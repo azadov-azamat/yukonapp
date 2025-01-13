@@ -32,6 +32,7 @@ const LoginForm = () => {
         onBlur={formik.handleBlur('phone')}
         placeholder="90 123 45 67"
         error={formik.touched.phone && formik.errors.phone}
+        divClass='mb-4'
       />
 
       {/* Parol */}
@@ -43,6 +44,7 @@ const LoginForm = () => {
         onBlur={formik.handleBlur('password')}
         placeholder="Parol"
         error={formik.touched.password && formik.errors.password}
+        divClass='mb-4'
       />
 
       {/* Kirish tugmasi */}

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; // Ikonkalar uchun kutubxona
+import { InputProps } from '@/interface/components';
 
-const Input = ({ 
+const Input: React.FC<InputProps> = ({ 
   label, 
   value, 
   onChangeText, 
@@ -10,14 +11,16 @@ const Input = ({
   placeholder, 
   error, 
   type,
+  divClass,
   loading = false,
+  ...rest
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false); // Parolni ko'rsatish holati
 
   return (
-    <View className="relative mb-4">
+    <View className={`relative ${divClass}`}>
       {/* Label */}
-      {label && <Text className="mb-2 text-lg font-semibold">{label}</Text>}
+      {label && <Text className="mb-1 text-lg font-semibold">{label}</Text>}
       
       <View className="flex-row items-center px-3 py-1 text-lg bg-white border rounded-md border-border-color">
         {/* Telefon uchun prefix */}
@@ -27,8 +30,10 @@ const Input = ({
         
         {/* Input */}
         <TextInput
-          style={{ flex: 1 }}
-          className={`text-lg ${
+          style={{
+            outline: 'none'
+          }}
+          className={`text-lg flex-1 ${
             error ? 'border-primary-red' : 'border-border-color'
           }`}
           value={value}
@@ -37,6 +42,7 @@ const Input = ({
           placeholder={placeholder}
           secureTextEntry={type === 'password' && !isPasswordVisible}
           keyboardType={type === 'phone' ? 'phone-pad' : 'default'}
+          {...rest}
         />
         
         {/* Parol uchun ko'rish/ko'rmaslik icon */}
@@ -54,7 +60,7 @@ const Input = ({
       </View>
       
       {/* Error */}
-      {error && <Text className="absolute text-sm text-primary-red -bottom-4">{error}</Text>}
+      {error && <Text className="absolute text-sm text-primary-red -bottom-[18px]">{error}</Text>}
     </View>
   );
 };

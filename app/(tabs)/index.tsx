@@ -1,16 +1,21 @@
-import { Text, View } from "react-native";
+import React from "react";
+import { CustomButton, CustomInput } from "@/components/customs";
+import { ScrollView, Text, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function MainPage() {
+  const [searchText, setSearchText] = React.useState('');
   
   return (
-    <View className='items-center justify-center flex-1 bg-gray-100'>
-      {/* Logo */}
-      {/* <Image
-        source={{ uri: 'https://example.com/logo.png' }} // O'zingizning logotipingizni joylashtiring
-        style={tailwind('w-20 h-20 mb-6')}
-      /> */}
-      {/* Form */}
-      <Text>Home page</Text>
-    </View>
+    <ScrollView className="flex-1 p-4 bg-gray-100">
+       <View className="flex-row items-center justify-between w-full mb-6">
+          <CustomInput
+            value={searchText}
+            onChangeText={(text: string) => setSearchText(text)} 
+            placeholder="Yuk qidirish: Misol uchun: Towkentdan urganchga"
+            divClass='w-full'
+          />
+       </View>
+    </ScrollView>
   );
 }

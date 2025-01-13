@@ -11,7 +11,7 @@ export default function MainPage() {
         style={tailwind('w-20 h-20 mb-6')}
       /> */}
       {/* Form */}
-      <LoginForm/>
+      <LoginForm />
     </View>
   );
 }
