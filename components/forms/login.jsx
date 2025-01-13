@@ -3,13 +3,17 @@ import { View, Alert } from 'react-native';
 import { useFormik } from 'formik';
 import { loginValidationSchema } from '@/validations/form';
 import { CustomInput, CustomButton } from '@/components/customs';
+import { useRouter } from "expo-router";
 
 const LoginForm = () => {
+  const router = useRouter();
+  
   const formik = useFormik({
     initialValues: { phone: '', password: '' },
     validationSchema: loginValidationSchema,
     onSubmit: (values) => {
       Alert.alert('Muvaffaqiyatli', `Telefon: ${values.phone}, Parol: ${values.password}`);
+      router.push("/(tabs)");
     },
   });
 

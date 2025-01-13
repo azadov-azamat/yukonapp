@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-export default function MainPage() {
+export default function ProfilePage() {
   
   return (
     <View className='items-center justify-center flex-1 bg-gray-100'>
@@ -10,7 +10,7 @@ export default function MainPage() {
         style={tailwind('w-20 h-20 mb-6')}
       /> */}
       {/* Form */}
-      <Text>Home page</Text>
+      <Text>Profile page</Text>
     </View>
   );
 }
