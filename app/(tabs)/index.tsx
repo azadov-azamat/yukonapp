@@ -1,7 +1,6 @@
 import { View } from "react-native";
-import LoginForm from '@/components/forms/login';
 
-export default function MainPage() {
+export default function TabsMainPage() {
   
   return (
     <View className='items-center justify-center flex-1 bg-gray-100'>
@@ -11,7 +10,7 @@ export default function MainPage() {
         style={tailwind('w-20 h-20 mb-6')}
       /> */}
       {/* Form */}
-      <LoginForm/>
+      
     </View>
   );
 }
