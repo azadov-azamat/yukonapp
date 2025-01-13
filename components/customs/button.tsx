@@ -1,7 +1,8 @@
 import React from "react";
 import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
+import { ButtonProps } from '@/interface/components';
 
-const Button = ({
+const Button: React.FC<ButtonProps> = ({
   title,
   onPress,
   loading = false, // Yuklanish holati uchun default false
