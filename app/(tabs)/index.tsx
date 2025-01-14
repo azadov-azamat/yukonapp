@@ -1,7 +1,6 @@
 import React from "react";
-import { CustomButton, CustomInput } from "@/components/customs";
-import { ScrollView, Text, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { CustomInput } from "@/components/customs";
+import { ScrollView, View } from "react-native";
 
 export default function MainPage() {
   const [searchText, setSearchText] = React.useState('');

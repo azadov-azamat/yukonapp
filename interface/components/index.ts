@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { StyleProp, TextInputProps, TextStyle, ViewStyle } from "react-native";
 
 export interface InputProps extends TextInputProps {
@@ -19,4 +20,14 @@ export interface ButtonProps {
     disabled?: boolean; // Tugma faol yoki yo'qligi (ixtiyoriy, default: false)
     buttonStyle?: string | StyleProp<ViewStyle>; // Tugma uslubi
     textStyle?: string | StyleProp<TextStyle>; // Matn uslubi
+}
+
+export interface ViewSelectorProps {
+    tabs: viewSelectorTabs[];
+    selectedTab: string;
+    onTabSelect: (id: string) => void;
+}
+
+export interface viewSelectorTabs {
+    label: string, value: string, icon?: keyof typeof Ionicons.glyphMap
 }

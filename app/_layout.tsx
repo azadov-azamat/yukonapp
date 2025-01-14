@@ -22,6 +22,9 @@ function App() {
           headerShadowVisible: false,
           headerTintColor: '#000',
           headerTransparent: true,
+          headerLeft: () => {
+            return null;
+          },
           headerTitle: ''
           }}
           initialRouteName="index"
