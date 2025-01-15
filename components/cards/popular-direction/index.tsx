@@ -8,7 +8,7 @@ interface DirectionItemProps {
   todayAds: number;
 }
 
-const PopularDirections: React.FC<DirectionItemProps> = ({ from, to, todayAds, totalAds }) => {
+const PopularDirection: React.FC<DirectionItemProps> = ({ from, to, todayAds, totalAds }) => {
   return (
     <View className="p-4 mb-4 bg-white rounded-lg shadow-md">
     {/* Cities */}
@@ -26,4 +26,4 @@ const PopularDirections: React.FC<DirectionItemProps> = ({ from, to, todayAds, t
   );
 };
 
-export default PopularDirections;
+export default PopularDirection;

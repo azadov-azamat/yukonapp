@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-interface LoadListCardProps {
+interface LoadCardProps {
   originCity: string;
   originCountry: string;
   destinationCity: string;
@@ -14,7 +14,7 @@ interface LoadListCardProps {
   onBookmark: () => void;
 }
 
-const LoadListCard: React.FC<LoadListCardProps> = ({
+const LoadCard: React.FC<LoadCardProps> = ({
   originCity,
   originCountry,
   destinationCity,
@@ -88,4 +88,4 @@ const LoadListCard: React.FC<LoadListCardProps> = ({
   );
 };
 
-export default LoadListCard;
+export default LoadCard;

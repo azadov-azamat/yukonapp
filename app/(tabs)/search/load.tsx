@@ -3,9 +3,8 @@ import React from 'react'
 import BadgeSelector from '@/components/customs/badge-selector'
 import { OPTIONS } from '@/utils/constants'
 import { CustomButton, CustomInput } from '@/components/customs'
-import { TabBarIcon } from '@/components/navigation/tab-bar-icon'
 import LoadRouteSelector from '@/components/load-route-selector'
-import LoadListCard from '@/components/load-list-card'
+import {LoadListCard} from '@/components/cards'
 
 const SearchLoadScreen = () => {
     

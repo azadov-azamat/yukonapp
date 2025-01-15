@@ -1,7 +1,7 @@
 import React from "react";
 import { CustomInput } from "@/components/customs";
 import { ScrollView, View, Text, FlatList } from "react-native";
-import PopularDirections from "@/components/popular-directions";
+import { PopularDirectionCard } from "@/components/cards";
 
 export default function MainPage() {
   const [searchText, setSearchText] = React.useState('');
@@ -34,7 +34,7 @@ export default function MainPage() {
           <FlatList
             data={directions}
             keyExtractor={(item, index) => `${item.from}-${item.to}-${index}`}
-            renderItem={({ item }) => <PopularDirections {...item}/>}
+            renderItem={({ item }) => <PopularDirectionCard {...item}/>}
           />
       </View>
     </ScrollView>
