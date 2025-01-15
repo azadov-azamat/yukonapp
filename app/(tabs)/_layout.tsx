@@ -3,9 +3,33 @@ import { Tabs } from 'expo-router';
 // import { Platform } from 'react-native';
 import { TabBarIcon } from '@/components/navigation/tab-bar-icon';
 import { Colors } from '@/utils/colors';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { getUserMe } from '@/redux/reducers/auth';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function TabLayout() {
-  
+  const dispatch = useAppDispatch();
+  const {auth, user} = useAppSelector(state => state.auth);
+
+  async function getLocalstorageData() {
+    const authData = await AsyncStorage.getItem('authenticate');
+    if (authData) {
+        const { userId } = JSON.parse(authData);
+        return userId;
+    }
+    return null;
+  }
+
+  React.useLayoutEffect(() => {
+    const fetchUserData = async () => {
+      const userId = await getLocalstorageData();
+      const res = await dispatch(getUserMe(auth?.userId || userId));
+
+    };
+
+    fetchUserData();
+  }, [auth]);
+
   return (
     <Tabs
       screenOptions={{

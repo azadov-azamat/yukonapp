@@ -3,10 +3,13 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {http} from "@/config/api";
 import {authenticate, deserialize} from "../../utils/general";
 import { AuthInitialProps} from "@/interface/redux/auth.interface";
+import { UrlParamsDataProps } from "@/interface/search/search.interface";
 
-export const getUserMe = createAsyncThunk('auth/getUserMe', async (id: number, {rejectWithValue}) => {
+export const getTopSearches = createAsyncThunk('load/getTopSearches', async (data: UrlParamsDataProps, {rejectWithValue}) => {
     try {
-        const response = await http.get(`/users/${id}`)
+        const response = await http.get(`/loads/top-searches`, {
+            params: data
+        })
         if (response.data === null) return rejectWithValue(response?.data)
         return await deserialize(response.data)
     } catch (error) {

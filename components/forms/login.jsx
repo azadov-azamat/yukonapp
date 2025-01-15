@@ -4,16 +4,43 @@ import { useFormik } from 'formik';
 import { loginValidationSchema } from '@/validations/form';
 import { CustomInput, CustomButton } from '@/components/customs';
 import { useRouter } from "expo-router";
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { login } from '@/redux/reducers/auth';
+import Toast from 'react-native-toast-message';
 
 const LoginForm = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { loading } = useAppSelector(state => state.auth)
   
   const formik = useFormik({
     initialValues: { phone: '', password: '' },
     validationSchema: loginValidationSchema,
-    onSubmit: (values) => {
-      Alert.alert('Muvaffaqiyatli', `Telefon: ${values.phone}, Parol: ${values.password}`);
+    onSubmit: async (values) => {
+      const res = await dispatch(login(values));
+      
+      const status = res.payload?.status;
+      if (status === 400) {
+        return Toast.show({
+          type: 'error',
+          text1: 'Login xato!',
+          text2: 'Login va parolni kiriting.',
+        });
+      } else if (status === 500) {
+        return Toast.show({
+          type: 'error',
+          text1: 'Tizimda nosozlik!',
+          text2: 'Keyinroq urinib ko\'ring',
+        });
+      }
+      
+      Toast.show({
+          type: 'success',
+          text1: 'Xush kelibsiz!',
+          text2: 'Siz muvaffaqiyatli tizimga kirdingiz.',
+      });
       router.push("/(tabs)");
+      
     },
   });
 
@@ -48,7 +75,13 @@ const LoginForm = () => {
       />
 
       {/* Kirish tugmasi */}
-      <CustomButton title="Kirish" onPress={formik.handleSubmit} buttonStyle={'bg-primary mt-2'} />
+      <CustomButton 
+        loading={loading}
+        disabled={loading} 
+        title="Kirish" 
+        onPress={formik.handleSubmit} 
+        buttonStyle={'bg-primary mt-2'} 
+      />
 
       {/* Parolni unutdingizmi */}
       <CustomButton title="Parolni unutdingizmi?" onPress={Working} />

@@ -18,17 +18,17 @@ const Button: React.FC<ButtonProps> = ({
     <TouchableOpacity
       onPress={onPress}
       disabled={loading || disabled} // Yuklanish yoki disabled bo'lsa, bosishni o'chiradi
-      className={`flex-row items-center justify-center py-3 px-5 rounded ${buttonStyle}`}
+      className={`flex-row items-center justify-center py-2 px-5 rounded ${buttonStyle}`}
       style={{
         opacity: loading || disabled ? 0.6 : 1, // Yuklanish vaqti yoki disabled holatda tugma yarim shaffof
       }}
     >
       {/* Agar yuklanish bo'lsa, yuklanish indikatorini ko'rsatamiz */}
       {loading ? (
-        <ActivityIndicator size="small" color="white" />
+        <ActivityIndicator size={24} color="white" />
       ) : (
         isIcon 
-        ? <TabBarIcon name={iconName} size={20} color={'white'}/> 
+        ? <TabBarIcon name={iconName} size={22} color={'white'}/> 
         : 
           <Text className={`${buttonStyle && 'text-white'} text-lg ${textStyle}`}>{title}</Text>
       )}

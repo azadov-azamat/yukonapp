@@ -3,8 +3,9 @@ import {Provider} from 'react-redux';
 import { store } from "@/redux/store";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useAppSelector } from "@/redux/hooks";
-// import { StatusBar } from "react-native";
+import { StatusBar } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
+import Toast from 'react-native-toast-message';
 
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -32,10 +33,11 @@ function App() {
           <Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }}/> 
         </Stack>
 
-        {/* <StatusBar
+        <StatusBar
           barStyle="dark-content"
           backgroundColor="white"
-        /> */}
+        />
+        <Toast />
     </SafeAreaProvider>
   )
 }
