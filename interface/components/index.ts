@@ -14,12 +14,14 @@ export interface InputProps extends TextInputProps {
   }
 
 export interface ButtonProps {
-    title: string; // Tugma matni
+    title?: string; // Tugma matni
     onPress: () => void; // Bosilganda chaqiriladigan funksiya
     loading?: boolean; // Yuklanish holati (ixtiyoriy, default: false)
     disabled?: boolean; // Tugma faol yoki yo'qligi (ixtiyoriy, default: false)
     buttonStyle?: string | StyleProp<ViewStyle>; // Tugma uslubi
     textStyle?: string | StyleProp<TextStyle>; // Matn uslubi
+    isIcon: boolean;
+    iconName: keyof typeof Ionicons.glyphMap;
 }
 
 export interface ViewSelectorProps {
@@ -31,3 +33,10 @@ export interface ViewSelectorProps {
 export interface viewSelectorTabs {
     label: string, value: string, icon?: keyof typeof Ionicons.glyphMap
 }
+
+export interface BadgeSelectorProps {
+    items: viewSelectorTabs[]; // Barcha badge ma'lumotlari
+    selectedItems: string[]; // Tanlangan badge'lar ID ro'yxati
+    onChange: (value: string) => void; // Badge tanlanganida chaqiriladigan callback
+    className?: string;
+  }

@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { ButtonProps } from '@/interface/components';
+import { TabBarIcon } from "../navigation/tab-bar-icon";
 
 const Button: React.FC<ButtonProps> = ({
   title,
@@ -9,6 +10,8 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false, // Faollik holati uchun default false
   buttonStyle = "",
   textStyle = "",
+  isIcon = false,
+  iconName
 }) => {
 
   return (
@@ -24,7 +27,10 @@ const Button: React.FC<ButtonProps> = ({
       {loading ? (
         <ActivityIndicator size="small" color="white" />
       ) : (
-        <Text className={`${buttonStyle && 'text-white'} text-lg ${textStyle}`}>{title}</Text>
+        isIcon 
+        ? <TabBarIcon name={iconName} size={20} color={'white'}/> 
+        : 
+          <Text className={`${buttonStyle && 'text-white'} text-lg ${textStyle}`}>{title}</Text>
       )}
     </TouchableOpacity>
   );

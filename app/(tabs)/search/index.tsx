@@ -15,13 +15,13 @@ export default function SearchPage() {
   ];
   
   return (
-    <View className="items-center flex-1 px-4 py-4 bg-gray-100">
+    <View className="items-center flex-1 px-4 pt-4 bg-gray-100">
       <ViewSelector
         tabs={tabs}
         selectedTab={selectedTab}
         onTabSelect={(value: string) => setSelectedTab(value)}
       />
-       <View className="flex-1 p-4">
+       <View className="flex-1 w-full">
         {selectedTab === 'load' && <SearchLoadScreen />}
         {selectedTab === 'vehicle' && <SearchVehicleScreen />}
       </View>
