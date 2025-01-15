@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { itemCityProps } from '@/interface/redux/variable.interface';
 
 interface LoadRouteSelectorProps {
-  origin: string;
-  destination: string;
+  origin: itemCityProps | null;
+  destination: itemCityProps | null;
   onClear: () => void; // Yonalishlarni o'chirish uchun
   onSwapCities: () => void; // Shaharlarni almashtirish uchun
 }
@@ -20,7 +21,7 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
       {/* Origin */}
       <View className="items-start flex-1">
         <Text className="text-gray-500">Отправления</Text>
-        <Text className="text-lg font-bold">{origin}</Text>
+        <Text className="text-lg font-bold">{origin?.name_uz}</Text>
       </View>
 
       {/* Path Line */}
@@ -38,7 +39,7 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
       <View className="items-end flex-1">
         <Text className="text-gray-500">Назначения</Text>
         <Text className="text-lg font-bold">
-          {destination || 'Не указано'}
+          {destination?.name_uz || 'Не указано'}
         </Text>
       </View>
 
