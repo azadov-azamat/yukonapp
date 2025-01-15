@@ -3,6 +3,7 @@ import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {http} from "@/config/api";
 import {authenticate, deserialize, deserializeUser} from "../../utils/general";
 import { AuthInitialProps} from "@/interface/redux/auth.interface";
+import Toast from 'react-native-toast-message';
 
 export const getUserMe = createAsyncThunk('auth/getUserMe', async (id: number, {rejectWithValue}) => {
     try {
@@ -47,7 +48,13 @@ export const authSlice = createSlice({
         })
         builder.addCase(login.rejected, (state: AuthInitialProps, action) => {
             state.loading = false;
-            console.error(action);
+            console.log(action);
+            
+            Toast.show({
+                type: 'error',
+                text1: 'Tizimda nosozlik!',
+                text2: `${action.payload}`,
+            });
         })
         builder.addCase(getUserMe.fulfilled, (state: AuthInitialProps, action) => {
             state.loading = false

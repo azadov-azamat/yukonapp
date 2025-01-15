@@ -26,7 +26,7 @@ export const getLatestAds = createAsyncThunk('load/getLatestAds', async (_, { re
 // Fetch Loads (Search)
 export const searchLoads = createAsyncThunk('load/searchLoads', async (query: any, { rejectWithValue }) => {
     try {
-        const response = await http.get('/loads', { params: query });
+        const response = await http.get('/loads/search', { params: query });
         return await deserialize(response.data);
     } catch (error) {
         return rejectWithValue(error);

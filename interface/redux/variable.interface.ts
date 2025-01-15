@@ -1,5 +1,19 @@
 import { IUserModel } from "./user.interface";
 
+
+export interface CityInitialProps {
+    cities: any;
+    extractCity: extractCityProps | null;
+    loading: boolean;
+}
+
+export interface extractCityProps {
+    destination?: itemCityProps | null;
+    hasDestination?: boolean;
+    origin: itemCityProps;
+    truckType?: any;
+}
+
 export interface ICountryModel extends defaultData {
     nameRu: string;
     nameUz: string;
@@ -50,7 +64,14 @@ export interface ISavedFilterModel extends defaultData {
     destinationCity?: ICityModel;
     owner?: IUserModel;
 }
-  
+
+export interface itemCityProps extends defaultData {
+    country_id?: number;
+    name_uz: string;
+    name_ru: string;
+    name_variant?: string;
+    type?: string;
+}
 
 export interface defaultData {
     id?: number | null;

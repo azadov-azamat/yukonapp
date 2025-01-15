@@ -1,16 +1,45 @@
 import { Image, View } from "react-native";
 import LoginForm from '@/components/forms/login';
+import React from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { getUserMe } from "@/redux/reducers/auth";
+import { useRouter } from "expo-router";
 
 export default function MainPage() {
   
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const {auth, user} = useAppSelector(state => state.auth);
+  const [isNavigationReady, setIsNavigationReady] = React.useState(false);
+  
+  async function getLocalstorageData() {
+    const authData = await AsyncStorage.getItem('authenticate');
+    if (authData) {
+        const { userId } = JSON.parse(authData);
+        return userId;
+    }
+    return null;
+  }
+
+  React.useLayoutEffect(() => {
+    const fetchUserData = async () => {
+      const userId = await getLocalstorageData();
+      await dispatch(getUserMe(auth?.userId || userId));
+      setIsNavigationReady(true);
+    };
+
+    fetchUserData();
+  }, [auth]);
+
+  React.useEffect(()=> {
+    if (user && isNavigationReady) {
+      router.push("/(tabs)");
+    }
+  }, [user, isNavigationReady]);
+  
   return (
     <View className='items-center justify-center flex-1 bg-gray-100'>
-      {/* Logo */}
-        {/* <Image
-          source={require('@/assets/images/logo.png')} // O'zingizning logotipingizni joylashtiring
-          className='w-1/2 '
-        /> */}
-      {/* Form */}
       <LoginForm />
     </View>
   );
