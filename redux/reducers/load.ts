@@ -52,14 +52,14 @@ export const authSlice = createSlice({
             state.loading = false;
             console.error(action);
         })
-        builder.addCase(getUserMe.fulfilled, (state: AuthInitialProps, action) => {
-            state.loading = false
-            state.user = action.payload
-        })
-        builder.addCase(getUserMe.rejected, (state: AuthInitialProps, action) => {
-            state.loading = false
-            console.error(action.payload)
-        })
+        // builder.addCase(getUserMe.fulfilled, (state: AuthInitialProps, action) => {
+        //     state.loading = false
+        //     state.user = action.payload
+        // })
+        // builder.addCase(getUserMe.rejected, (state: AuthInitialProps, action) => {
+        //     state.loading = false
+        //     console.error(action.payload)
+        // })
     }
 })
 

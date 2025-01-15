@@ -1,18 +1,21 @@
+import { defaultData, ICityModel, ICountryModel } from "./variable.interface";
+
 export interface LoadInitialProps {
-    load: loadDataProps | null;
-    loads: loadDataProps[] | [];
+    load: ILoadModel | null;
+    loads: ILoadModel[] | [];
     loading: boolean;
 }
 
-export interface loadDataProps {
+
+export interface ILoadModel extends defaultData {
     url: string;
     originCityName: string;
     destinationCityName: string;
     price: number;
     distance: number;
     distanceSeconds: number;
-    telegram: string;
     phone: string;
+    telegram: string;
     goods: string;
     cargoType: string;
     cargoType2: string;
@@ -25,14 +28,23 @@ export interface loadDataProps {
     isDagruz: boolean;
     hasPrepayment: boolean;
     isLikelyOwner: boolean;
-    isArchived?: boolean; // Default qiymat false
-    isDeleted?: boolean; // Default qiymat false
-    openMessageCounter?: number; // Default qiymat 0
-    phoneViewCounter?: number; // Default qiymat 0
-    prepaymentAmount?: number; // Default qiymat 0
-    expirationButtonCounter?: number; // Default qiymat 0
-    createdAt: Date;
-    updatedAt: Date;
-    loading?: boolean; // Default qiymat yo'q
-    isWebAd?: boolean; // Default qiymat true
-}
+    isArchived: boolean;
+    isDeleted: boolean;
+    openMessageCounter: number;
+    phoneViewCounter: number;
+    prepaymentAmount: number;
+    expirationButtonCounter: number;
+    publishedDate: Date | null;
+    loading: boolean;
+    isWebAd: boolean;
+    originCity?: ICityModel;
+    originCountry?: ICountryModel;
+    destinationCity?: ICityModel;
+    destinationCountry?: ICountryModel;
+  
+    // distanceInKm: string;
+    // distanceInHours: string;
+    // phoneFunction(close?: () => void): Promise<void>;
+    // urlFunction(): Promise<void>;
+    // handleFunction(endpoint: string, successCallback: (response: any) => void, close?: () => void): Promise<void>;
+  }
