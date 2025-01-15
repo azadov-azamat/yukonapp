@@ -2278,6 +2278,11 @@
   resolved "https://registry.npmjs.org/@types/json-schema/-/json-schema-7.0.15.tgz"
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
 
+"@types/jsonapi-serializer@^3.6.8":
+  version "3.6.8"
+  resolved "https://registry.npmjs.org/@types/jsonapi-serializer/-/jsonapi-serializer-3.6.8.tgz"
+  integrity sha512-wPx2UBoW+R2KW0Z2U7FkzIM+iDLFqjHXxr8WGE9F8ww02m+qt886+8a2lGFSiODXe9JVnPscB8d+5+eL/d9nOw==
+
 "@types/node-forge@^1.3.0":
   version "1.3.11"
   resolved "https://registry.npmjs.org/@types/node-forge/-/node-forge-1.3.11.tgz"

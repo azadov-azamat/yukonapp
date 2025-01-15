@@ -4,7 +4,7 @@ import BadgeSelector from '@/components/customs/badge-selector'
 import { OPTIONS } from '@/utils/constants'
 import { CustomButton, CustomInput } from '@/components/customs'
 import LoadRouteSelector from '@/components/load-route-selector'
-import {LoadListCard} from '@/components/cards'
+import { LoadListCard } from '@/components/cards'
 
 const SearchLoadScreen = () => {
     

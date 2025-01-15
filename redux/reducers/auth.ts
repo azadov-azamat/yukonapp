@@ -1,14 +1,14 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 import {http} from "@/config/api";
-import {authenticate, deserialize} from "../../utils/general";
+import {authenticate, deserialize, deserializeUser} from "../../utils/general";
 import { AuthInitialProps} from "@/interface/redux/auth.interface";
 
 export const getUserMe = createAsyncThunk('auth/getUserMe', async (id: number, {rejectWithValue}) => {
     try {
         const response = await http.get(`/users/${id}`)
         if (response.data === null) return rejectWithValue(response?.data)
-        return await deserialize(response.data)
+        return deserializeUser(await deserialize(response.data))
     } catch (error) {
         return rejectWithValue(error)
     }

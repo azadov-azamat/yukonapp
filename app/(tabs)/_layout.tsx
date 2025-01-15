@@ -6,6 +6,7 @@ import { Colors } from '@/utils/colors';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getUserMe } from '@/redux/reducers/auth';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getTopSearches } from '@/redux/reducers/load';
 
 export default function TabLayout() {
   const dispatch = useAppDispatch();
@@ -24,11 +25,14 @@ export default function TabLayout() {
     const fetchUserData = async () => {
       const userId = await getLocalstorageData();
       const res = await dispatch(getUserMe(auth?.userId || userId));
-
     };
 
     fetchUserData();
   }, [auth]);
+
+  React.useEffect(()=> {
+    dispatch(getTopSearches())
+  },  []);
 
   return (
     <Tabs
