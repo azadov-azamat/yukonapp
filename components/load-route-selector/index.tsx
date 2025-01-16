@@ -17,7 +17,7 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
   onSwapCities,
 }) => {
   return (
-    <View className="relative flex-row items-center justify-between p-4 bg-white shodow-lg rounded-xl">
+    <View className="relative flex-row items-center justify-between p-4 mt-2 overflow-visible bg-white shodow-lg rounded-xl">
       {/* Origin */}
       <View className="items-start flex-1">
         <Text className="text-gray-500">Отправления</Text>
@@ -30,6 +30,7 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
       {/* Swap Button */}
       <TouchableOpacity
         onPress={onSwapCities}
+        disabled={!destination}
         className="z-10 items-center justify-center w-10 h-10 mx-4 bg-white border border-blue-400 rounded-full"
       >
         <Ionicons name="swap-horizontal" size={24} color="#2563eb" />

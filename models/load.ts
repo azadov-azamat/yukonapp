@@ -37,7 +37,9 @@ export default class LoadModel implements ILoadModel {
   originCountry?: ICountryModel;
   destinationCity?: ICityModel;
   destinationCountry?: ICountryModel;
-
+  createdAt?: string;
+  updatedAt?: string;
+  
   constructor(data: Partial<ILoadModel>) {
     Object.assign(this, data);
   }

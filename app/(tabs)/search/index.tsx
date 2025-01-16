@@ -2,16 +2,15 @@ import React from "react";
 import { View } from "react-native";
 import ViewSelector from "@/components/view-selector";
 import { viewSelectorTabs } from "@/interface/components";
-import SearchLoadScreen from "./load";
+import SearchLoadScreen from "./load.jsx";
 import SearchVehicleScreen from "./vehicle";
 
 export default function SearchPage() {
-  const [selectedTab, setSelectedTab] = React.useState('load'); // Default tab
-  const [searchText, setSearchText] = React.useState('');
-
+  const [selectedTab, setSelectedTab] = React.useState('load'); 
+  
   const tabs: viewSelectorTabs[] = [
-    { label: 'Yuk', value: 'load', icon: 'cube' },
-    { label: 'transport', value: 'vehicle', icon: 'car' },
+    { label: 'bookmarks.load', value: 'load', icon: 'cube' },
+    { label: 'bookmarks.vehicle', value: 'vehicle', icon: 'car' },
   ];
   
   return (

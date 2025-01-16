@@ -44,6 +44,6 @@ export interface BadgeSelectorProps {
 export interface DirectionItemProps {
     origin: {id: number; name_uz: string; name_ru: string};
     destination: {id: number; name_uz: string; name_ru: string};
-    total_loads: string;
-    today_loads: string;
+    total_loads: number;
+    today_loads: number;
 }

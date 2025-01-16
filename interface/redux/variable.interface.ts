@@ -24,8 +24,8 @@ export interface ICountryModel extends defaultData {
 }
 
 export interface ICityModel extends defaultData {
-    nameRu: string;
-    nameUz: string;
+    nameRu?: string;
+    nameUz?: string;
     nameEn: string;
     countryId: string;
     country?: ICountryModel;

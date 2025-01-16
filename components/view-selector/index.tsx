@@ -2,8 +2,11 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ViewSelectorProps } from '@/interface/components';
+import { useTranslation } from 'react-i18next';
 
 const ViewSelector: React.FC<ViewSelectorProps> = ({ tabs, selectedTab, onTabSelect }) => {
+  const {t} = useTranslation();
+  
   return (
     <View className="flex-row items-center justify-center w-full mb-4 space-x-2">
       {tabs.map((tab) => (
@@ -22,7 +25,7 @@ const ViewSelector: React.FC<ViewSelectorProps> = ({ tabs, selectedTab, onTabSel
               style={{ marginRight: 8 }}
             />
           )}
-          <Text className="text-base font-bold text-white capitalize">{tab.label}</Text>
+          <Text className="text-base font-bold text-white capitalize">{t (tab.label)}</Text>
         </TouchableOpacity>
       ))}
     </View>

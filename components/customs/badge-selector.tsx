@@ -1,10 +1,12 @@
 import React from 'react';
 import { FlatList, Text, TouchableOpacity, View } from 'react-native';
 import { BadgeSelectorProps, viewSelectorTabs } from '@/interface/components';
+import { useTranslation } from 'react-i18next';
+import { TFunction } from 'i18next';
 
 function FlatItem(
-  {isSelected, item, onChange}: 
-  {item: viewSelectorTabs, onChange: (value: string) => void, isSelected: (value: string) => boolean}
+  {isSelected, item, onChange, translate}: 
+  {item: viewSelectorTabs, onChange: (value: string) => void, isSelected: (value: string) => boolean; translate: TFunction}
 ) {
   return (
     <TouchableOpacity
@@ -22,17 +24,18 @@ function FlatItem(
                   isSelected(item.value) ? 'text-white' : 'text-primary'
                 }`}
               >
-                {item.label}
+                {translate (item.label)}
               </Text>
               {isSelected(item.value) && (
                 <View className="absolute w-4 h-4 rounded-full bg-primary-red -top-4 -right-[19px]" />
               )}
             </View>
           </TouchableOpacity>
-  )
+  ) 
 }
 
 const BadgeSelector: React.FC<BadgeSelectorProps> = ({ items, selectedItems, onChange, className }) => {
+  const {t} = useTranslation();
   const isSelected = (value: string) => selectedItems.includes(value); // Badge tanlanganligini tekshirish
 
   return (
@@ -55,6 +58,7 @@ const BadgeSelector: React.FC<BadgeSelectorProps> = ({ items, selectedItems, onC
             item={item} 
             isSelected={isSelected} 
             onChange={onChange}
+            translate={t}
           />
         )}
       />

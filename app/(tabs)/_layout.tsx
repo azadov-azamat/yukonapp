@@ -7,10 +7,12 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getUserMe } from '@/redux/reducers/auth';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getTopSearches } from '@/redux/reducers/load';
+import { useTranslation } from 'react-i18next';
 
 export default function TabLayout() {
   const dispatch = useAppDispatch();
-  const {auth, user} = useAppSelector(state => state.auth);
+  const {t} = useTranslation();
+  const {auth} = useAppSelector(state => state.auth);
 
   async function getLocalstorageData() {
     const authData = await AsyncStorage.getItem('authenticate');
@@ -24,7 +26,7 @@ export default function TabLayout() {
   React.useLayoutEffect(() => {
     const fetchUserData = async () => {
       const userId = await getLocalstorageData();
-      const res = await dispatch(getUserMe(auth?.userId || userId));
+      await dispatch(getUserMe(auth?.userId || userId)).unwrap();
     };
 
     fetchUserData();
@@ -44,7 +46,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: 'Home',
+            title: t ('pages.main'),
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon size={24} name={focused ? "home" : "home-outline"} color={color} />
             ),
@@ -53,7 +55,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="search"
           options={{
-            title: 'Search',
+            title: t ('pages.cargo'),
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon size={24} name={focused ? "search" : "search-outline"} color={color} />
             ),
@@ -62,7 +64,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="profile"
           options={{
-            title: 'Profile',
+            title: t ('pages.profile'),
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon size={24} name={focused ? "person" : "person-outline"} color={color} />
             ),

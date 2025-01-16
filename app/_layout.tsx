@@ -6,6 +6,7 @@ import { useAppSelector } from "@/redux/hooks";
 import { StatusBar } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 import Toast from 'react-native-toast-message';
+import '@/utils/i18n';
 
 NativeWindStyleSheet.setOutput({
   default: "native",

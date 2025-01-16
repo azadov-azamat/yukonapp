@@ -1,9 +1,10 @@
+import LoadModel from "@/models/load";
 import { DirectionItemProps } from "../components";
 import { defaultData, ICityModel, ICountryModel } from "./variable.interface";
 
 export interface LoadInitialProps {
     load: ILoadModel | null;
-    loads: ILoadModel[] | [];
+    loads: LoadModel[] | [];
     topSearches: DirectionItemProps[] | [];
     latestAds: ILoadModel[] | [];
     loading: boolean;
@@ -44,10 +45,4 @@ export interface ILoadModel extends defaultData {
     originCountry?: ICountryModel;
     destinationCity?: ICityModel;
     destinationCountry?: ICountryModel;
-  
-    // distanceInKm: string;
-    // distanceInHours: string;
-    // phoneFunction(close?: () => void): Promise<void>;
-    // urlFunction(): Promise<void>;
-    // handleFunction(endpoint: string, successCallback: (response: any) => void, close?: () => void): Promise<void>;
   }

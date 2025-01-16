@@ -27,7 +27,9 @@ export const getLatestAds = createAsyncThunk('load/getLatestAds', async (_, { re
 export const searchLoads = createAsyncThunk('load/searchLoads', async (query: any, { rejectWithValue }) => {
     try {
         const response = await http.get('/loads/search', { params: query });
-        return await deserialize(response.data);
+        let deserializedData = await deserialize(response.data.data)
+        deserializedData.map((item: ILoadModel) => deserializeLoad(item))
+        return deserializedData;
     } catch (error) {
         return rejectWithValue(error);
     }
@@ -57,7 +59,7 @@ export const updateLoad = createAsyncThunk('load/updateLoad', async ({ id, data 
 export const createLoad = createAsyncThunk('load/createLoad', async (data: ILoadModel, { rejectWithValue }) => {
     try {
         const response = await http.post('/loads', data);
-        return await deserialize(response.data);
+        return deserializeLoad(await deserialize(response.data));
     } catch (error) {
         return rejectWithValue(error);
     }
@@ -102,8 +104,8 @@ export const loadSlice = createSlice({
 
         // Search Loads
         builder.addCase(searchLoads.fulfilled, (state, action) => {
-            state.loading = false;
             state.loads = action.payload;
+            state.loading = false;
         });
         builder.addCase(searchLoads.pending, (state) => {
             state.loading = true;

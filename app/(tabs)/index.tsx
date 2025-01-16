@@ -3,8 +3,10 @@ import { CustomInput } from "@/components/customs";
 import { ScrollView, View, Text, FlatList } from "react-native";
 import { PopularDirectionCard } from "@/components/cards";
 import { useAppSelector } from "@/redux/hooks";
+import { useTranslation } from 'react-i18next';
 
 export default function MainPage() {
+  const { t } = useTranslation();
   const {topSearches} = useAppSelector(state => state.load);
   const [searchText, setSearchText] = React.useState('');
   
@@ -14,14 +16,14 @@ export default function MainPage() {
           <CustomInput
             value={searchText}
             onChangeText={(text: string) => setSearchText(text)} 
-            placeholder="Yuk qidirish: Misol uchun: Towkentdan urganchga"
+            placeholder={t ('search-by-destination-main')}
             divClass='w-full'
           />
        </View>
        <View className="">
           {/* Header */}
           <Text className="mb-4 text-lg font-bold text-center">
-            {topSearches.length} самых популярных направлений поиска
+            {t ("top-five-searches")}
           </Text>
 
           {/* Direction List */}

@@ -1,0 +1,428 @@
+{
+    "logo-text": "YukOn",
+    "telegram": "Telegram",
+    "go-back": "Orqaga",
+    "load": "Yuklar",
+    "vehicle": "Transport",
+    "my-load": "Yuklarim",
+    "my-vehicle": "Transportlarim",
+    "add-new": "Yangi Qo'shish",
+    "add-new-ads": "Yangi e'lonlar qo'shish",
+    "add-cargo": "Yangi yuk qo'shish",
+    "edit-cargo": "Yukni tahrirlash",
+    "active": "Faol",
+    "archive": "Nofaol",
+    "expired": "Muddati o'tgan",
+    "other": "boshqa",
+    "unarchive": "Faollashtirish",
+    "add-vehicle": "Yangi transport qo'shish",
+    "edit-vehicle": "Transportni tahrirlash",
+    "save": "Saqlash",
+    "delete": "O'chirish",
+    "cancel": "Bekor qilish",
+    "login": "Tizimga kirish",
+    "register": "Roʻyxatdan oʻtish",
+    "password": "Parol",
+    "accepted": "Qabul qilindi",
+    "cargo-out-date": "Yukni eskirgan deb belgilash",
+    "vehicle-already-taken": "Transport allaqachon olingan",
+    "is-cargo-out-date": "Yukni haqiqatdan ham eskirgan deb belgilaysizmi?",
+    "is-vehicle-already-taken": "Transport haqiqatdan ham olingan deb belgilaysizmi?",
+    "auth-with-telegram": "Telegram orqali avtorizatsiya",
+    "query-result-message": "{cargo} uchun {{count}} ta e'lon topildi, {{todayCounter}} tasi bugungi",
+    "query-result-message-without-cargo": "{{count}} ta e'lon topildi, {{todayCounter}} tasi bugungi",
+    "top-searches-result": "Umumiy {{count}} ta e'lon, {{todayCounter}} tasi bugungi",
+    "repeat-password": "Tasqidlqash",
+    "forgot-password": "Parolni unutdingizmi?",
+    "reset-password-by-code": "Kod orqali parolni tiklash",
+    "code": "Kod",
+    "to-message": "Xabarga oʻtish",
+    "apply-filters": "Qo'llash",
+    "reset-all": "Tozalash",
+    "more-filters": "Barcha filterler",
+    "code-sent": "Kod sizga SMS orqali yuborildi",
+    "enter-code": "Olingan kodni kiriting",
+    "send-again": "Qayta yuborish",
+    "send-code-again": "Ko'dni qayta yuborish",
+    "seconds": "soniyadan dan keyin",
+    "send-verification": "Tasdiqlashni kodini olish",
+    "phone": "Telefon raqam",
+    "cargo-details": "Yuk ma'lumotlari",
+    "vehicle-details": "Transport ma'lumotlari",
+    "success-create": "Muvaffaqiyatli yaratildi",
+    "success-unarchive": "Muvaffaqiyatli faollashtirildi!",
+    "added-bookmark": "{adType} muvaffaqiyatli belgilandi",
+    "removed-bookmark": "{adType} muvaffaqiyatli o'chirildi",
+    "something-wrong": "Nimadir noto'g'ri, qayta urinib ko'ring!",
+    "search-message": "Qidirish uchun yozing",
+    "search-vehicle": "Transport (yuk mashina) topish",
+    "search-by-destination": "Misol: Toshkentdan Samarqandga",
+    "search-by-destination-main": "Yuk topish. Misol: Toshkentdan Samarqandga",
+    "not-found-result": "Natijalar topilmadi",
+    "phone-not-found": "Telefon raqam topilmadi",
+    "load-ready-recently": "Yuklanadi: {{day}} {{date}}",
+    "confirm": "Tasdiqlash",
+    "deny": "Rad etish",
+    "true": "Ha",
+    "false": "Yo'q",
+    "show-more": "Koʻproq koʻrsatish ({{nextIndex}} - {{count}})",
+    "show-less": "Kamroq koʻrsatish",
+    "price": "Narxi:",
+    "distance-text": "Masofa: {km} km {hour} soatlik",
+    "search": "Qidirish",
+    "where-from": "Qayerdan",
+    "where-to": "Qayerga",
+    "add-destination": "Manzil qo'shish",
+    "my-vehicles": "Mening Transportlarim",
+    "my-loads": "Mening Yuklarim",
+    "type-search": "Qidirish uchun matn kiriting",
+    "no-results": "Hech qanday natija topilmadi",
+    "loading-options": "natijalar yuklanmoqda...",
+    "prepayment": "avans",
+    "dagruz": "Dagruz",
+    "maybe": "Balki",
+    "top-five-searches": "5 ta eng ko'p qidirilgan yo'nalishlar",
+    "has-prepayment": "avans bor",
+    "is-likely-owner": "Extimol yuk egasi",
+    "is-likely-dispatcher": "Extimol Dispecher",
+    "is-likely-driver": "Extimol haydovchi",
+    "is-web-ad": "Saytdan qo'shilgan",
+    "load-ready-date": "Yuklanadi: {date}",
+    "today": "bugun",
+    "tomorrow": "ertaga",
+    "for-30": "1 oy uchun",
+    "for-90": "3 oy uchun",
+    "for-1": "1 kun uchun",
+    "for-3": "3 kun uchun",
+    "subscribe": "Obuna bo'lish",
+    "payment-price": "To'lanadigan narx: {price} so'm",
+    "accept-terms": "\"Davom etish\" tugmasini bosish orqali siz <a href=\"https://cdn.payme.uz/terms/main.html?target=_blank\" target=\"_blank\" class=\"text-primary\">oferta shartlariga</a> qo'shilasiz",
+    "card-data-info": "Sizning kartangiz ma'lumotlari ushbu xizmatga uzatilmaydi va Payme xizmatining xavfsiz hududida saqlanadi",
+    "daily-limit-text": "Kunlik limitingiz tugadi, limitni olib tashlashni xoxlasangiz obunalardan birini sotib oling",
+    "ask-to-support": "Savollaringiz bo'lsa <a href=\"https://t.me/marina_laty\" target=\"_blank\">Marina</a> bilan bog'laning",
+    "select-city": "Shaharni tanlang",
+    "select-country": "Davlatni tanlang",
+    "select-filters": "Filterlarni tanlang",
+    "show-phone-number": "telefon raqamini ko'rsatish",
+    "show-more-text": "Ko'proq",
+    "show-less-text": "Kamroq",
+    "bot": "Bot",
+    "site": "Sayt",
+    "message-link": "Xabarga havola",
+    "subscription-period": "Obuna davomiyligi",
+    "advantages": "Afzalliklar",
+    "reset-password": "Parolni tiklash",
+    "new-load-ads-notifier": "Yangi yuklar haqida xabar berishni yoqish",
+    "latest-ads": "So'nggi e'lonlar",
+    "payment-card": {
+      "title": "To'lov shakli",
+      "number": "Karta raqami",
+      "expire": "Muddati",
+      "remember": "Eslab qolish",
+      "continue": "Davom etish",
+      "month": "OY/YIL",
+      "time-left": "Qolgan vaqt: {time} sekund",
+      "resend-code": "Kodni qayta yuborish",
+      "confirm": "Tasdiqlash",
+      "enter-confirm-code": "Tasdiqlash kodini kiriting",
+      "send-this-phone": "Tasdiqlash kodi quyidagi raqamga yuborildi:\n <strong id=\"phoneNumber\">{phone}</strong>",
+      "confirm-code": "Tasdiqlash kodi"
+    },
+    "load-filters": {
+      "more-filters": "Barcha filtrlar",
+      "price-range": "Narx oralig'i",
+      "more-details": "Batafsil ma'lumot",
+      "weight-range": "Og'irlik oralig'i",
+      "from": "Dan",
+      "to": "Gacha"
+    },
+    "languages": {
+      "uz-cyrl": "Ўзбекча",
+      "ru": "Русский",
+      "uz": "O'zbekcha"
+    },
+    "table": {
+      "phone": "Telefon raqam",
+      "origin-city": "Qayerdan",
+      "destination-city": "Qayerga",
+      "price": "Narx",
+      "goods": "Yuk",
+      "weight": "Og'irligi (tonna)",
+      "payment-type": "To'lov turi",
+      "prepayment": "Avans",
+      "prepayment-amount": "Avans narxi",
+      "description": "Izoh",
+      "truck-types": "Transport turi",
+      "is-dispatcher": "Dispetcher",
+      "volume": "Hajm",
+      "action": "...",
+      "info": "Ma'lumotlar",
+      "location": "Marshrut",
+      "ad-type": "E'lon turi",
+      "ad-status": "Holati",
+      "stats": "Statistika"
+    },
+    "loads": {
+      "origin-city": "Boshlang'ich Shahar",
+      "origin-country": "Boshlang'ich mamlakat",
+      "destination-country": "Manzil mamlakati",
+      "destination-city": "Manzil shahar",
+      "goods": "Yuk (mahsulot nomi)",
+      "price": "Narxi",
+      "weight": "Vazni (tonna)",
+      "phone": "Telefon",
+      "truck-type": "Yuk moshinasi turi",
+      "cargo-type": "Yuk turi",
+      "payment-type": "To'lov turi",
+      "description": "Tavsif",
+      "has-prepayment": "Oldindan to'lov bor",
+      "prepayment-amount": "Oldindan to'lov miqdori",
+      "add-more": "+ Yana qo'shish",
+      "load-ready-date": "Yuklanish sanasi",
+      "is-archived": "Arxivda"
+    },
+    "truck": {
+      "load-capacity": "Yuk ko'tarish vazni (tonna)"
+    },
+    "truck-type": {
+      "isuzu": "Isuzu",
+      "big_isuzu": "Katta Isuzu",
+      "small_isuzu": "Kichkina Isuzu",
+      "labo": "Labo",
+      "man": "MAN",
+      "chakman": "Chakman",
+      "kamaz": "Kamaz",
+      "flatbed": "Ploshadka",
+      "barge": "Shalanda",
+      "lowboy": "Tral",
+      "tented": "Tent",
+      "containership": "Konteyneravoz",
+      "locomotive": "Parovoz",
+      "reefer": "Ref",
+      "reefer-18": "Ref -18",
+      "reefer-mode": "Ref rejimda",
+      "mega": "Mega",
+      "faw": "FAW",
+      "gazel": "Gazel",
+      "sprinter": "Sprinter",
+      "any": "Har qanday",
+      "avtovoz": "Avtovoz",
+      "dump": "Samosval",
+      "isotherm": "Izoterma",
+      "kia_bongo": "Kia Bongo",
+      "not_specified": "Har qanday"
+    },
+    "payment-type": {
+      "cash": "Naqd",
+      "transfer": "perechisleniya",
+      "by_card": "Karta orqali",
+      "cash_or_by_card": "Naqd yoki karta orqali",
+      "combo": "Combo",
+      "any": "Har qanday",
+      "not_specified": "Har qanday"
+    },
+    "success": {
+      "profile": "Kontakt ma'lumotlari muvaffaqiyatli o'zgartirildi!",
+      "password": "Parol muvaffaqiyatli almashtirildi!",
+      "notification-saved": "Xabar sozlamalari muvaffaqiyatli saqlandi",
+      "login": "Tizimga muvaffaqiyatli kirildi!"
+    },
+    "change-password": {
+      "title": "Parolni o'zgartirish",
+      "current": "Joriy parol",
+      "new": "Yangi parol",
+      "verify-new": "Yangi parolni tasdiqlang"
+    },
+    "errors": {
+      "something-wrong": "Nimadir noto'g'ri bajarildi",
+      "validate-errors": "Davom etishdan oldin tekshirish xatolarini tuzating.",
+      "enter-required": "kiritish talab qilinadi!",
+      "auth": "telefon raqam yoki parol noto'g'ri kiritilgan",
+      "wrong-phone-number": "telefon raqam noto'g'ri",
+      "phone-length": "raqam qisqa",
+      "phone-exist": "bu raqam tizimda bor",
+      "password-not-match": "parol mos kelmadi",
+      "password-too-short": "parol juda qisqa",
+      "invalid-data": "Ma'lumotlar noto'g'ri kiritilgan, qayta urinib ko'ring!",
+      "must-be-number": "Qiymat raqam bo'lishi kerak!",
+      "same-direction-load-exists": "Sizda bu yo'nalishdagi e'lon mavjud!",
+      "select-role": "Foydalanuvchi turi tanlanmagan, variantlardan birini tanlang",
+      "add-vehicle-limit-reached": "Siz faqat 4 ta transport e'lonini joylashtirishingiz mumkin!",
+      "add-load-limit-reached": "Siz faqat 8 ta yuk e'lonini joylashtirishingiz mumkin!",
+      "active-vehicles-limit-reached": "Sizda yetarlicha aktiv transport e'lonlari mavjud, afsuski bu e'lonni faollashtira olmaysiz!",
+      "active-loads-limit-reached": "Sizda yetarlicha aktiv yuk e'lonlari mavjud, afsuski bu e'lonni faollashtira olmaysiz!",
+      "card-data-incorrect": "Karta ma'lumotlari noto'g'ri! Qayta tekshiring",
+      "confirmation-code-incorrect": "Tasdiqlash kodi xato! Tekshirib ko'ring",
+      "confirmation-code-expired": "Tasdiqlash kod muddati o'tgan! Qayta kod yuborish orqali tasdiqlang",
+      "get-enough-amount": "Kartangizda mablag' yetarli emas!",
+      "destination-not-found": "Kiritilgan manzil topilmadi! Shahar nomini tekshiring",
+      "phone-not-exist": "Telefon raqami mavjud emas",
+      "password-update": "Parol muvaffaqiyatli yangilandi.",
+      "empty-confirm-password": "Parol kiritilmagan."
+    },
+    "success-register": "Siz muvaffaqiyatli roʻyxatdan oʻtdingiz, yaratilgan akkauntingiz orqali tizimga kiring.",
+    "user-saved": "Ma'lumotlaringiz muvaffaqiyatli yangilandi.",
+    "successfully-deleted": "E'lon muvaffaqiyatli o'chirildi",
+    "who-are-you": "Siz kimsiz?",
+    "more": "Batafsil",
+    "select-from-list": "Ro'yxatdan variantni tanlang",
+    "not-found": {
+      "vehicle": {
+        "title": "Hech qanday transport topilmadi",
+        "description": "Qidiruv mezonlariga mos keladigan e'lon topilmadi. Qidiruv parametrlarini o'zgartirib yana harakat qilib ko'ring."
+      },
+      "load": {
+        "title": "Hech qanday yuk topilmadi",
+        "description": "Qidiruv mezonlariga mos keladigan e'lon topilmadi. Qidiruv parametrlarini o'zgartirib yana harakat qilib ko'ring."
+      },
+      "before-first-search": {
+        "title": "Shaharlarni Tanlab Qidiruvni Boshlang",
+        "description": "Saytimizdan to‘liq foydalanish uchun avval qidiruv parametrlarida shaharlarni tanlang. Tanlangan shaharga mos ma'lumotlar qidiruv natijalarida aks etadi. Qidiruv parametrlarini aniqlab, kerakli ma'lumotlarga tezkor kirish imkoniyatidan foydalaning."
+      },
+      "my-ads": {
+        "title": "Sizda hali e'lonlar yo'q.",
+        "description": "E'lon qo'shish uchun «+» tugmasini bosing."
+      },
+      "bookmarks-load": {
+        "title": "Sizda hali belgilangan yuklar yo'q.",
+        "description": "E'lonlarni Izlash qidiruv bo'limidan topishingiz mumkin."
+      },
+      "bookmarks-vehicle": {
+        "title": "Sizda hali belgilangan transportlar yo'q.",
+        "description": "E'lonlarni Izlash qidiruv bo'limidan topishingiz mumkin."
+      },
+      "subscription-active": {
+        "title": "Sizda hali aktiv obuna yo'q.",
+        "description": "Pastdagi obunalardan birini tanlab sotib oling va cheklovlarsiz saytimizdan foydalaning"
+      },
+      "subscription-expired": {
+        "title": "Sizda hali muddati o'tgan obuna yo'q.",
+        "description": "Pastdagi obunalardan birini tanlab sotib oling va cheklovlarsiz saytimizdan foydalaning"
+      }
+    },
+    "alert": {
+      "confirm-or-deny": "Haqiqatan ham, bu amalni bajarmoqchimisiz?"
+    },
+    "success-payment-subscription": "✅ Toʻlov muvaffaqiyatli amalga oshirildi va sizning obunangiz faollashtirildi!\n✅ Sizning - '*{plan}*' obunangiz: {endDate} sanasigacha amal qiladi.",
+    "user-roles": {
+      "driver": "Yuk tashovchi",
+      "dispatcher": "Dispetcher / Logist",
+      "load_owner": "Yuk egasi",
+      "admin": "Admin"
+    },
+    "user": {
+      "details": "Foydalanuvchi ma'lumotlari",
+      "name": "Ism",
+      "surname": "Familiya"
+    },
+    "post": {
+      "goods": "Mahsulot: {{goods}}",
+      "weight": "{{weight}}t",
+      "weight-kg": "{{weight}}kg",
+      "published": "Joylashtirilgan",
+      "payment-type": "{{type}}",
+      "truck-type": "{{type}}",
+      "truck-types": "{{type}}, {{type2}}"
+    },
+    "profile": {
+      "my": "Profilim",
+      "help": "Yordam kerakmi?",
+      "logout": "Chiqish",
+      "details": "Profil ma'lumotlari",
+      "fullName": "F.I.O",
+      "firstName": "Ism",
+      "lastName": "Familiya",
+      "username": "Telegram username",
+      "role": "Lavozim",
+      "phone": "Telefon",
+      "overview": "Umumiy",
+      "edit": "taxrirlash",
+      "change-password": "Parol o'zgartirish",
+      "my-ads": "mening e'lonlarim",
+      "search": "izlash",
+      "cargo": "yuk",
+      "vehicle": "yuk mashinasi",
+      "bookmarks": "Saralangan e'lonlarim",
+      "subscriptions": "Obunalar",
+      "settings": "Sozlamalar",
+      "notifications": "Xabarnomalar"
+    },
+    "bookmarks": {
+      "load": "Yuk",
+      "vehicle": "Transport"
+    },
+    "unarchive-ad": "Haqiqatan ham, e'lonni faollashtirmoqchimisiz? E'lon yana 3 kungacha aktiv bo'lib turadi.",
+    "help-center": {
+      "title": "Yordam Markazi",
+      "description": "Bizning platforma yuklarni tez va samarali qidirishga imkon beradi. Buning uchun quyidagi amalarni bajaring",
+      "guide": {
+        "title": "Yuk qidirish bo'yicha qo'llanma",
+        "filters": {
+          "title": "Filtrlar",
+          "description": "Sahifaning yuqorisidagi filtrlar orqali quyidagilarni tanlang",
+          "items": {
+            "1":"Qayerdan (masalan, O'zbekiston)",
+            "2":"Qayerga (masalan, Rossiya)",
+            "3":"Yuk turi yoki transport vositasi turi"
+          }
+        },
+        "details": {
+          "title": "Ma'lumotlar",
+          "description": "Yuk qidirishda quyidagi ma'lumotlarni ko'ring:",
+          "items": {
+           "1": "Yo'nalish (qayerdan-qayerga)",
+            "2":"Yukning og'irligi va turi",
+            "3": "To'lov turi va narxi (agar ko'rsatilgan bo'lsa)"
+          }
+        }
+      },
+      "profile": {
+        "title": "Profilni boshqarish",
+        "steps": {
+          "1": "Yuqori o'ng burchakdagi profilingiz nomini bosing",
+          "2": "Mening Profilim bo'limini tanlang",
+          "3": "Shaxsiy ma'lumotlarni, masalan, aloqa ma'lumotlari, sozlamalar va transport vositasi ma'lumotlarini tahrirlang",
+          "4": "O'zgarishlarni saqlang"
+        }
+      },
+      "addCargo": {
+        "title": "Yuk yoki transport vositasini qo'shish",
+        "steps": {
+          "1": "Yuklarim yoki Transportlarim bo'limiga o'ting",
+          "2": "Qo'shish tugmasini bosing",
+          "3": "Yuk yoki transport vositasi haqida kerakli ma'lumotlarni to'ldiring: yo'nalish, og'irlik va boshqa muhim ma'lumotlar",
+          "4": "Shaklni topshiring va platformaga yukingizni qo'shing"
+        }
+      },
+      "contact": {
+        "title": "Aloqa uchun",
+        "description": "Agar savollaringiz bo'lsa yoki yordam kerak bo'lsa, qo'llab-quvvatlash xizmati bilan bog'laning",
+        "support": {
+          "name": "Marina Latipova",
+          "link": "https://t.me/marina_laty"
+        }
+      }
+    },
+    "subscription": {
+      "title": "Obunalar ro'yhati",
+      "description": "Obunalar ro‘yxati sahifasi orqali botning barcha funksiyalaridan foydalanish uchun qulay rejalarni tanlang. Kunlik, oylik va uch oylik obunalar mavjud. To‘lov \"Payme\" orqali amalga oshiriladi"
+    },
+    "pages": {
+      "main": "Asosiy",
+      "profile": "Profilim",
+      "cargo": "Yuklar",
+      "load": "Mening Yuklarim",
+      "vehicle": "Mening Transportlarim",
+      "search": "Izlash",
+      "bookmarks": "Saralangan e'lonlarim",
+      "edit": "E'lon qo'shish | Taxrirlash",
+      "subscriptions": "Obunalar"
+    },
+    "date-range": {
+      "title": "Sana",
+      "today": "Bugungi",
+      "yesterday": "Kechagi",
+      "last-three-days": "3 kunlik"
+    }
+  }
+  
