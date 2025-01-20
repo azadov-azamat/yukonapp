@@ -32,10 +32,6 @@ export default function TabLayout() {
     fetchUserData();
   }, [auth]);
 
-  React.useEffect(()=> {
-    dispatch(getTopSearches())
-  },  []);
-
   return (
     <Tabs
       screenOptions={{

@@ -2,14 +2,20 @@ import React from "react";
 import { CustomInput } from "@/components/customs";
 import { ScrollView, View, Text, FlatList } from "react-native";
 import { PopularDirectionCard } from "@/components/cards";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
+import { getTopSearches } from "@/redux/reducers/load";
 
 export default function MainPage() {
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const {topSearches} = useAppSelector(state => state.load);
   const [searchText, setSearchText] = React.useState('');
   
+  React.useEffect(()=> {
+    dispatch(getTopSearches())
+  },  []);
+
   return (
     <ScrollView className="flex-1 p-4 bg-gray-100">
        <View className="flex-row items-center justify-between w-full mb-6">

@@ -12,6 +12,7 @@ import { getExtractCity } from '@/redux/reducers/city'
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next'
 import { debounce } from 'lodash';
+import CardLoaderLoadComponent from '@/components/content-loader/load'
 
 const SearchLoadScreen = () => {
     const route = useRoute();
@@ -60,6 +61,15 @@ const SearchLoadScreen = () => {
       }
     }, [origin, destination]);
 
+    React.useEffect(()=> {
+      return () => {
+        navigation.setParams({
+          arrival: undefined, // Parametrni tozalash uchun undefined qilib o'rnating
+          departure: undefined
+        });
+      }
+    }, []);
+    
     const handleSwapCities = () => {
       setOrigin((prevOrigin) => {
         const prevDestination = destination;
@@ -223,25 +233,33 @@ const SearchLoadScreen = () => {
                 selectedItems={selectedItems} 
                 onChange={handleBadgeChange} 
             />
+            {cityLoad || loading ? (
               <FlatList
-                data={loads}
-                keyExtractor={(item) => item?.id?.toString()}
-                showsVerticalScrollIndicator={false}
-                // contentContainerStyle={styles.contentContainer}
-                // ItemSeparatorComponent={separatorComp}
-                // ListHeaderComponent={headerComp}
-                // ListFooterComponent={footerComp}
-                // ListFooterComponentStyle={styles.footerComp}
-                // onEndReached={loadMoreData} // Scroll pastga tushganda ishlatiladi
-                // onEndReachedThreshold={0.5}
-                // ListFooterComponent={
-                //   isFetchingMore ? <ActivityIndicator size="small" color="#0000ff" /> : null
-                // }
-                ListEmptyComponent={<Text>No Items</Text>}
-                renderItem={({item}) => (
-                  <LoadListCard {...item}/>
-                )}
+              data={[1, 2, 3, 4]} // Foydalanilmaydigan placeholder massiv
+              keyExtractor={(item) => item.toString()}
+              renderItem={() => <CardLoaderLoadComponent />}
             />
+            ) : (
+              <FlatList
+                  data={loads}
+                  keyExtractor={(item) => item?.id?.toString()}
+                  showsVerticalScrollIndicator={false}
+                  // contentContainerStyle={styles.contentContainer}
+                  // ItemSeparatorComponent={separatorComp}
+                  // ListHeaderComponent={headerComp}
+                  // ListFooterComponent={footerComp}
+                  // ListFooterComponentStyle={styles.footerComp}
+                  // onEndReached={loadMoreData} // Scroll pastga tushganda ishlatiladi
+                  // onEndReachedThreshold={0.5}
+                  // ListFooterComponent={
+                  //   isFetchingMore ? <ActivityIndicator size="small" color="#0000ff" /> : null
+                  // }
+                  ListEmptyComponent={<Text>No Items</Text>}
+                  renderItem={({item}) => (
+                    <LoadListCard {...item}/>
+                  )}
+              />
+            )}
         </ScrollView>
     )
 }

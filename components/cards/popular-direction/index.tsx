@@ -3,26 +3,30 @@ import { getCityName } from '@/utils/general';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { View, Text } from 'react-native';
+import { Link } from 'expo-router';
 
 const PopularDirection: React.FC<DirectionItemProps> = ({ origin, destination, today_loads, total_loads }) => {
   const { t } = useTranslation();
+  
   return (
-    <View className="p-4 mb-4 bg-white rounded-lg shadow-md">
+    <Link href={`/search?arrival=${getCityName(origin)}&departure=${getCityName(destination)}`}>
+      <View className="w-full p-4 mb-4 bg-white rounded-lg shadow-md">
         <View className="flex-row items-center justify-between mb-2">
-            <Text className="text-lg font-bold">{getCityName(origin)}</Text>
-            <Text className="text-lg font-bold text-gray-500">→</Text>
-            <Text className="text-lg font-bold">{getCityName(destination)}</Text>
+              <Text className="text-lg font-bold">{getCityName(origin)}</Text>
+              <Text className="text-lg font-bold text-gray-500">→</Text>
+              <Text className="text-lg font-bold">{getCityName(destination)}</Text>
         </View>
 
-        {/* Details */}
-        <Text className="text-sm text-center text-primary">
-          {t ("top-searches-result", {
-              count: total_loads, 
-              todayCounter: today_loads
-            }
-          )}
-        </Text>
-  </View>
+          {/* Details */}
+          <Text className="text-sm text-center text-primary">
+            {t ("top-searches-result", {
+                count: total_loads, 
+                todayCounter: today_loads
+              }
+            )}
+          </Text>
+      </View>
+  </Link>
   );
 };
 
