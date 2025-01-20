@@ -29,7 +29,11 @@ export const searchLoads = createAsyncThunk('load/searchLoads', async (query: an
         const response = await http.get('/loads/search', { params: query });
         let deserializedData = await deserialize(response.data.data)
         deserializedData.map((item: ILoadModel) => deserializeLoad(item))
-        return deserializedData;
+        return {
+                loads: deserializedData, 
+                pagination: response.data?.data.meta.pagination,
+                stats: response.data.stats
+            };
     } catch (error) {
         return rejectWithValue(error);
     }
@@ -70,6 +74,8 @@ const initialState: LoadInitialProps = {
     load: null,
     topSearches: [],
     latestAds: [],
+    pagination: null,
+    stats: null,
     loading: false,
 };
 
@@ -104,7 +110,9 @@ export const loadSlice = createSlice({
 
         // Search Loads
         builder.addCase(searchLoads.fulfilled, (state, action) => {
-            state.loads = action.payload;
+            state.loads = action.payload.loads;
+            state.pagination = action.payload.pagination;
+            state.stats = action.payload.stats;
             state.loading = false;
         });
         builder.addCase(searchLoads.pending, (state) => {

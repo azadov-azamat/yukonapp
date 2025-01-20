@@ -1,4 +1,4 @@
-import { Text, ScrollView, View, FlatList } from 'react-native'
+import { Text, ScrollView, View, FlatList, ActivityIndicator } from 'react-native'
 import React from 'react'
 import BadgeSelector from '@/components/customs/badge-selector'
 import { OPTIONS } from '@/utils/constants'
@@ -10,16 +10,15 @@ import { searchLoads } from '@/redux/reducers/load'
 import { useRoute } from '@react-navigation/native';
 import { getExtractCity } from '@/redux/reducers/city'
 import { useNavigation } from '@react-navigation/native';
-import { dateFromNow, formatPrice, formatRelativeTime } from '@/utils/general'
 import { useTranslation } from 'react-i18next'
-import { date } from 'yup'
+import { debounce } from 'lodash';
 
 const SearchLoadScreen = () => {
     const route = useRoute();
     const dispatch = useAppDispatch();
     const {t} = useTranslation();
     const navigation = useNavigation();
-    const {loads, loading} = useAppSelector(state => state.load);
+    const {loads, loading, pagination} = useAppSelector(state => state.load);
     const {loading: cityLoad} = useAppSelector(state => state.city);
     
     const [searchText, setSearchText] = React.useState('');
@@ -31,37 +30,44 @@ const SearchLoadScreen = () => {
     const arrival = route.params?.arrival;
     const departure = route.params?.departure; 
     
-    const handleBadgeChange = (value) => {
-        setSelectedItems((prevSelected) =>
-          prevSelected.includes(value)
-            ? prevSelected.filter((itemValue) => itemValue !== value)
-            : [...prevSelected, value] 
-        );
-        if (origin) {
-          fetchLoads();
-        }
-    };
-    
     const [origin, setOrigin] = React.useState(null);
     const [destination, setDestination] = React.useState(null);
   
+    const debouncedFetchExtract = React.useCallback(
+      debounce(() => {
+        fetchExtractCity();
+      }, 300), // 300ms ichida faqat bitta chaqiruv amalga oshiriladi
+    )
+  
+    const debouncedFetchLoads = React.useCallback(
+      debounce(() => {
+        fetchLoads();
+      }, 300), // 300ms ichida faqat bitta chaqiruv amalga oshiriladi
+    )
+
+        // 3. Arrival va departure page yuklanganda o'rnatiladi
     React.useEffect(() => {
-         if (arrival) {
-          setSearchText(`${arrival} ${departure}`);
-          fetchLoads();
-        }
-      }, [arrival, departure]);
-    
+      if (arrival || departure) {
+        setSearchText(`${arrival || ''} ${departure || ''}`);
+        debouncedFetchExtract();
+      }
+    }, [arrival, departure]);
+
+    // 4. Origin va destination o'zgarganda loadlarni fetch qilish
+    React.useEffect(() => {
+      if (origin) {
+        debouncedFetchLoads();
+      }
+    }, [origin, destination]);
+
     const handleSwapCities = () => {
       setOrigin((prevOrigin) => {
         const prevDestination = destination;
         setDestination(prevOrigin);
         return prevDestination;
       });
-      
-      updateQueryParams(origin.name_uz, destination.name_uz);
     };
-  
+    
     const handleClear = () => {
       setOrigin(null);
       setDestination(null);
@@ -73,6 +79,17 @@ const SearchLoadScreen = () => {
       dispatch({ type: 'load/searchLoads/fulfilled', payload: [] });
     };
     
+    const handleBadgeChange = (value) => {
+      setSelectedItems((prevSelected) =>
+        prevSelected.includes(value)
+          ? prevSelected.filter((itemValue) => itemValue !== value)
+          : [...prevSelected, value] 
+      );
+      if (origin) {
+        debouncedFetchExtract();
+      }
+    };
+  
     const handleBookmark = () => {
         console.log('Bookmark clicked!');
     };
@@ -116,7 +133,7 @@ const SearchLoadScreen = () => {
     
         if (selectedItems.length) {
           query.cargoTypes = selectedItems
-            .map((item) => item?.value)
+            .map((item) => item)
             .join(', ');
         }
     
@@ -137,30 +154,37 @@ const SearchLoadScreen = () => {
         // if (this.dateRange.length) {
         //   query.dateRange = this.dateRange;
         // }
-    
+      
         return query;
       }
       
-      const updateQueryParams = (arrival, departure) => {
+    const updateQueryParams = React.useCallback((arrival, departure) => {
         navigation.setParams({
-            arrival, 
-            departure
-        });
-      };
-      
+          arrival,
+          departure,
+      });
+    }, []); 
+    
+    const fetchExtractCity = async() => {
+      const cityResponse = await dispatch(getExtractCity({ search: searchText || `${arrival} ${departure}` })).unwrap();
+      const { origin: fetchedOrigin, destination: fetchedDestination } = cityResponse;
+      if (!fetchedOrigin) {
+        dispatch({ type: 'load/searchLoads/fulfilled', payload: [] });
+        return;
+      }
+      setOrigin(fetchedOrigin);
+      setDestination(fetchedDestination || null);
+      if (fetchedOrigin.name_uz !== arrival || fetchedDestination?.name_uz !== departure) {
+          updateQueryParams(fetchedOrigin.name_uz, fetchedDestination?.name_uz || '');
+      }
+    }
+    
       const fetchLoads = async () => {
         try {
-          const cityResponse = await dispatch(getExtractCity({ search: searchText || `${arrival} ${departure}` })).unwrap();
-          const { origin: fetchedOrigin, destination: fetchedDestination } = cityResponse;
-    
-          if (!fetchedOrigin) {
+          if (!origin) {
             dispatch({ type: 'load/searchLoads/fulfilled', payload: [] });
             return;
           }
-    
-          setOrigin(fetchedOrigin);
-          setDestination(fetchedDestination || null);
-          updateQueryParams(fetchedOrigin.name_uz, fetchedDestination?.name_uz || '');
     
           const params = requestParams();
           await dispatch(searchLoads(params));
@@ -188,7 +212,7 @@ const SearchLoadScreen = () => {
                 <CustomButton
                      iconName='search' 
                      isIcon 
-                     onPress={fetchLoads}
+                     onPress={debouncedFetchExtract}
                      loading={loading || cityLoad}
                      buttonStyle="w-auto p-3 bg-primary ml-2"
                 />
@@ -201,13 +225,18 @@ const SearchLoadScreen = () => {
             />
               <FlatList
                 data={loads}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item?.id?.toString()}
                 showsVerticalScrollIndicator={false}
                 // contentContainerStyle={styles.contentContainer}
                 // ItemSeparatorComponent={separatorComp}
                 // ListHeaderComponent={headerComp}
                 // ListFooterComponent={footerComp}
                 // ListFooterComponentStyle={styles.footerComp}
+                // onEndReached={loadMoreData} // Scroll pastga tushganda ishlatiladi
+                // onEndReachedThreshold={0.5}
+                // ListFooterComponent={
+                //   isFetchingMore ? <ActivityIndicator size="small" color="#0000ff" /> : null
+                // }
                 ListEmptyComponent={<Text>No Items</Text>}
                 renderItem={({item}) => (
                   <LoadListCard {...item}/>

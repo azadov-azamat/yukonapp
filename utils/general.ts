@@ -20,7 +20,6 @@ dayjs.extend(localizedFormat);
 export const dateFromNow = (value: string | Date): string => {
   let dayjsLocale = 'uz'; // Default locale
   const currentLanguage = i18n.language;
-  console.log(currentLanguage);
   
   switch (currentLanguage) {
     case 'ru':

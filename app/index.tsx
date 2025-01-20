@@ -22,10 +22,12 @@ export default function MainPage() {
     return null;
   }
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     const fetchUserData = async () => {
       const userId = await getLocalstorageData();
-      await dispatch(getUserMe(auth?.userId || userId));
+      if (userId || auth?.userId) {
+        await dispatch(getUserMe(auth?.userId || userId)); 
+      }
       setIsNavigationReady(true);
     };
 

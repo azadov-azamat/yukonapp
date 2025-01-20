@@ -23,7 +23,7 @@ export default function TabLayout() {
     return null;
   }
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     const fetchUserData = async () => {
       const userId = await getLocalstorageData();
       await dispatch(getUserMe(auth?.userId || userId)).unwrap();
