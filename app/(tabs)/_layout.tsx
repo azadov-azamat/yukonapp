@@ -38,6 +38,10 @@ export default function TabLayout() {
         headerShown: false,
         tabBarActiveTintColor: Colors['light'].tint,
         tabBarInactiveTintColor: Colors['light'].tint,
+          headerStyle: {
+          elevation: 0, // Android uchun shadow yo'q qilish
+          shadowOpacity: 0, // iOS uchun shadow yo'q qilish
+        },
       }}>
         <Tabs.Screen
           name="index"

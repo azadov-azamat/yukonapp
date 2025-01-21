@@ -1,4 +1,4 @@
-import { Text, ScrollView, View, FlatList, ActivityIndicator } from 'react-native'
+import { Text, ScrollView, View, FlatList, Keyboard } from 'react-native'
 import React from 'react'
 import { OPTIONS } from '@/utils/constants'
 import { CustomBadgeSelector, CustomButton, CustomDateSelector, CustomInput } from '@/components/customs'
@@ -236,7 +236,7 @@ const SearchLoadScreen = () => {
     };
     
     return (
-        <ScrollView className="flex-1 bg-gray-100">
+        <View className="flex-1 bg-gray-100">
             {origin ? (
                <LoadRouteSelector
                   origin={origin}
@@ -250,6 +250,11 @@ const SearchLoadScreen = () => {
                     onChangeText={(text) => setSearchText(text)} 
                     placeholder={t ('search-by-destination')}
                     divClass='flex-1'
+                    onSubmitEditing={() => {
+                      Keyboard.dismiss(); // Klaviaturani yopish
+                      debouncedFetchExtract(); // Funksiyani ishga tushirish
+                    }}
+                    returnKeyType="search"
                 />
                 <CustomButton
                      iconName='search' 
@@ -315,7 +320,7 @@ const SearchLoadScreen = () => {
                   renderItem={({ item }) => <RenderLoadItem item={item} />}
               />
             )}
-        </ScrollView>
+        </View>
     )
 }
 

@@ -18,7 +18,7 @@ export default function MainPage() {
   },  []);
 
   return (
-    <ScrollView className="flex-1 p-4 bg-gray-100">
+    <View className="flex-1 p-4 bg-gray-100">
        <View className="flex-row items-center justify-between w-full mb-6">
           <CustomInput
             value={searchText}
@@ -50,6 +50,6 @@ export default function MainPage() {
           }
 
       </View>
-    </ScrollView>
+    </View>
   );
 }

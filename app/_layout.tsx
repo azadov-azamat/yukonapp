@@ -19,7 +19,7 @@ function App() {
     <SafeAreaProvider>
         <Stack screenOptions={{
           headerStyle: {
-            backgroundColor: 'transparent'
+            backgroundColor: 'transparent',
           },
           headerShadowVisible: false,
           headerTintColor: '#000',

@@ -22,7 +22,7 @@ const Input: React.FC<InputProps> = ({
       {/* Label */}
       {label && <Text className="mb-1 text-lg font-semibold">{label}</Text>}
       
-      <View className="flex-row items-center px-3 py-1 text-lg bg-white border rounded-md border-border-color">
+      <View className="flex-row items-center px-3 text-lg bg-white border rounded-md border-border-color">
         {/* Telefon uchun prefix */}
         {type === 'phone' && (
           <Text className="mr-2 text-lg">+998</Text>
@@ -33,7 +33,7 @@ const Input: React.FC<InputProps> = ({
           style={{
             outline: 'none'
           }}
-          className={`text-lg flex-1 ${
+          className={`text-lg h-12 flex-1 ${
             error ? 'border-primary-red' : 'border-border-color'
           }`}
           value={value}
