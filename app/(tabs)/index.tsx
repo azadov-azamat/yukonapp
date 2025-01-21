@@ -9,15 +9,15 @@ import { ContentLoaderTopSearches } from "@/components/content-loader";
 import { debounce } from 'lodash';
 import { getExtractCity } from "@/redux/reducers/city";
 import { startLoading, stopLoading } from "@/redux/reducers/variable";
-import { useNavigation } from "expo-router";
+import { useRouter } from "expo-router";
 import { getCityName } from "@/utils/general";
 
 export default function MainPage() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const {navigate} = useNavigation()
+  const router = useRouter();
   const {topSearches, loading} = useAppSelector(state => state.load);
-  const [searchText, setSearchText] = React.useState('');
+  const [searchText, setSearchText] = React.useState<string>('');
   
   React.useEffect(()=> {
     dispatch(getTopSearches())
@@ -29,7 +29,7 @@ export default function MainPage() {
     }, 300), [searchText]
   )
   
-  const fetchExtractCity = async (search) => {
+  const fetchExtractCity = async (search: string) => {
     if (!search) return;
     dispatch(startLoading());
     const cityResponse = await dispatch(getExtractCity({ search })).unwrap();
@@ -40,14 +40,8 @@ export default function MainPage() {
     }
     console.log(getCityName(fetchedOrigin), getCityName(fetchedDestination));
     
-    navigate('search', {
-      arrival: getCityName(fetchedOrigin),
-      departure: getCityName(fetchedDestination)
-    })
+    router.push(`/(tabs)/search?arrival=${getCityName(fetchedOrigin)}&departure=${getCityName(fetchedDestination)}`)
     dispatch(stopLoading());
-    // if (fetchedOrigin.name_uz !== arrival || fetchedDestination?.name_uz !== departure) {
-    //   updateQueryParams(getCityName(fetchedOrigin), getCityName(fetchedDestination) || '');
-    // }
   }
   
   return (
