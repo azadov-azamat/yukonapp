@@ -3,7 +3,7 @@ import React from 'react'
 import { OPTIONS } from '@/utils/constants'
 import { CustomBadgeSelector, CustomButton, CustomDateSelector, CustomInput } from '@/components/customs'
 import LoadRouteSelector from '@/components/load-route-selector'
-import { EmptyStateCard, LoadListCard } from '@/components/cards'
+import { EmptyStateCard, LoadGridCard, LoadListCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { searchLoads } from '@/redux/reducers/load'
 import { useRoute } from '@react-navigation/native';
@@ -19,7 +19,7 @@ const SearchLoadScreen = () => {
     const dispatch = useAppDispatch();
     const {t} = useTranslation();
     const navigation = useNavigation();
-    const {loads, pagination} = useAppSelector(state => state.load);
+    const {loads, pagination, stats} = useAppSelector(state => state.load);
     const { loading } = useAppSelector(state => state.variable);
     
     const [searchText, setSearchText] = React.useState('');
@@ -42,9 +42,14 @@ const SearchLoadScreen = () => {
     
     const [origin, setOrigin] = React.useState(null);
     const [destination, setDestination] = React.useState(null);
-  
-    const RenderLoadItem = React.memo(({ item }) => <LoadListCard {...item} />);
+    const [isGridView, setIsGridView] = React.useState(false);
+    
+    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard {...item} /> : <LoadGridCard {...item} />);
 
+    const toggleView = () => {
+      setIsGridView((prev) => !prev);
+    };
+    
     const debouncedFetchExtract = React.useCallback(
       debounce(() => {
         fetchExtractCity();
@@ -250,6 +255,25 @@ const SearchLoadScreen = () => {
                 />
             </View>)}
             <View className='my-1'/>
+            {pagination && <View className="flex-row items-center justify-between p-4 mt-2 bg-white rounded-md shadow-sm">
+              <View>
+                <Text className="text-sm font-bold text-gray-800">
+                  {t ('query-result-message-without-cargo', {
+                    count: pagination.totalCount, 
+                    todayCounter: stats?.loads_today
+                    }
+                  )}
+                </Text>
+              </View>
+              <CustomButton
+                iconName={isGridView ? 'list' : 'grid'} // Icon for toggle
+                isIcon
+                iconSize={18}
+                onPress={toggleView}
+                buttonStyle="bg-primary px-2 py-1"
+              />
+            </View>}
+            
             {loading ? (
               <FlatList
               data={[1, 2, 3, 4]} // Foydalanilmaydigan placeholder massiv

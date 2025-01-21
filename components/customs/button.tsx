@@ -11,7 +11,8 @@ const Button: React.FC<ButtonProps> = ({
   buttonStyle = "",
   textStyle = "",
   isIcon = false,
-  iconName
+  iconName,
+  iconSize = 22
 }) => {
 
   return (
@@ -25,10 +26,10 @@ const Button: React.FC<ButtonProps> = ({
     >
       {/* Agar yuklanish bo'lsa, yuklanish indikatorini ko'rsatamiz */}
       {loading ? (
-        <ActivityIndicator size={24} color="white" />
+        <ActivityIndicator size={iconSize} color="white" />
       ) : (
         isIcon 
-        ? <TabBarIcon name={iconName} size={22} color={'white'}/> 
+        ? <TabBarIcon name={iconName} size={iconSize} color={'white'} className="m-0"/> 
         : 
           <Text className={`${buttonStyle && 'text-white'} text-lg ${textStyle}`}>{title}</Text>
       )}

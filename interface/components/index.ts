@@ -22,6 +22,7 @@ export interface ButtonProps {
     textStyle?: string | StyleProp<TextStyle>; // Matn uslubi
     isIcon: boolean;
     iconName: keyof typeof Ionicons.glyphMap;
+    iconSize?: number;
 }
 
 export interface ViewSelectorProps {
