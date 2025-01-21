@@ -44,29 +44,29 @@ const SearchLoadScreen = () => {
     const [origin, setOrigin] = React.useState(null);
     const [destination, setDestination] = React.useState(null);
     const [isGridView, setIsGridView] = React.useState(false);
-    
+
     const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard {...item} /> : <LoadGridCard {...item} />);
 
     const toggleView = () => {
       setIsGridView((prev) => !prev);
     };
-    
+
     const debouncedFetchExtract = React.useCallback(
       debounce(() => {
         fetchExtractCity();
       }, 300), // 300ms ichida faqat bitta chaqiruv amalga oshiriladi
     )
-    
+
     const debouncedFetchLoads = React.useCallback(
       debounce(() => {
         fetchLoads();
-      }, 300), 
+      }, 300),
     )
 
         // 3. Arrival va departure page yuklanganda o'rnatiladi
     React.useEffect(() => {
       console.log("departure", departure);
-      
+
       if (arrival) {
         setSearchText(`${arrival || ''} ${departure || ''}`);
         debouncedFetchExtract();
@@ -99,7 +99,7 @@ const SearchLoadScreen = () => {
         return prevDestination;
       });
     };
-    
+
     const handleClear = () => {
       setOrigin(null);
       setDestination(null);
@@ -115,13 +115,13 @@ const SearchLoadScreen = () => {
       setSelectedItems((prevSelected) =>
         prevSelected.includes(value)
           ? prevSelected.filter((itemValue) => itemValue !== value)
-          : [...prevSelected, value] 
+          : [...prevSelected, value]
       );
       if (origin) {
         debouncedFetchExtract();
       }
     };
-  
+
     const handleBookmark = () => {
         console.log('Bookmark clicked!');
     };
@@ -133,7 +133,7 @@ const SearchLoadScreen = () => {
           isArchived: false,
           isDeleted: false,
         };
-  
+
         if (booleanFilters['isDagruz']) {
           query.isDagruz = booleanFilters['isDagruz'];
         }
@@ -173,7 +173,7 @@ const SearchLoadScreen = () => {
         if (dateRange.length) {
           query.dateRange = dateRange;
         }
-      
+
         return query;
       }
       
@@ -182,8 +182,8 @@ const SearchLoadScreen = () => {
     //       arrival,
     //       departure,
     //   });
-    // }, []); 
-    
+    // }, []);
+
     const fetchExtractCity = async() => {
       dispatch(startLoading());
       let search = arrival ? `${arrival} ${departure}` : searchText;
@@ -199,7 +199,7 @@ const SearchLoadScreen = () => {
       setOrigin(fetchedOrigin);
       setDestination(fetchedDestination || null);
     }
-    
+
       const fetchLoads = async () => {
         try {
           if (!origin) {
@@ -215,11 +215,11 @@ const SearchLoadScreen = () => {
           dispatch(stopLoading());
         }
     };
-  
+
     const handleDateSelect = (range) => {
       console.log("Tanlangan sana diapazoni:", range);
     };
-    
+
     const onChange = (value) => {
       setBooleanFilters((prevFilters) => ({
         ...prevFilters,
@@ -228,7 +228,7 @@ const SearchLoadScreen = () => {
       setSelectedFilters((prevSelected) =>
         prevSelected.includes(value)
           ? prevSelected.filter((itemValue) => itemValue !== value)
-          : [...prevSelected, value] 
+          : [...prevSelected, value]
       );
       if (origin) {
         debouncedFetchExtract();
@@ -264,7 +264,7 @@ const SearchLoadScreen = () => {
               <View>
                 <Text className="text-sm font-bold text-gray-800">
                   {t ('query-result-message-without-cargo', {
-                    count: pagination.totalCount, 
+                    count: pagination.totalCount,
                     todayCounter: stats?.loads_today
                     }
                   )}
@@ -291,17 +291,17 @@ const SearchLoadScreen = () => {
                   keyExtractor={(item) => item?.id?.toString()}
                   showsVerticalScrollIndicator={false}
                   // ItemSeparatorComponent={separatorComp}
-                  ListHeaderComponent={ 
+                  ListHeaderComponent={
                     <View>
-                       <CustomBadgeSelector 
-                      items={booleanFiltersData} 
-                      selectedItems={selectedFitlers} 
-                      onChange={onChange} 
+                       <CustomBadgeSelector
+                      items={booleanFiltersData}
+                      selectedItems={selectedFitlers}
+                      onChange={onChange}
                     />
-                      <CustomBadgeSelector 
-                      items={truckTypes} 
-                      selectedItems={selectedItems} 
-                      onChange={handleBadgeChange} 
+                      <CustomBadgeSelector
+                      items={truckTypes}
+                      selectedItems={selectedItems}
+                      onChange={handleBadgeChange}
                     />
                     </View>
                   }
