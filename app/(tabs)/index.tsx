@@ -17,6 +17,8 @@ export default function MainPage() {
   const { t } = useTranslation();
   const router = useRouter();
   const {topSearches, loading} = useAppSelector(state => state.load);
+  const {loading: globalLoad} = useAppSelector(state => state.variable);
+  
   const [searchText, setSearchText] = React.useState<string>('');
   
   React.useEffect(()=> {
@@ -40,8 +42,8 @@ export default function MainPage() {
     }
     console.log(getCityName(fetchedOrigin), getCityName(fetchedDestination));
     
-    router.push(`/(tabs)/search?arrival=${getCityName(fetchedOrigin)}&departure=${getCityName(fetchedDestination)}`)
     dispatch(stopLoading());
+    router.push(`/(tabs)/search?arrival=${getCityName(fetchedOrigin)}&departure=${getCityName(fetchedDestination)}`)
   }
   
   return (
@@ -62,7 +64,8 @@ export default function MainPage() {
                      iconName='search' 
                      isIcon 
                      onPress={debouncedFetchExtract}
-                     loading={loading}
+                     loading={globalLoad}
+                     disabled={globalLoad}
                      buttonStyle="w-auto p-3 bg-primary ml-2"
                 />
             </View>
