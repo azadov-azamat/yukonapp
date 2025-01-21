@@ -5,11 +5,12 @@ import { PopularDirectionCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
 import { getTopSearches } from "@/redux/reducers/load";
+import { ContentLoaderTopSearches } from "@/components/content-loader";
 
 export default function MainPage() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const {topSearches} = useAppSelector(state => state.load);
+  const {topSearches, loading} = useAppSelector(state => state.load);
   const [searchText, setSearchText] = React.useState('');
   
   React.useEffect(()=> {
@@ -32,12 +33,22 @@ export default function MainPage() {
             {t ("top-five-searches")}
           </Text>
 
-          {/* Direction List */}
-          <FlatList
-            data={topSearches}
-            keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
-            renderItem={({ item }) => <PopularDirectionCard {...item}/>}
-          />
+          {
+            !loading ? (
+                <FlatList
+                  data={topSearches}
+                  keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
+                  renderItem={({ item }) => <PopularDirectionCard {...item}/>}
+                />
+            ) : (
+              <FlatList
+              data={[1, 2, 3, 4]}
+              keyExtractor={(item) => item.toString()}
+              renderItem={() => <ContentLoaderTopSearches />}
+            />
+            )
+          }
+
       </View>
     </ScrollView>
   );

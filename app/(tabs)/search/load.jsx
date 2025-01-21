@@ -12,7 +12,7 @@ import { getExtractCity } from '@/redux/reducers/city'
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next'
 import { debounce } from 'lodash';
-import CardLoaderLoadComponent from '@/components/content-loader/load'
+import { ContentLoaderLoad } from '@/components/content-loader'
 
 const SearchLoadScreen = () => {
     const route = useRoute();
@@ -58,6 +58,8 @@ const SearchLoadScreen = () => {
     React.useEffect(() => {
       if (origin) {
         debouncedFetchLoads();
+      } else {
+        handleClear();
       }
     }, [origin, destination]);
 
@@ -237,7 +239,7 @@ const SearchLoadScreen = () => {
               <FlatList
               data={[1, 2, 3, 4]} // Foydalanilmaydigan placeholder massiv
               keyExtractor={(item) => item.toString()}
-              renderItem={() => <CardLoaderLoadComponent />}
+              renderItem={() => <ContentLoaderLoad />}
             />
             ) : (
               <FlatList
