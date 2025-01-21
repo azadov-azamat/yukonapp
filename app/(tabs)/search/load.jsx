@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { debounce } from 'lodash';
 import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/content-loader'
 import { startLoading, stopLoading } from '@/redux/reducers/variable'
+import LoadCardModal from '@/components/modal/load'
 
 const SearchLoadScreen = () => {
     const route = useRoute();
@@ -235,6 +236,10 @@ const SearchLoadScreen = () => {
       }
     };
     
+    const openViewModal =()=> {
+      
+    }
+    
     return (
         <View className="flex-1 bg-gray-100">
             {origin ? (
@@ -320,6 +325,7 @@ const SearchLoadScreen = () => {
                   renderItem={({ item }) => <RenderLoadItem item={item} />}
               />
             )}
+            <LoadCardModal/>
         </View>
     )
 }

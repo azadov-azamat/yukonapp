@@ -28,7 +28,8 @@ export const searchLoads = createAsyncThunk('load/searchLoads', async (query: an
     try {
         const response = await http.get('/loads/search', { params: query });
         let deserializedData = await deserialize(response.data.data)
-        deserializedData.map((item: ILoadModel) => deserializeLoad(item))
+        deserializedData.map((item: ILoadModel) => deserializeLoad(item));
+        
         return {
                 loads: deserializedData, 
                 pagination: response.data?.data.meta.pagination,
@@ -119,6 +120,9 @@ export const loadSlice = createSlice({
             state.loading = true;
         });
         builder.addCase(searchLoads.rejected, (state) => {
+            state.loads = [];
+            state.pagination = null;
+            state.stats = null;
             state.loading = false;
         });
 
