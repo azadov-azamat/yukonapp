@@ -1,4 +1,4 @@
-import { Text, ScrollView, View, FlatList, Keyboard } from 'react-native'
+import { Text, View, FlatList, Keyboard } from 'react-native'
 import React from 'react'
 import { OPTIONS } from '@/utils/constants'
 import { CustomBadgeSelector, CustomButton, CustomDateSelector, CustomInput } from '@/components/customs'
@@ -66,8 +66,6 @@ const SearchLoadScreen = () => {
 
         // 3. Arrival va departure page yuklanganda o'rnatiladi
     React.useEffect(() => {
-      console.log("departure", departure);
-
       if (arrival) {
         setSearchText(`${arrival || ''} ${departure || ''}`);
         debouncedFetchExtract();

@@ -6,13 +6,17 @@ import { Colors } from '@/utils/colors';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getUserMe } from '@/redux/reducers/auth';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getTopSearches } from '@/redux/reducers/load';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from "expo-router";
 
 export default function TabLayout() {
-  const dispatch = useAppDispatch();
+
+  const router = useRouter();
   const {t} = useTranslation();
-  const {auth} = useAppSelector(state => state.auth);
+  const dispatch = useAppDispatch();
+  const {auth, user} = useAppSelector(state => state.auth);
+
+  const [isNavigationReady, setIsNavigationReady] = React.useState(false);
 
   async function getLocalstorageData() {
     const authData = await AsyncStorage.getItem('authenticate');
@@ -23,10 +27,17 @@ export default function TabLayout() {
     return null;
   }
 
+  React.useEffect(()=> {
+    if (!user && isNavigationReady) {
+      router.push("/");
+    }
+  }, [user, isNavigationReady]);
+
   React.useEffect(() => {
     const fetchUserData = async () => {
       const userId = await getLocalstorageData();
       await dispatch(getUserMe(auth?.userId || userId)).unwrap();
+      setIsNavigationReady(true);
     };
 
     fetchUserData();
@@ -54,8 +65,9 @@ export default function TabLayout() {
         />
         <Tabs.Screen
           name="search"
+          initialParams={{ arrival: '', departure: '' }}
           options={{
-            title: t ('pages.cargo'),
+            title: t ('pages.cargo'),          
             tabBarIcon: ({ color, focused }) => (
               <TabBarIcon size={24} name={focused ? "search" : "search-outline"} color={color} />
             ),
