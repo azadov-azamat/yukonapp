@@ -11,8 +11,7 @@ import { getExtractCity } from '@/redux/reducers/city'
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next'
 import { debounce } from 'lodash';
-import { ContentLoaderLoad } from '@/components/content-loader'
-import { getCityName } from '@/utils/general'
+import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/content-loader'
 import { startLoading, stopLoading } from '@/redux/reducers/variable'
 
 const SearchLoadScreen = () => {
@@ -46,6 +45,7 @@ const SearchLoadScreen = () => {
     const [isGridView, setIsGridView] = React.useState(false);
 
     const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard {...item} /> : <LoadGridCard {...item} />);
+    const RenderContentLoadItem = React.memo(() => isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
 
     const toggleView = () => {
       setIsGridView((prev) => !prev);
@@ -286,9 +286,9 @@ const SearchLoadScreen = () => {
             <View className='my-1'/>
             {loading ? (
               <FlatList
-              data={[1, 2, 3, 4]} // Foydalanilmaydigan placeholder massiv
+              data={[1, 2, 3, 4, 6, 7]} // Foydalanilmaydigan placeholder massiv
               keyExtractor={(item) => item.toString()}
-              renderItem={() => <ContentLoaderLoad />}
+              renderItem={() => <RenderContentLoadItem />}
             />
             ) : (
               <FlatList
