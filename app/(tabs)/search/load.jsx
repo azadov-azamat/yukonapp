@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { debounce } from 'lodash';
 import { ContentLoaderLoad } from '@/components/content-loader'
 import { getCityName } from '@/utils/general'
+import { startLoading, stopLoading } from '@/redux/reducers/variable'
 
 const SearchLoadScreen = () => {
     const route = useRoute();
@@ -59,7 +60,7 @@ const SearchLoadScreen = () => {
     const debouncedFetchLoads = React.useCallback(
       debounce(() => {
         fetchLoads();
-      }, 300), // 300ms ichida faqat bitta chaqiruv amalga oshiriladi
+      }, 300), 
     )
 
         // 3. Arrival va departure page yuklanganda o'rnatiladi
@@ -77,6 +78,7 @@ const SearchLoadScreen = () => {
     // 4. Origin va destination o'zgarganda loadlarni fetch qilish
     React.useEffect(() => {
       if (origin) {
+        dispatch(startLoading());
         debouncedFetchLoads();
       }
     }, [origin, destination]);
@@ -183,6 +185,7 @@ const SearchLoadScreen = () => {
     // }, []); 
     
     const fetchExtractCity = async() => {
+      dispatch(startLoading());
       let search = arrival ? `${arrival} ${departure}` : searchText;
       const cityResponse = await dispatch(getExtractCity({ search })).unwrap();
       const { origin: fetchedOrigin, destination: fetchedDestination } = cityResponse;
@@ -208,6 +211,8 @@ const SearchLoadScreen = () => {
           await dispatch(searchLoads(params));
         } catch (error) {
           console.error('Error fetching loads:', error);
+        } finally {
+          dispatch(stopLoading());
         }
     };
   
@@ -273,7 +278,7 @@ const SearchLoadScreen = () => {
                 buttonStyle="bg-primary px-2 py-1"
               />
             </View>}
-            
+            <View className='my-1'/>
             {loading ? (
               <FlatList
               data={[1, 2, 3, 4]} // Foydalanilmaydigan placeholder massiv

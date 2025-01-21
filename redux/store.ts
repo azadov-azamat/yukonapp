@@ -4,8 +4,8 @@ import {configureStore} from '@reduxjs/toolkit'
 export const store = configureStore({
     reducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-        serializableCheck: false, // Bu yerda tekshirishni o'chiramiz
-      }),
+      serializableCheck: false, // Bu yerda tekshirishni o'chiramiz
+    }),
     devTools: process.env.NODE_ENV !== 'production',
 })
 
