@@ -13,7 +13,8 @@ module.exports = {
       colors: {
         'primary': '#623bff',
         'border-color': '#ced4da',
-        'primary-red': '#eb5757'
+        'primary-red': '#eb5757',
+        'secondary': "#6B7280", 
       }
     },
   },

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { http } from '@/config/api';
 import { CityInitialProps, extractCityProps } from '@/interface/redux/variable.interface';
+import { startLoading, stopLoading } from './variable';
 
 // Define the action to fetch city data from the API based on search text.
 export const getExtractCity = createAsyncThunk('city/extractCity', async (data: any, { rejectWithValue }) => {
@@ -39,14 +40,14 @@ const citySlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getExtractCity.pending, (state) => {
-      state.loading = true;  // Set loading to true when request starts
+      startLoading();
     });
     builder.addCase(getExtractCity.fulfilled, (state, action) => {
       state.extractCity = action.payload;  // Update the cities with the response data
-      state.loading = false;  // Set loading to false once the request completes
+      stopLoading();  // Set loading to false once the request completes
     });
     builder.addCase(getExtractCity.rejected, (state, action) => {
-      state.loading = false;  // Set loading to false on failure
+      stopLoading();  // Set loading to false on failure
     });
   },
 });

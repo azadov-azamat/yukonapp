@@ -8,6 +8,7 @@ function FlatItem(
   {isSelected, item, onChange, translate}: 
   {item: viewSelectorTabs, onChange: (value: string) => void, isSelected: (value: string) => boolean; translate: TFunction}
 ) {
+
   return (
     <TouchableOpacity
             key={item.value}

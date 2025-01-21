@@ -35,5 +35,11 @@ export const OPTIONS = {
       { label: 'truck-type.dump', value: 'dump' },
     ],
     'user-roles': ['driver', 'dispatcher', 'load_owner'],
+    'boolean-filters' : [
+        { value: 'isLikelyOwner', label: 'is-likely-owner' },
+        { value: 'isWebAd', label: 'is-web-ad' },
+        { value: 'isDagruz', label: 'dagruz' },
+        { value: 'hasPrepayment', label: 'has-prepayment' }
+    ]
   };
   

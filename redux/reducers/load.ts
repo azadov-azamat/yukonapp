@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { http } from "@/config/api";
 import { LoadInitialProps, ILoadModel } from "@/interface/redux/load.interface";
 import { deserialize, deserializeLoad } from "@/utils/general";
+import { startLoading, stopLoading } from "./variable";
 
 // Fetch Top Searches
 export const getTopSearches = createAsyncThunk('load/getTopSearches', async (_, { rejectWithValue }) => {
@@ -113,13 +114,13 @@ export const loadSlice = createSlice({
             state.loads = action.payload.loads;
             state.pagination = action.payload.pagination;
             state.stats = action.payload.stats;
-            state.loading = false;
+            stopLoading();
         });
         builder.addCase(searchLoads.pending, (state) => {
-            state.loading = true;
+            startLoading();
         });
         builder.addCase(searchLoads.rejected, (state) => {
-            state.loading = false;
+            stopLoading();
         });
 
         // Get Load by ID

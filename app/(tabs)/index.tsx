@@ -42,10 +42,10 @@ export default function MainPage() {
                 />
             ) : (
               <FlatList
-              data={[1, 2, 3, 4]}
-              keyExtractor={(item) => item.toString()}
-              renderItem={() => <ContentLoaderTopSearches />}
-            />
+                data={[1, 2, 3, 4]}
+                keyExtractor={(item) => item.toString()}
+                renderItem={() => <ContentLoaderTopSearches />}
+              />
             )
           }
 
