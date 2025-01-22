@@ -1,7 +1,7 @@
 import React from "react";
 import { CustomButton, CustomInput } from "@/components/customs";
 import { Keyboard, View, Text, FlatList } from "react-native";
-import { PopularDirectionCard } from "@/components/cards";
+import { EmptyStateCard, PopularDirectionCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
 import { getTopSearches } from "@/redux/reducers/load";
@@ -81,6 +81,7 @@ export default function MainPage() {
                 <FlatList
                   data={topSearches}
                   keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
+                  ListEmptyComponent={<EmptyStateCard type="load"/>}
                   renderItem={({ item }) => <PopularDirectionCard {...item}/>}
                 />
             ) : (
