@@ -1,7 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { ButtonProps } from '@/interface/components';
-import { TabBarIcon } from "../navigation/tab-bar-icon";
+import { TabBarIcon } from "../../navigation/tab-bar-icon";
 
 const Button: React.FC<ButtonProps> = ({
   title,

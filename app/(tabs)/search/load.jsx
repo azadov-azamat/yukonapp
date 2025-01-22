@@ -1,7 +1,7 @@
 import { Text, View, FlatList, Keyboard } from 'react-native'
 import React from 'react'
 import { OPTIONS } from '@/utils/constants'
-import { CustomBadgeSelector, CustomButton, CustomDateSelector, CustomInput } from '@/components/customs'
+import { CustomBadgeSelector, CustomButton, CustomInput } from '@/components/customs'
 import LoadRouteSelector from '@/components/load-route-selector'
 import { EmptyStateCard, LoadGridCard, LoadListCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
