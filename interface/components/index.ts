@@ -48,3 +48,9 @@ export interface DirectionItemProps {
     total_loads: number;
     today_loads: number;
 }
+
+export interface ModalItemProps {
+    open: boolean;
+    toggle: () => void;
+    children?: React.ReactNode;
+}

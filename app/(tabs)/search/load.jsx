@@ -5,7 +5,7 @@ import { CustomBadgeSelector, CustomButton, CustomInput } from '@/components/cus
 import LoadRouteSelector from '@/components/load-route-selector'
 import { EmptyStateCard, LoadGridCard, LoadListCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import { clearLoads, searchLoads } from '@/redux/reducers/load'
+import { clearLoad, clearLoads, getLoadById, searchLoads } from '@/redux/reducers/load'
 import { useRoute } from '@react-navigation/native';
 import { getExtractCity } from '@/redux/reducers/city'
 import { useNavigation } from '@react-navigation/native';
@@ -44,15 +44,19 @@ const SearchLoadScreen = () => {
     
     const [origin, setOrigin] = React.useState(null);
     const [destination, setDestination] = React.useState(null);
+    const [viewId, setViewId] = React.useState(null);
     const [isGridView, setIsGridView] = React.useState(false);
+    const [openModal, setOpenModal] = React.useState(false);
 
-    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard {...item} /> : <LoadGridCard {...item} />);
+    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard onPress={() => setViewId(item.id)} load={item} /> : <LoadGridCard onPress={() => setViewId(item.id)} load={item} />);
     const RenderContentLoadItem = React.memo(() => isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
 
     const toggleView = () => {
       setIsGridView((prev) => !prev);
     };
 
+    const toggleModal = () => setOpenModal(!openModal);
+    
     const debouncedFetchExtract = React.useCallback(
       debounce(() => {
         fetchExtractCity();
@@ -64,6 +68,15 @@ const SearchLoadScreen = () => {
         fetchLoads();
       }, 300),
     )
+    
+    React.useEffect(() => {
+      if (viewId) {
+        dispatch(getLoadById(viewId)).unwrap();
+        toggleModal();
+      } else {
+        dispatch(clearLoad())
+      }
+    }, [viewId])
 
         // 3. Arrival va departure page yuklanganda o'rnatiladi
     React.useEffect(() => {
@@ -354,7 +367,7 @@ const SearchLoadScreen = () => {
                   renderItem={({ item }) => <RenderLoadItem item={item} />}
               />
             )}
-            <LoadCardModal/>
+            <LoadCardModal open={openModal} toggle={toggleModal}/>
         </View>
     )
 }

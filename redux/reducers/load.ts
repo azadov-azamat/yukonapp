@@ -89,6 +89,9 @@ export const loadSlice = createSlice({
             state.pagination = null;
             state.stats = null;
             state.loading = false;
+        },
+        clearLoad: (state) => {
+            state.load = null;
         }
     },
     extraReducers: (builder) => {
@@ -171,5 +174,5 @@ export const loadSlice = createSlice({
     },
 });
 
-export const { clearLoads } = loadSlice.actions;
+export const { clearLoads, clearLoad } = loadSlice.actions;
 export default loadSlice.reducer;

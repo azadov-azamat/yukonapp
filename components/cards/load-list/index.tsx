@@ -6,17 +6,23 @@ import LoadModel from '@/models/load';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/redux/hooks';
 
-const LoadCard: React.FC<LoadModel> = (load) => {
+interface loadInterface {
+  load: LoadModel,
+  onPress: () => void;
+}
+const LoadCard = ({load, onPress}: loadInterface) => {
   const {user} = useAppSelector(state => state.auth);
   const {t} = useTranslation();
   
   return (
-    <View className="flex-col items-start justify-between px-4 py-2 mb-4 bg-white rounded-lg shadow-sm">
+    <TouchableOpacity
+      onPress={onPress}
+      className="flex-col items-start justify-between px-4 py-2 mb-4 bg-white rounded-lg shadow-sm">
     {/* Left Side: Origin and Destination */}
     <View className="flex-1">
       <Text className="text-lg font-bold text-gray-800">
       <Text className="text-lg font-bold">{getCityName(load?.originCity)}</Text>
-        <Text className="text-lg font-bold"> - {getCityName(load.destinationCity)}</Text>
+        {/* <Text className="text-lg font-bold"> - {getCityName(load.destinationCity)}</Text> */}
       </Text>
     </View>
 
@@ -32,7 +38,7 @@ const LoadCard: React.FC<LoadModel> = (load) => {
       <Text className="text-sm text-gray-600">{dateFromNow(load.publishedDate || load.createdAt || '')}</Text>
     </View>
     </View>
-  </View>
+  </TouchableOpacity>
   );
 };
 

@@ -1,13 +1,9 @@
+import { TabBarIcon } from '@/components/navigation/tab-bar-icon';
+import { ModalItemProps } from '@/interface/components';
 import React from 'react';
 import { Modal, View, TouchableOpacity, Text } from 'react-native';
 
-interface DynamicModalProps {
-  open: boolean;
-  toggle: () => void;
-  children?: React.ReactNode;
-}
-
-const DynamicModal: React.FC<DynamicModalProps> = ({ open, toggle, children }) => {
+const DynamicModal: React.FC<ModalItemProps> = ({ open, toggle, children }) => {
   return (
     <Modal
       animationType="fade" // Ochilish va yopilish animatsiyasi
@@ -16,13 +12,11 @@ const DynamicModal: React.FC<DynamicModalProps> = ({ open, toggle, children }) =
       onRequestClose={toggle} // Back button bosilganda modalni yopish
     >
       <View className="items-center justify-center flex-1 bg-black/50">
-        <View className="w-4/5 p-6 bg-white rounded-lg">
+        <View className="w-[90%] p-6 bg-white rounded-lg">
           {/* Close Button */}
           <TouchableOpacity onPress={toggle} className="absolute top-2 right-2">
-            <Text className="text-xl font-bold">×</Text>
+            <TabBarIcon name='close' size={20}/>
           </TouchableOpacity>
-
-          {/* Children */}
           {children}
         </View>
       </View>

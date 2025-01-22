@@ -3,7 +3,7 @@ import { DirectionItemProps } from "../components";
 import { defaultData, ICityModel, ICountryModel } from "./variable.interface";
 
 export interface LoadInitialProps {
-    load: ILoadModel | null;
+    load: LoadModel | null;
     loads: LoadModel[] | [];
     topSearches: DirectionItemProps[] | [];
     latestAds: ILoadModel[] | [];
