@@ -48,8 +48,6 @@ export const authSlice = createSlice({
         })
         builder.addCase(login.rejected, (state: AuthInitialProps, action) => {
             state.loading = false;
-            console.log(action);
-            
             Toast.show({
                 type: 'error',
                 text1: 'Tizimda nosozlik!',

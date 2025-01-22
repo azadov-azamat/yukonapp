@@ -8,10 +8,12 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { login } from '@/redux/reducers/auth';
 import Toast from 'react-native-toast-message';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { useTranslation } from 'react-i18next';
 
 const LoginForm = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const {t} = useTranslation();
   const { loading } = useAppSelector(state => state.auth)
   
   const formik = useFormik({
@@ -23,11 +25,20 @@ const LoginForm = () => {
         .then(res => {
           Toast.show({
               type: 'success',
-              text1: 'Xush kelibsiz!',
-              text2: 'Siz muvaffaqiyatli tizimga kirdingiz.',
+              text1: t ('success.login')
           });
           router.push("/(tabs)");
         })
+        .catch(err => {
+          switch(err.status) {
+            case 400:
+              Toast.show({
+                type: 'error',
+                text1: t ('errors.auth'),
+              });
+              break;
+          }
+        }) 
     },
   });
 
@@ -40,7 +51,7 @@ const LoginForm = () => {
       {/* Telefon raqami */}
       <CustomInput
         type={'phone'}
-        label="Telefon raqami"
+        label={t ('phone')}
         value={formik.values.phone}
         onChangeText={formik.handleChange('phone')}
         onBlur={formik.handleBlur('phone')}
@@ -51,12 +62,12 @@ const LoginForm = () => {
 
       {/* Parol */}
       <CustomInput
-        label="Parol"
+        label={t ('password')}
         type={'password'}
         value={formik.values.password}
         onChangeText={formik.handleChange('password')}
         onBlur={formik.handleBlur('password')}
-        placeholder="Parol"
+        placeholder={t ('password')}
         error={formik.touched.password && formik.errors.password}
         divClass='mb-4'
       />
@@ -65,13 +76,13 @@ const LoginForm = () => {
       <CustomButton 
         loading={loading}
         disabled={loading} 
-        title="Kirish" 
+        title={t ('login')} 
         onPress={formik.handleSubmit} 
         buttonStyle={'bg-primary mt-2'} 
       />
 
       {/* Parolni unutdingizmi */}
-      <CustomButton title="Parolni unutdingizmi?" onPress={Working} />
+      <CustomButton title={t ("forgot-password")} onPress={Working} />
       
     </View>
   );

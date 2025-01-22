@@ -2,10 +2,10 @@ import * as Yup from 'yup';
 
 export const loginValidationSchema = Yup.object().shape({
   phone: Yup.string()
-    .required("Telefon raqami majburiy"),
+    .required("errors.enter-required"),
   password: Yup.string()
-    .min(6, 'Parol kamida 6 ta belgidan iborat bo‘lishi kerak')
-    .required('Parolni kiriting'),
+    .min(6, 'errors.password-too-short')
+    .required('errors.enter-required'),
 });
 
   

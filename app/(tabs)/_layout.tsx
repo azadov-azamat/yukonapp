@@ -37,7 +37,11 @@ export default function TabLayout() {
   React.useEffect(() => {
     const fetchUserData = async () => {
       const userId = await getLocalstorageData();
-      await dispatch(getUserMe(auth?.userId || userId)).unwrap();
+      if (userId || auth?.userId) {
+        await dispatch(getUserMe(auth?.userId || userId)); 
+      } else {
+        router.push("/");
+      }
       setIsNavigationReady(true);
     };
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useNavigation } from '@react-navigation/native';;
+import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const baseUrl = `${process.env.EXPO_PUBLIC_BACKEND_HOST}/api`;
@@ -25,10 +25,11 @@ http.interceptors.request.use(async (config) => {
     }
     return config;
 }, (error) => {
-    console.error("error - 29", error);
+    console.log("error - 29", error);
     if (error.response?.status === 401) {
-        // const {navigate} = useNavigation();
-        // navigate('home');
+        console.log("401");
+        // const router = useRouter();
+        // router.push("/");
     }
     return Promise.reject(error);
 });

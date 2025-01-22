@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; // Ikonkalar uchun kutubxona
 import { InputProps } from '@/interface/components';
+import { useTranslation } from 'react-i18next';
 
 const Input: React.FC<InputProps> = ({ 
   label, 
@@ -15,6 +16,7 @@ const Input: React.FC<InputProps> = ({
   loading = false,
   ...rest
 }) => {
+  const {t} = useTranslation();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false); // Parolni ko'rsatish holati
 
   return (
@@ -60,7 +62,7 @@ const Input: React.FC<InputProps> = ({
       </View>
       
       {/* Error */}
-      {error && <Text className="absolute text-sm text-primary-red -bottom-[18px]">{error}</Text>}
+      {error && <Text className="absolute -bottom-[18px] text-primary-red">{t (error)}</Text>}
     </View>
   );
 };
