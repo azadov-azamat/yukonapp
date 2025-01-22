@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, Alert } from "react-native";
 import LoginForm from '@/components/forms/login';
 import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -44,13 +44,18 @@ export default function MainPage() {
     }
   }, [user, isNavigationReady]);
   
+  function Working() {
+    Alert.alert('Tugatilmagan', `Ishlash jarayonida`);
+    // router.push('/forgot-password')
+  }
+  
   return (
     <View className='relative items-center justify-center flex-1 bg-gray-100'>
        <View className="absolute top-0 left-0 right-0 flex-row items-center justify-between px-4 py-3">
         {/* Search Button */}
         <TouchableOpacity
           className="flex items-center justify-center w-12 h-12 bg-gray-200 border-2 rounded-xl border-border-color"
-          onPress={() => router.push("/search")}
+          onPress={Working}
         >
           <TabBarIcon name='search' color={'gray'}/>
         </TouchableOpacity>

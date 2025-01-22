@@ -5,7 +5,7 @@ import { CustomBadgeSelector, CustomButton, CustomInput } from '@/components/cus
 import LoadRouteSelector from '@/components/load-route-selector'
 import { EmptyStateCard, LoadGridCard, LoadListCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import { searchLoads } from '@/redux/reducers/load'
+import { clearLoads, searchLoads } from '@/redux/reducers/load'
 import { useRoute } from '@react-navigation/native';
 import { getExtractCity } from '@/redux/reducers/city'
 import { useNavigation } from '@react-navigation/native';
@@ -14,13 +14,14 @@ import { debounce } from 'lodash';
 import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/content-loader'
 import { startLoading, stopLoading } from '@/redux/reducers/variable'
 import LoadCardModal from '@/components/modal/load'
+import { getCityName } from '@/utils/general'
 
 const SearchLoadScreen = () => {
     const route = useRoute();
     const dispatch = useAppDispatch();
     const {t} = useTranslation();
     const navigation = useNavigation();
-    const {loads, pagination, stats} = useAppSelector(state => state.load);
+    const {loads, pagination, stats, loading: cargoLoad} = useAppSelector(state => state.load);
     const { loading } = useAppSelector(state => state.variable);
     
     const [searchText, setSearchText] = React.useState('');
@@ -68,7 +69,9 @@ const SearchLoadScreen = () => {
     React.useEffect(() => {
       if (arrival) {
         setSearchText(`${arrival || ''} ${departure || ''}`);
+        // if (getCityName(origin) !== arrival || getCityName(destination) !== departure) {
         debouncedFetchExtract();
+        // }
       } else {
         handleClear();
       }
@@ -81,6 +84,11 @@ const SearchLoadScreen = () => {
         debouncedFetchLoads();
       }
     }, [origin, destination]);
+
+    // 4. Origin va destination o'zgarganda loadlarni fetch qilish
+    React.useEffect(() => {
+      fetchLoads();
+    }, [page]);
 
     React.useEffect(()=> {
       return () => {
@@ -97,6 +105,9 @@ const SearchLoadScreen = () => {
         setDestination(prevOrigin);
         return prevDestination;
       });
+      dispatch(startLoading());
+      setPage(1);
+      dispatch(clearLoads());
     };
 
     const handleClear = () => {
@@ -107,7 +118,8 @@ const SearchLoadScreen = () => {
         arrival: undefined, // Parametrni tozalash uchun undefined qilib o'rnating
         departure: undefined
       });
-      dispatch({ type: 'load/searchLoads/fulfilled', payload: [] });
+      dispatch(clearLoads());
+      dispatch(stopLoading());
     };
     
     const handleBadgeChange = (value) => {
@@ -116,9 +128,7 @@ const SearchLoadScreen = () => {
           ? prevSelected.filter((itemValue) => itemValue !== value)
           : [...prevSelected, value]
       );
-      if (origin) {
-        debouncedFetchExtract();
-      }
+      checkAndFetch();
     };
 
     const handleBookmark = () => {
@@ -175,34 +185,27 @@ const SearchLoadScreen = () => {
 
         return query;
       }
-      
-    // const updateQueryParams = React.useCallback((arrival, departure) => {
-    //     navigation.setParams({
-    //       arrival,
-    //       departure,
-    //   });
-    // }, []);
 
-    const fetchExtractCity = async() => {
+    const fetchExtractCity = async () => {
       dispatch(startLoading());
-      let search = arrival ? `${arrival} ${departure}` : searchText;
+      let search = arrival ? `${arrival} ${departure}` : searchText
       const cityResponse = await dispatch(getExtractCity({ search })).unwrap();
       const { origin: fetchedOrigin, destination: fetchedDestination } = cityResponse;
       if (!fetchedOrigin) {
-        dispatch({ type: 'load/searchLoads/fulfilled', payload: [] });
+        handleClear()
         return;
       }
-      // if (fetchedOrigin.name_uz !== arrival || fetchedDestination?.name_uz !== departure) {
+      // if (getCityName(fetchedOrigin) !== arrival || getCityName(fetchedDestination) !== departure) {
       //   updateQueryParams(getCityName(fetchedOrigin), getCityName(fetchedDestination) || '');
       // }
       setOrigin(fetchedOrigin);
       setDestination(fetchedDestination || null);
     }
 
-      const fetchLoads = async () => {
+    const fetchLoads = async () => {
         try {
           if (!origin) {
-            dispatch({ type: 'load/searchLoads/fulfilled', payload: [] });
+            dispatch(clearLoads());
             return;
           }
     
@@ -229,13 +232,31 @@ const SearchLoadScreen = () => {
           ? prevSelected.filter((itemValue) => itemValue !== value)
           : [...prevSelected, value]
       );
-      if (origin) {
-        debouncedFetchExtract();
-      }
+      checkAndFetch();
     };
     
-    const openViewModal =()=> {
-      
+    const checkAndFetch =()=> {
+      if (origin) {
+        dispatch(clearLoads());
+        debouncedFetchExtract();
+      }
+    }
+  // const updateQueryParams = React.useCallback((arrival, departure) => {
+  //     navigation.setParams({
+  //       arrival,
+  //       departure,
+  //   });
+  // }, []);
+  
+    const isLast = pagination?.totalPages === page;
+    
+    const handleViewMore = () => {
+      if (isLast) {
+        setPage(1)
+        dispatch(clearLoads())
+      } else {
+        setPage(previus => previus + 1); 
+      }
     }
     
     return (
@@ -313,7 +334,17 @@ const SearchLoadScreen = () => {
                     />
                     </View>
                   }
-                  // ListFooterComponent={<Text>list Footer</Text>}
+                  ListFooterComponent={<View className={`mb-3 ${(!loads.length || loads.length < limit) && 'hidden'}`}>
+                    <CustomButton 
+                        title={t (isLast ? 'show-less' : 'show-more', {
+                          nextIndex: page * limit,
+                          count: pagination?.totalCount
+                        })} 
+                        buttonStyle='bg-primary'
+                        onPress={handleViewMore}
+                        loading={cargoLoad}
+                    />
+                  </View>}
                   // onEndReached={loadMoreData} // Scroll pastga tushganda ishlatiladi
                   // onEndReachedThreshold={0.5}
                   // ListFooterComponent={

@@ -42,7 +42,7 @@ const LanguageSelector = () => {
 
       {/* Dropdown List */}
       {isDropdownOpen && (
-        <View className="absolute right-0 z-10 w-auto bg-white rounded-md shadow-md top-12">
+        <View className="absolute right-0 z-10 w-32 bg-white rounded-md shadow-md top-14">
           <FlatList
             data={languages}
             keyExtractor={(item) => item.code}

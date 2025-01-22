@@ -83,7 +83,14 @@ const initialState: LoadInitialProps = {
 export const loadSlice = createSlice({
     name: 'load',
     initialState,
-    reducers: {},
+    reducers: {
+        clearLoads: (state) => {
+            state.loads = [];
+            state.pagination = null;
+            state.stats = null;
+            state.loading = false;
+        }
+    },
     extraReducers: (builder) => {
         // Top Searches
         builder.addCase(getTopSearches.fulfilled, (state, action) => {
@@ -111,7 +118,7 @@ export const loadSlice = createSlice({
 
         // Search Loads
         builder.addCase(searchLoads.fulfilled, (state, action) => {
-            state.loads = action.payload.loads;
+            state.loads = [...state.loads, ...action.payload?.loads];
             state.pagination = action.payload.pagination;
             state.stats = action.payload.stats;
             state.loading = false;
@@ -164,4 +171,5 @@ export const loadSlice = createSlice({
     },
 });
 
+export const { clearLoads } = loadSlice.actions;
 export default loadSlice.reducer;

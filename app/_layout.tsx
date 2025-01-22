@@ -32,6 +32,7 @@ function App() {
           initialRouteName="index"
         >
           <Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }}/> 
+          <Stack.Screen name="forgot-password" options={{ headerShown: false, title: 'Forgot password' }}/> 
         </Stack>
 
         <StatusBar

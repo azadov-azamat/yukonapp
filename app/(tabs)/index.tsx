@@ -4,7 +4,7 @@ import { Keyboard, View, Text, FlatList } from "react-native";
 import { EmptyStateCard, PopularDirectionCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
-import { getTopSearches } from "@/redux/reducers/load";
+import { clearLoads, getTopSearches } from "@/redux/reducers/load";
 import { ContentLoaderTopSearches } from "@/components/content-loader";
 import { debounce } from 'lodash';
 import { getExtractCity } from "@/redux/reducers/city";
@@ -37,7 +37,7 @@ export default function MainPage() {
     const cityResponse = await dispatch(getExtractCity({ search })).unwrap();
     const { origin: fetchedOrigin, destination: fetchedDestination } = cityResponse;
     if (!fetchedOrigin) {
-      dispatch({ type: 'load/searchLoads/fulfilled', payload: [] });
+      dispatch(clearLoads());
       return;
     }
     console.log(getCityName(fetchedOrigin), getCityName(fetchedDestination));

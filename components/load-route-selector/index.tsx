@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { itemCityProps } from '@/interface/redux/variable.interface';
+import { getCityName } from '@/utils/general';
+import { useTranslation } from 'react-i18next';
 
 interface LoadRouteSelectorProps {
   origin: itemCityProps | null;
@@ -16,12 +18,13 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
   onClear,
   onSwapCities,
 }) => {
+  const {t} = useTranslation();
   return (
     <View className="relative flex-row items-center justify-between p-4 mt-2 overflow-visible bg-white shodow-lg rounded-xl">
       {/* Origin */}
       <View className="items-start flex-1">
-        <Text className="text-gray-500">Отправления</Text>
-        <Text className="text-lg font-bold">{origin?.name_uz}</Text>
+        <Text className="text-gray-500">{t ('table.origin-city')}</Text>
+        <Text className="text-lg font-bold">{getCityName(origin)}</Text>
       </View>
 
       {/* Path Line */}
@@ -38,9 +41,9 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
 
       {/* Destination */}
       <View className="items-end flex-1">
-        <Text className="text-gray-500">Назначения</Text>
+        <Text className="text-gray-500">{t ('table.destination-city')}</Text>
         <Text className="text-lg font-bold">
-          {destination?.name_uz || 'Не указано'}
+          {getCityName(destination)}
         </Text>
       </View>
 
