@@ -40,7 +40,6 @@ export default function MainPage() {
       dispatch(clearLoads());
       return;
     }
-    console.log(getCityName(fetchedOrigin), getCityName(fetchedDestination));
     
     dispatch(stopLoading());
     router.push(`/(tabs)/search?arrival=${getCityName(fetchedOrigin)}&departure=${getCityName(fetchedDestination)}`)

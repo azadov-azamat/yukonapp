@@ -51,7 +51,6 @@ export const dateFromNow = (value: string | Date): string => {
 
 export function getCityName(city: any): string {
     const currentLanguage = i18n.language;
-// console.log(city);
 
     const uzKey = city?.name_uz || city?.nameUz;
     const ruKey = city?.name_ru || city?.nameRu;
@@ -61,7 +60,6 @@ export function getCityName(city: any): string {
     // Return the value based on the current language
     return currentLanguage === 'uz' ? uzKey || fallbackText : ruKey || fallbackText;
 }
-  
 
 export const formatPrice = (price: number | null | undefined): string => {
     if (!price) {
@@ -91,3 +89,39 @@ export const deserializeUser = (data: IUserModel): UserModel => {
 export const deserializeLoad = (data: ILoadModel): LoadModel => {
     return new LoadModel(data);
 };
+
+export function removePhoneNumbers(text: string) {
+    const phoneNumberPattern =
+      /(?!\d{2}[.-])[+]?(\b\d{1,3}[ .-]?)?([(]?\d{2,3}[)]?)((?:[ .-]?\d){4,7})(?![ .-]?\d)/g;
+  
+    const removedPhones: string[] = [];
+    const newText = text.replace(phoneNumberPattern, (match) => {
+      if (match.trim().endsWith('0000')) {
+        return match; // Agar raqam '0000' bilan tugasa, o'zgarmasdan qoldiring
+      }
+      removedPhones.push(formatPhone(match.trim()));
+      return ''; // Telefon raqamni olib tashlang
+    });
+  
+    return {
+      text: newText.trim(), // Tozalangan matnni qaytarish
+      removedPhones, // Olib tashlangan telefon raqamlarining ro'yxati
+    };
+}
+  
+export function formatPhone(str: string, prefix = '+998 ') {
+    let phone = str;
+  
+    if (phone?.startsWith('+998')) {
+      phone = str.slice(4);
+    }
+  
+    let cleaned = ('' + phone).replace(/\D/g, '');
+    let match = cleaned.match(/^(\d{2})(\d{3})(\d{2})(\d{2})$/);
+    if (match) {
+      return `${prefix}${match.slice(1).join(' ')}`;
+    }
+    
+    return phone;
+}
+  

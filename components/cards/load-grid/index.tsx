@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, Linking, Alert, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { dateFromNow, formatPrice, getCityName } from '@/utils/general';
+import {formatPhone, dateFromNow, formatPrice, getCityName, removePhoneNumbers } from '@/utils/general';
 import LoadModel from '@/models/load';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Colors } from '@/utils/colors';
+import { CustomPhoneCall, CustomTelegramLink } from '@/components/customs';
 
 interface loadInterface {
   load: LoadModel,
@@ -13,6 +14,7 @@ interface loadInterface {
   showElement?: boolean;
 }
 const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
+  const dispatch = useAppDispatch();
   const {user} = useAppSelector(state => state.auth);
   const {t} = useTranslation();
   
@@ -27,7 +29,34 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
   function isMarkedExpired() {
     return !!user?.markedExpiredLoads.find((item) => item === load.id);
   }
-  console.log(load);
+ 
+  React.useEffect(() => {
+    
+  }, [load.telegram, load.phone]);
+  
+  if (!user) {
+    return null;
+  }
+  
+  const handleTelegramPress = async () => {
+    if (!load.telegram) {
+      Alert.alert('Error', 'Telegram username is missing!');
+      return;
+    }
+
+    try {
+      const canOpen = await Linking.canOpenURL(load.telegram);
+      if (canOpen) {
+        await Linking.openURL(load.telegram);
+      } else {
+        Alert.alert('Error', 'Telegram app not installed!');
+      }
+    } catch (error) {
+      console.error('Failed to open Telegram:', error);
+      Alert.alert('Error', 'Unable to open Telegram.');
+    }
+  };
+  
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -62,7 +91,10 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
         {/* Origin */}
         <View className="items-start flex-1">
           <Text className="text-lg font-bold">{getCityName(load?.originCity)}</Text>
-          <Text className="text-gray-500">{load?.originCountry?.icon + getCityName(load?.originCountry)}</Text>
+          <View className='flex-row flex-1 w-full space-x-1'>
+            <Text>{load.originCountry?.icon}</Text>
+            <Text className="text-gray-500">{getCityName(load.originCountry)}</Text>
+          </View>
         </View>
 
         {/* Path Line */}
@@ -71,7 +103,10 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
         {/* Destination */}
         <View className="items-end flex-1">
           <Text className="text-lg font-bold">{getCityName(load.destinationCity)}</Text>
-          <Text className="text-gray-500">{load.destinationCountry?.icon + getCityName(load.destinationCountry)}</Text>
+          <View className='flex-row flex-1 w-full space-x-1'>
+            <Text>{load.destinationCountry?.icon}</Text>
+            <Text className="text-gray-500">{getCityName(load.destinationCountry)}</Text>
+          </View>
         </View>
       </View>
 
@@ -81,41 +116,45 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
 
           {/* Details */}
           <View className="space-y-2">
-            <TouchableOpacity className='flex-row items-center space-x-2'>
+            {!load.phone && <TouchableOpacity onPress={() => load.phoneFunction(user, dispatch)} className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
                 <Ionicons name="call" size={18} color={Colors.light.tint} /> 
               </View>
-              <Text className="text-lg blue-500">
-                telefon raqamini ko'rsatish
+              <Text className="text-base blue-500">
+                {t ('show-phone-number')}
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity>}
 
-            <View className='flex-row items-center space-x-2'>
+            {load.phone && <CustomPhoneCall phoneNumber={load.phone} />}
+            <View />
+            {load.telegram && <CustomTelegramLink url={load.telegram} />}
+            
+            {load.goods && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
                 <Ionicons name="cube" size={18} color={Colors.light.tint} /> 
               </View>
-              <Text className="text-lg">Laminant</Text>
-            </View>
+              <Text className="text-base">{load.goods}</Text>
+            </View>}
 
-            <View className='flex-row items-center space-x-2'>
+            {load.weight && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
                 <Ionicons name="scale" size={18} color={Colors.light.tint} /> 
               </View>
-              <Text className="text-lg">35t</Text>
-            </View>
+              <Text className="text-base">{handleDetermineTon(load.weight)}</Text>
+            </View>}
 
-            <View className='flex-row items-center space-x-2'>
+            {load.price && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
                 <Ionicons name="cash" size={18} color={Colors.light.tint} /> 
               </View>
-              <Text className="text-lg font-semibold text-blue-500">$5 400</Text>
-            </View>
+              <Text className="text-base font-semibold text-blue-500">{formatPrice(load.price)}</Text>
+            </View>}
 
             <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
                 <Ionicons name="time" size={18} color={Colors.light.tint} /> 
               </View>
-              <Text className="text-lg">6 soat oldin</Text>
+              <Text className="text-base">{dateFromNow(load?.publishedDate || load?.createdAt || '')}</Text>
             </View>
           </View>
 
@@ -124,8 +163,7 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
 
           {/* Description */}
           <Text className="text-sm text-gray-600">
-            ❗ Toshkentdan ❗ ❗ ❗ Buxoroga ❗ 📦 Laminant 35 tonna Fraxt 💵 5. 400
-            Logist ❌❌
+            {removePhoneNumbers(load.description).text}
           </Text>
 
         </>
