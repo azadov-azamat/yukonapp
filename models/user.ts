@@ -1,5 +1,6 @@
 import { http } from '@/config/api';
 import { IUserModel } from '@/interface/redux/user.interface';
+import { updateUser } from '@/redux/reducers/auth';
 
 export default class UserModel implements IUserModel {
   firstName: string = '';
@@ -18,6 +19,7 @@ export default class UserModel implements IUserModel {
   bookmarkedVehicleIds: string[] = [];
   markedExpiredLoads: string[] = [];
   markedInvalidVehicles: string[] = [];
+  isSubscriptionModal: boolean = false;
 
   constructor(data: Partial<IUserModel>) {
     Object.assign(this, data);
@@ -52,5 +54,9 @@ export default class UserModel implements IUserModel {
       console.error('Error changing password:', error);
       throw new Error('Unable to change password');
     }
+  }
+
+  async save(dispatch: any) {
+    await dispatch(updateUser(this))
   }
 }

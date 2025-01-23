@@ -5,6 +5,7 @@ import { updateLoad } from "@/redux/reducers/load";
 import { removePhoneNumbers } from "@/utils/general";
 import Toast from "react-native-toast-message";
 import UserModel from "./user";
+import { setUser } from "@/redux/reducers/auth";
 
 export default class LoadModel implements ILoadModel {
   id = null;
@@ -43,7 +44,7 @@ export default class LoadModel implements ILoadModel {
   destinationCountry?: ICountryModel;
   createdAt?: string;
   updatedAt?: string;
-
+  
   constructor(data: Partial<ILoadModel>) {
     Object.assign(this, data);
   }
@@ -68,6 +69,7 @@ export default class LoadModel implements ILoadModel {
     await this.handleFunction({
       endpoint: `loads/${this.id}/phone`,
       user,
+      dispatch,
       successCallback: async (res) => {
         const {removedPhones} = removePhoneNumbers(this.description);
 
@@ -97,11 +99,12 @@ export default class LoadModel implements ILoadModel {
     });
   }
 
-  async urlFunction(user: UserModel): Promise<void> {
+  async urlFunction(user: UserModel, dispatch: any): Promise<void> {
     this.loading = true;
     await this.handleFunction({
         endpoint: `loads/${this.id}/url`, 
         user, 
+        dispatch,
         successCallback: async (response) => {
             console.log('Opening URL:', response.url);
             this.openMessageCounter += 1;
@@ -113,28 +116,60 @@ export default class LoadModel implements ILoadModel {
   async handleFunction({
     endpoint,
     user,
+    dispatch,
     successCallback,
     close,
   }: {
     endpoint: string;
     user: UserModel;
+    dispatch: any;
     successCallback: (response: any) => void;
     close?: () => void;
-  }): Promise<void> {
+  }) {
     this.loading = true;
 
+    if (!user) {
+        this.loading = false;
+        console.log("open auth modal"); // FUTURE
+        return ''
+    }
+
     try {
-      const response = await http.get(endpoint);
-      successCallback(response.data);
+      const hasSubscription = await this.checkSubscription(user);
+
+      if (!hasSubscription) {
+        if (user.loadSearchLimit > 0) {
+            const response = await http.get(endpoint);
+            successCallback(response.data);
+            user.loadSearchLimit--;
+            await user.save(dispatch);
+        } else {
+            user.isSubscriptionModal = true;
+            dispatch(setUser(user));
+            close?.();
+        }
+      } else {
+        const response = await http.get(endpoint);
+        successCallback(response.data);
+      }
     } catch (e) {
       console.error('An error occurred:', e);
     } finally {
       this.loading = false;
-      close?.();
+    //   close?.();
+    }
+  }
+
+  async checkSubscription(user: UserModel) {
+    try {
+        return await user.hasActiveSubscription();
+    } catch (err) {
+        console.log(err)
+        return false;
     }
   }
 
   async save(dispatch: any) {
-    await dispatch(updateLoad({id: this.id || '', data: this}))
+    await dispatch(updateLoad(this))
   }
 }

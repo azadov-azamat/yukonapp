@@ -1,17 +1,26 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import React from 'react'
 import DynamicModal from '../dialog';
 import { LoadGridCard } from '@/components/cards';
-import { useAppSelector } from '@/redux/hooks';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { ModalItemProps } from '@/interface/components';
+// import { updateLoad } from '@/redux/reducers/load';
 
 const LoadCardModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
+    const dispatch = useAppDispatch();
     const {load} = useAppSelector(state => state.load);
-    
+
     if (!load) {
-        return null;
+        return <DynamicModal open={open} toggle={toggle}>
+            <ActivityIndicator size="large" color="#000" />
+        </DynamicModal>;
     }
-    
+
+    // useEffect(() => {
+        // load.openMessageCounter=+1;
+        // dispatch(updateLoad(load))
+    // }, []);
+
     return (
         <DynamicModal open={open} toggle={toggle}>
             <LoadGridCard load={load} showElement/>

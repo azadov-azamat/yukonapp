@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { http } from "@/config/api";
 import { LoadInitialProps, ILoadModel } from "@/interface/redux/load.interface";
 import { deserialize, deserializeLoad } from "@/utils/general";
+import { LoadSerializer } from "@/serializers";
 
 // Fetch Top Searches
 export const getTopSearches = createAsyncThunk('load/getTopSearches', async (_, { rejectWithValue }) => {
@@ -51,9 +52,9 @@ export const getLoadById = createAsyncThunk('load/getLoadById', async (id: strin
 });
 
 // Patch Load by ID
-export const updateLoad = createAsyncThunk('load/updateLoad', async ({ id, data }: { id: string; data: Partial<ILoadModel> }, { rejectWithValue }) => {
+export const updateLoad = createAsyncThunk('load/updateLoad', async (data: Partial<ILoadModel>, { rejectWithValue }) => {
     try {
-        const response = await http.patch(`/loads/${id}`, data);
+        const response = await http.patch(`/loads/${data.id}`, LoadSerializer.serialize(data));
         return deserializeLoad(await deserialize(response.data));
     } catch (error) {
         return rejectWithValue(error);
@@ -94,7 +95,7 @@ export const loadSlice = createSlice({
             state.load = null;
         },
         setLoad: (state, action) => {
-            state.load = action.payload;
+            state.load = deserializeLoad(action.payload);
         }
     },
     extraReducers: (builder) => {
@@ -154,7 +155,7 @@ export const loadSlice = createSlice({
         // Update Load
         builder.addCase(updateLoad.fulfilled, (state, action) => {
             state.loading = false;
-            state.load = action.payload;
+            // state.load = action.payload;
         });
         builder.addCase(updateLoad.pending, (state) => {
             state.loading = true;

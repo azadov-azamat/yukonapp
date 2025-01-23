@@ -13,8 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { debounce } from 'lodash';
 import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/content-loader'
 import { startLoading, stopLoading } from '@/redux/reducers/variable'
-import LoadCardModal from '@/components/modal/load'
-import { getCityName } from '@/utils/general'
+import { LoadModal, SubscriptionModal } from '@/components/modal'
 
 const SearchLoadScreen = () => {
     const route = useRoute();
@@ -22,6 +21,7 @@ const SearchLoadScreen = () => {
     const {t} = useTranslation();
     const navigation = useNavigation();
     const {loads, pagination, stats, loading: cargoLoad} = useAppSelector(state => state.load);
+    const {user} = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
     
     const [dateRange, setDateRange] = React.useState([]);
@@ -48,11 +48,16 @@ const SearchLoadScreen = () => {
     const [viewId, setViewId] = React.useState(null);
     const [isGridView, setIsGridView] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
-
+    const [openSubscriptionModal, setOpenSubscriptionModal] = React.useState(false)
+    
     const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard onPress={() => toggleSetId(item)} load={item} /> : 
                                                                 <LoadGridCard onPress={() => toggleSetId(item)} load={item} />);
     const RenderContentLoadItem = React.memo(() => isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
 
+    React.useEffect(()=> {    
+      if (user) setOpenModal(user?.isSubscriptionModal)
+    }, [user]);
+  
     const toggleView = () => {
       setIsGridView((prev) => !prev);
     };
@@ -64,6 +69,8 @@ const SearchLoadScreen = () => {
     const toggleSetId = (item) => {
       setViewId(item.id);
       dispatch(setLoad(item))
+      // item.openMessageCounter=+1;
+      // dispatch(updateLoad(item))
     }
     
     const debouncedFetchExtract = React.useCallback(
@@ -279,6 +286,11 @@ const SearchLoadScreen = () => {
         setPage(previus => previus + 1); 
       }
     }
+
+    const toggleSubscriptionModal =()=> {
+      if (user) user.isSubscriptionModal = false;
+      setSubscriptionOpenModal(!openModal)
+    }
     
     return (
         <View className="flex-1 bg-gray-100">
@@ -370,7 +382,8 @@ const SearchLoadScreen = () => {
                   renderItem={({ item }) => <RenderLoadItem item={item} />}
               />
             )}
-            <LoadCardModal open={openModal} toggle={toggleModal}/>
+            <LoadModal open={openModal} toggle={toggleModal}/>
+            <SubscriptionModal open={openSubscriptionModal} toggle={toggleSubscriptionModal}/>
         </View>
     )
 }
