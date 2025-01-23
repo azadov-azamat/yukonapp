@@ -9,20 +9,23 @@ import { useAppSelector } from '@/redux/hooks';
 interface loadInterface {
   load: LoadModel,
   onPress: () => void;
+  showElement?: boolean;
 }
-const LoadCard = ({load, onPress}: loadInterface) => {
+const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
   const {user} = useAppSelector(state => state.auth);
   const {t} = useTranslation();
   
+  const ParentComponent = showElement ? View : TouchableOpacity;
+  
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      className="flex-col items-start justify-between px-4 py-2 mb-4 bg-white rounded-lg shadow-sm">
+    <ParentComponent
+    {...(!showElement && { onPress })} 
+    className="flex-col items-start justify-between px-4 py-2 mb-4 bg-white rounded-lg shadow-sm">
     {/* Left Side: Origin and Destination */}
     <View className="flex-1">
       <Text className="text-lg font-bold text-gray-800">
       <Text className="text-lg font-bold">{getCityName(load?.originCity)}</Text>
-        {/* <Text className="text-lg font-bold"> - {getCityName(load.destinationCity)}</Text> */}
+        <Text className="text-lg font-bold"> - {getCityName(load.destinationCity)}</Text>
       </Text>
     </View>
 
@@ -38,7 +41,7 @@ const LoadCard = ({load, onPress}: loadInterface) => {
       <Text className="text-sm text-gray-600">{dateFromNow(load.publishedDate || load.createdAt || '')}</Text>
     </View>
     </View>
-  </TouchableOpacity>
+  </ParentComponent>
   );
 };
 

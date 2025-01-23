@@ -61,13 +61,21 @@ export function getCityName(city: any): string {
     return currentLanguage === 'uz' ? uzKey || fallbackText : ruKey || fallbackText;
 }
 
-export const formatPrice = (price: number | null | undefined): string => {
-    if (!price) {
-      return '0';
-    }
+export const formatPrice = (x: number, hideSign?: boolean): string => {
+    if (!x) return '0';
+    let result = x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    if (x < 20000 && x > 100) {
+        if (hideSign) {
+          return result;
+        }
+        return '$' + result;
+      }
   
-    // Narxni bo'laklarga ajratish va formatlash
-    return price.toLocaleString('en-US');
+      if (x <= 50) {
+        return result + '%';
+      }
+  
+      return result;
 };
 
 const DefaultDeserializer = new Deserializer({

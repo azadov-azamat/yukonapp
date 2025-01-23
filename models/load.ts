@@ -64,6 +64,7 @@ export default class LoadModel implements ILoadModel {
   }
 
   async phoneFunction(user: UserModel, dispatch: any, close?: () => void): Promise<void> {
+    this.loading = true;
     await this.handleFunction({
       endpoint: `loads/${this.id}/phone`,
       user,
@@ -89,6 +90,7 @@ export default class LoadModel implements ILoadModel {
                 text1: 'phone-not-found',
             });
         }
+        this.loading = false;
         this.save(dispatch);
       },
       close
@@ -96,12 +98,14 @@ export default class LoadModel implements ILoadModel {
   }
 
   async urlFunction(user: UserModel): Promise<void> {
+    this.loading = true;
     await this.handleFunction({
         endpoint: `loads/${this.id}/url`, 
         user, 
         successCallback: async (response) => {
             console.log('Opening URL:', response.url);
             this.openMessageCounter += 1;
+            this.loading = false;
         }}
 );
   }

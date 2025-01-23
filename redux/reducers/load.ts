@@ -92,6 +92,9 @@ export const loadSlice = createSlice({
         },
         clearLoad: (state) => {
             state.load = null;
+        },
+        setLoad: (state, action) => {
+            state.load = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -174,5 +177,5 @@ export const loadSlice = createSlice({
     },
 });
 
-export const { clearLoads, clearLoad } = loadSlice.actions;
+export const { clearLoads, clearLoad, setLoad } = loadSlice.actions;
 export default loadSlice.reducer;

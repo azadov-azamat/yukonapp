@@ -5,7 +5,7 @@ import { CustomBadgeSelector, CustomButton, CustomInput } from '@/components/cus
 import LoadRouteSelector from '@/components/load-route-selector'
 import { EmptyStateCard, LoadGridCard, LoadListCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import { clearLoad, clearLoads, getLoadById, searchLoads } from '@/redux/reducers/load'
+import { clearLoad, clearLoads, getLoadById, searchLoads, setLoad } from '@/redux/reducers/load'
 import { useRoute } from '@react-navigation/native';
 import { getExtractCity } from '@/redux/reducers/city'
 import { useNavigation } from '@react-navigation/native';
@@ -24,7 +24,6 @@ const SearchLoadScreen = () => {
     const {loads, pagination, stats, loading: cargoLoad} = useAppSelector(state => state.load);
     const { loading } = useAppSelector(state => state.variable);
     
-    const [searchText, setSearchText] = React.useState('');
     const [dateRange, setDateRange] = React.useState([]);
     const truckTypes = OPTIONS['truck-types'].filter(item => item.value !== 'not_specified');
     const booleanFiltersData = OPTIONS['boolean-filters'];
@@ -42,20 +41,30 @@ const SearchLoadScreen = () => {
     const arrival = route.params?.arrival;
     const departure = route.params?.departure; 
     
+    const [searchText, setSearchText] = React.useState(arrival ? `${arrival} ${departure}` : '');
+    
     const [origin, setOrigin] = React.useState(null);
     const [destination, setDestination] = React.useState(null);
     const [viewId, setViewId] = React.useState(null);
     const [isGridView, setIsGridView] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
 
-    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard onPress={() => setViewId(item.id)} load={item} /> : <LoadGridCard onPress={() => setViewId(item.id)} load={item} />);
+    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard onPress={() => toggleSetId(item)} load={item} /> : 
+                                                                <LoadGridCard onPress={() => toggleSetId(item)} load={item} />);
     const RenderContentLoadItem = React.memo(() => isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
 
     const toggleView = () => {
       setIsGridView((prev) => !prev);
     };
 
-    const toggleModal = () => setOpenModal(!openModal);
+    const toggleModal = () => {
+      setOpenModal(!openModal)
+    };
+    
+    const toggleSetId = (item) => {
+      setViewId(item.id);
+      dispatch(setLoad(item))
+    }
     
     const debouncedFetchExtract = React.useCallback(
       debounce(() => {
@@ -71,20 +80,24 @@ const SearchLoadScreen = () => {
     
     React.useEffect(() => {
       if (viewId) {
-        dispatch(getLoadById(viewId)).unwrap();
         toggleModal();
+        dispatch(getLoadById(viewId));
       } else {
         dispatch(clearLoad())
       }
     }, [viewId])
 
+    React.useEffect(() => {
+      if (!openModal) {
+        setViewId(null);
+      }
+    }, [openModal])
+    
         // 3. Arrival va departure page yuklanganda o'rnatiladi
     React.useEffect(() => {
       if (arrival) {
         setSearchText(`${arrival || ''} ${departure || ''}`);
-        // if (getCityName(origin) !== arrival || getCityName(destination) !== departure) {
         debouncedFetchExtract();
-        // }
       } else {
         handleClear();
       }
@@ -152,6 +165,7 @@ const SearchLoadScreen = () => {
         let query = {
           limit: limit,
           page: page,
+          sort: '!createdAt',
           isArchived: false,
           isDeleted: false,
         };
@@ -254,12 +268,6 @@ const SearchLoadScreen = () => {
         debouncedFetchExtract();
       }
     }
-  // const updateQueryParams = React.useCallback((arrival, departure) => {
-  //     navigation.setParams({
-  //       arrival,
-  //       departure,
-  //   });
-  // }, []);
   
     const isLast = pagination?.totalPages === page;
     
@@ -358,11 +366,6 @@ const SearchLoadScreen = () => {
                         loading={cargoLoad}
                     />
                   </View>}
-                  // onEndReached={loadMoreData} // Scroll pastga tushganda ishlatiladi
-                  // onEndReachedThreshold={0.5}
-                  // ListFooterComponent={
-                  //   isFetchingMore ? <ActivityIndicator size="small" color="#0000ff" /> : null
-                  // }
                   ListEmptyComponent={<EmptyStateCard type="load"/>}
                   renderItem={({ item }) => <RenderLoadItem item={item} />}
               />

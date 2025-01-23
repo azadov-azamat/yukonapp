@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, Text, Linking, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, Linking, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import {formatPhone, dateFromNow, formatPrice, getCityName, removePhoneNumbers } from '@/utils/general';
+import { dateFromNow, formatPrice, getCityName, removePhoneNumbers } from '@/utils/general';
 import LoadModel from '@/models/load';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Colors } from '@/utils/colors';
-import { CustomPhoneCall, CustomTelegramLink } from '@/components/customs';
+import { CustomOpenLink, CustomPhoneCall, CustomShowMoreText } from '@/components/customs';
+import dayjs from "dayjs";
 
 interface loadInterface {
   load: LoadModel,
@@ -30,36 +31,55 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
     return !!user?.markedExpiredLoads.find((item) => item === load.id);
   }
  
+  function formatPaymentType(type: string) {
+    return t ('post.payment-type', {
+      type: t ('payment-type.' + type),
+    });
+  }
+  
   React.useEffect(() => {
     
-  }, [load.telegram, load.phone]);
+  }, [load.telegram, load.phone, load.loading]);
   
   if (!user) {
     return null;
   }
   
-  const handleTelegramPress = async () => {
-    if (!load.telegram) {
-      Alert.alert('Error', 'Telegram username is missing!');
-      return;
+  function formatLoadReadyDate(loadReadyDate: string | Date): string {
+    const { t } = useTranslation(); // i18n translate hook
+    const date = dayjs(loadReadyDate);
+    const today = dayjs();
+    const tomorrow = dayjs().add(1, 'day');
+  
+    if (date.isSame(today, 'day')) {
+      return `${t('today')}, ${date.format('D MMMM')}`; // "Bugun, 23 Yanvar"
+    } else if (date.isSame(tomorrow, 'day')) {
+      return `${t('tomorrow')}, ${date.format('D MMMM')}`; // "Ertaga, 24 Yanvar"
+    } else {
+      return date.format('D MMMM'); // "25 Yanvar"
     }
-
-    try {
-      const canOpen = await Linking.canOpenURL(load.telegram);
-      if (canOpen) {
-        await Linking.openURL(load.telegram);
-      } else {
-        Alert.alert('Error', 'Telegram app not installed!');
-      }
-    } catch (error) {
-      console.error('Failed to open Telegram:', error);
-      Alert.alert('Error', 'Unable to open Telegram.');
-    }
-  };
+  }
+  
+  function formatPriceAndPrepayment(
+    price: number,
+    hasPrepayment: boolean,
+    prepaymentAmount: number,
+    originId: number,
+    destinationId: number,
+  ) {
+    const prepayment = hasPrepayment
+      ? prepaymentAmount
+        ? ` (${t ('prepayment')} ${formatPrice(prepaymentAmount)})`
+        : ` (${t ('has-prepayment')})`
+      : '';
+    return `${(price ? formatPrice(price, originId === 1 && destinationId === 1) : '') + prepayment}`;
+  }
+  
+  const ParentComponent = showElement ? View : TouchableOpacity;
   
   return (
-    <TouchableOpacity
-      onPress={onPress}
+    <ParentComponent
+      {...(!showElement && { onPress })} 
       className={`mb-4 bg-white ${showElement ? '' : 'p-4 shadow-md rounded-xl'}`}>
       {/* Top Row */}
       {!showElement && <View className="flex-row items-center justify-between mb-4">
@@ -91,22 +111,16 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
         {/* Origin */}
         <View className="items-start flex-1">
           <Text className="text-lg font-bold">{getCityName(load?.originCity)}</Text>
-          <View className='flex-row flex-1 w-full space-x-1'>
-            <Text>{load.originCountry?.icon}</Text>
-            <Text className="text-gray-500">{getCityName(load.originCountry)}</Text>
-          </View>
+          <Text className="text-gray-500">{load.originCountry?.icon + " " + getCityName(load.originCountry)}</Text>
         </View>
 
         {/* Path Line */}
-        <View className="h-[2px] bg-gradient-to-r from-blue-400 to-transparent flex-1 mx-4" />
+        {/* <View className="h-[2px] bg-gradient-to-r from-blue-400 to-transparent flex-1 mx-4" /> */}
 
         {/* Destination */}
         <View className="items-end flex-1">
           <Text className="text-lg font-bold">{getCityName(load.destinationCity)}</Text>
-          <View className='flex-row flex-1 w-full space-x-1'>
-            <Text>{load.destinationCountry?.icon}</Text>
-            <Text className="text-gray-500">{getCityName(load.destinationCountry)}</Text>
-          </View>
+          <Text className="text-gray-500">{load.destinationCountry?.icon + " " + getCityName(load.destinationCountry)}</Text>
         </View>
       </View>
 
@@ -118,16 +132,18 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
           <View className="space-y-2">
             {!load.phone && <TouchableOpacity onPress={() => load.phoneFunction(user, dispatch)} className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="call" size={18} color={Colors.light.tint} /> 
+                {load.loading ? <ActivityIndicator size={18} color="white" /> : <Ionicons name="call" size={18} color={Colors.light.tint} /> }
               </View>
               <Text className="text-base blue-500">
                 {t ('show-phone-number')}
               </Text>
             </TouchableOpacity>}
 
-            {load.phone && <CustomPhoneCall phoneNumber={load.phone} />}
-            <View />
-            {load.telegram && <CustomTelegramLink url={load.telegram} />}
+            {load.phone && <View><CustomPhoneCall phoneNumber={load.phone} /></View>}
+            
+            {load.telegram && <View><CustomOpenLink url={load.telegram} /> </View>}
+            
+            {(load.telegram || load.phone) && load.url ? <View><CustomOpenLink url={load.url} text='message-link' /></View> : ''}
             
             {load.goods && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
@@ -143,13 +159,56 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
               <Text className="text-base">{handleDetermineTon(load.weight)}</Text>
             </View>}
 
-            {load.price && <View className='flex-row items-center space-x-2'>
+            {(load.price || load.hasPrepayment || load.prepaymentAmount) && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
                 <Ionicons name="cash" size={18} color={Colors.light.tint} /> 
               </View>
-              <Text className="text-base font-semibold text-blue-500">{formatPrice(load.price)}</Text>
+              <Text className="text-base font-semibold text-blue-500">{showElement ? 
+                formatPriceAndPrepayment(
+                  load.price, 
+                  load.hasPrepayment, 
+                  load.prepaymentAmount, 
+                  load.originCountry?.id || 1,
+                  load.destinationCountry?.id || 1
+                ) : formatPrice(load.price)
+                }</Text>
             </View>}
 
+            {load.isDagruz && <View className='flex-row items-center space-x-2'>
+              <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
+                <Ionicons name="cube" size={18} color={Colors.light.tint} /> 
+              </View>
+              <Text className="text-base">{t ('dagruz')}</Text>
+            </View>}
+            
+            {load.paymentType && (load.paymentType !== 'not_specified') && <View className='flex-row items-center space-x-2'>
+              <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
+                <Ionicons name="card" size={18} color={Colors.light.tint} /> 
+              </View>
+              <Text className="text-base">{formatPaymentType(load.paymentType)}</Text>
+            </View>}
+            
+            {load.loadReadyDate && <View className='flex-row items-center space-x-2'>
+              <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
+                <Ionicons name="calendar" size={18} color={Colors.light.tint} /> 
+              </View>
+              <Text className="text-base">{t ('loads.load-ready-date')} - {formatLoadReadyDate(load.loadReadyDate)}</Text>
+            </View>}
+            
+            {load.isLikelyOwner && <View className='flex-row items-center space-x-2'>
+              <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
+                <Ionicons name="person" size={18} color={Colors.light.tint} /> 
+              </View>
+              <Text className="text-base">{t ('is-likely-owner')}</Text>
+            </View>}
+            
+            { load.customsClearanceLocation && (load.customsClearanceLocation !== null) && <View className='flex-row items-center space-x-2'>
+              <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
+                <Ionicons name="person" size={18} color={Colors.light.tint} /> 
+              </View>
+              <Text className="text-base">{t ('customs-clearance', {customClearance: load.customsClearanceLocation})}</Text>
+            </View>}
+            
             <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
                 <Ionicons name="time" size={18} color={Colors.light.tint} /> 
@@ -161,11 +220,11 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
           {/* Separator */}
           <View className="my-2 border-t border-gray-300"></View>
 
-          {/* Description */}
-          <Text className="text-sm text-gray-600">
-            {removePhoneNumbers(load.description).text}
-          </Text>
-
+          
+          <CustomShowMoreText 
+            text={load.phone ? load.description : removePhoneNumbers(load.description).text}
+          />
+          
         </>
       }
       {/* Bottom Row */}
@@ -182,7 +241,7 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
           <Ionicons name="cash-outline" size={20} color="#2563eb" />
         </View>
       </View>}
-    </TouchableOpacity>
+    </ParentComponent>
   );
 };
 
