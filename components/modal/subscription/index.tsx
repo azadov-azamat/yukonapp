@@ -11,14 +11,14 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
     const dispatch = useAppDispatch();
     const {t} = useTranslation();
     const {plans, loading} = useAppSelector(state => state.variable);
-console.log(plans);
-
+    const [selectedId, setSelected] = React.useState<number | null>(null);
+    
     React.useEffect(() => {
         dispatch(getPlans());
     }, []);
 
     const handleSelectPlan = (id: number) => {
-        dispatch(getPlanById(id)); // ID orqali rejani yuklash
+        setSelected(id);
     };
 
     if (loading) return <Text className="text-lg text-center text-gray-700">Yuklanmoqda...</Text>;
@@ -37,7 +37,7 @@ console.log(plans);
                     <TouchableOpacity
                         key={plan.id}
                         onPress={() => handleSelectPlan(plan?.id)}
-                        className="p-4 bg-white border rounded-lg shadow-md"
+                        className={`p-4 bg-white border rounded-lg shadow-md ${selectedId === plan.id ? 'border-primary' :'border-border-color'} `}
                     >
                         <Text className="text-lg font-semibold text-gray-800">{getName(plan, 'name')}</Text>
                         <Text className="mt-2 text-sm text-gray-600">{getName(plan, 'description')}</Text>
