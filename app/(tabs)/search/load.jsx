@@ -14,6 +14,7 @@ import { debounce } from 'lodash';
 import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/content-loader'
 import { startLoading, stopLoading } from '@/redux/reducers/variable'
 import { LoadModal, SubscriptionModal } from '@/components/modal'
+import { updateUserSubscriptionModal } from '@/redux/reducers/auth'
 
 const SearchLoadScreen = () => {
     const route = useRoute();
@@ -285,6 +286,8 @@ const SearchLoadScreen = () => {
       }
     }
 
+    const toggleSubscriptionModal =()=> dispatch(updateUserSubscriptionModal())
+    
     return (
         <View className="flex-1 bg-gray-100">
             {origin ? (
@@ -376,6 +379,7 @@ const SearchLoadScreen = () => {
               />
             )}
             <LoadModal open={openModal} toggle={toggleModal}/>
+            <SubscriptionModal open={!!user?.isSubscriptionModal || false} toggle={toggleSubscriptionModal}/>
         </View>
     )
 }

@@ -1,8 +1,8 @@
+import React from "react";
 import { Stack } from "expo-router";
 import {Provider} from 'react-redux';
 import { store } from "@/redux/store";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useAppSelector } from "@/redux/hooks";
 import { StatusBar } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 import Toast from 'react-native-toast-message';
@@ -13,6 +13,7 @@ NativeWindStyleSheet.setOutput({
 });
 
 function App() {
+
   return (
     <SafeAreaProvider>
         <Stack screenOptions={{

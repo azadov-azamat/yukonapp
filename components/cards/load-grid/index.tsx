@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Text, Linking, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { dateFromNow, formatPrice, getCityName, removePhoneNumbers } from '@/utils/general';
-import LoadModel from '@/models/load';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Colors } from '@/utils/colors';
@@ -10,10 +9,10 @@ import { CustomOpenLink, CustomPhoneCall, CustomShowMoreText } from '@/component
 import dayjs from "dayjs";
 import { loadCardInterfaceProps } from '@/interface/components';
 
-const LoadCard = ({load, onPress, showElement = false}: loadCardInterfaceProps) => {
+const LoadCard = ({load, onPress, showElement = false, close}: loadCardInterfaceProps) => {
   const dispatch = useAppDispatch();
-  const {user} = useAppSelector(state => state.auth);
   const {t} = useTranslation();
+  const {user} = useAppSelector(state => state.auth);
   
   function handleDetermineTon(weight: number) {
     if (weight < 0.5) {
@@ -131,7 +130,7 @@ const LoadCard = ({load, onPress, showElement = false}: loadCardInterfaceProps) 
                 {load.loading ? <ActivityIndicator size={18} color="white" /> : <Ionicons name="call" size={18} color={Colors.light.tint} /> }
               </View>
               <Text className="text-base blue-500">
-                {t ('show-phone-number')}
+                {t ('show-phone-number')} {String(user.isSubscriptionModal)}
               </Text>
             </TouchableOpacity>}
 

@@ -1,17 +1,15 @@
-import { ActivityIndicator } from 'react-native';
 import React from 'react'
 import DynamicModal from '../dialog';
-import { LoadGridCard } from '@/components/cards';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useAppDispatch } from '@/redux/hooks';
 import { ModalItemProps } from '@/interface/components';
-
+import { Text } from 'react-native';
 
 const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
     const dispatch = useAppDispatch();
-
+console.log(open);
     return (
         <DynamicModal open={open} toggle={toggle}>
-            Subsciption modal
+            <Text>Subsciption modal</Text>
         </DynamicModal>
     )
 }
