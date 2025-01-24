@@ -13,8 +13,6 @@ NativeWindStyleSheet.setOutput({
 });
 
 function App() {
-  const { user } = useAppSelector(state => state.auth);
-
   return (
     <SafeAreaProvider>
         <Stack screenOptions={{

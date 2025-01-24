@@ -48,15 +48,10 @@ const SearchLoadScreen = () => {
     const [viewId, setViewId] = React.useState(null);
     const [isGridView, setIsGridView] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
-    const [openSubscriptionModal, setOpenSubscriptionModal] = React.useState(false)
     
-    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard onPress={() => toggleSetId(item)} load={item} /> : 
-                                                                <LoadGridCard onPress={() => toggleSetId(item)} load={item} />);
+    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} /> : 
+                                                                <LoadGridCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />);
     const RenderContentLoadItem = React.memo(() => isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
-
-    React.useEffect(()=> {    
-      if (user) setOpenModal(user?.isSubscriptionModal)
-    }, [user]);
   
     const toggleView = () => {
       setIsGridView((prev) => !prev);
@@ -69,8 +64,10 @@ const SearchLoadScreen = () => {
     const toggleSetId = (item) => {
       setViewId(item.id);
       dispatch(setLoad(item))
-      // item.openMessageCounter=+1;
-      // dispatch(updateLoad(item))
+      // if (item.openMessageCounter) {
+      //   item.openMessageCounter=+1;
+      //   dispatch(updateLoad(item))        
+      // }
     }
     
     const debouncedFetchExtract = React.useCallback(
@@ -146,7 +143,8 @@ const SearchLoadScreen = () => {
     const handleClear = () => {
       setOrigin(null);
       setDestination(null);
-      setSearchText('')
+      setSearchText('');
+      setLimit(10);
       navigation.setParams({
         arrival: undefined, // Parametrni tozalash uchun undefined qilib o'rnating
         departure: undefined
@@ -287,11 +285,6 @@ const SearchLoadScreen = () => {
       }
     }
 
-    const toggleSubscriptionModal =()=> {
-      if (user) user.isSubscriptionModal = false;
-      setSubscriptionOpenModal(!openModal)
-    }
-    
     return (
         <View className="flex-1 bg-gray-100">
             {origin ? (
@@ -383,7 +376,6 @@ const SearchLoadScreen = () => {
               />
             )}
             <LoadModal open={openModal} toggle={toggleModal}/>
-            <SubscriptionModal open={openSubscriptionModal} toggle={toggleSubscriptionModal}/>
         </View>
     )
 }

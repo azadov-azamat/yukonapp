@@ -5,13 +5,9 @@ import { dateFromNow, formatPrice, getCityName } from '@/utils/general';
 import LoadModel from '@/models/load';
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/redux/hooks';
+import { loadCardInterfaceProps } from '@/interface/components';
 
-interface loadInterface {
-  load: LoadModel,
-  onPress: () => void;
-  showElement?: boolean;
-}
-const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
+const LoadCard = ({load, onPress, showElement = false}: loadCardInterfaceProps) => {
   const {user} = useAppSelector(state => state.auth);
   const {t} = useTranslation();
   

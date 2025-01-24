@@ -1,3 +1,4 @@
+import LoadModel from "@/models/load";
 import { Ionicons } from "@expo/vector-icons";
 import { StyleProp, TextInputProps, TextStyle, ViewStyle } from "react-native";
 
@@ -53,4 +54,11 @@ export interface ModalItemProps {
     open: boolean;
     toggle: () => void;
     children?: React.ReactNode;
+}
+
+export interface loadCardInterfaceProps {
+    load: LoadModel,
+    onPress?: () => void;
+    showElement?: boolean;
+    close?: () => void;
 }

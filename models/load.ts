@@ -5,7 +5,7 @@ import { updateLoad } from "@/redux/reducers/load";
 import { removePhoneNumbers } from "@/utils/general";
 import Toast from "react-native-toast-message";
 import UserModel from "./user";
-import { setUser } from "@/redux/reducers/auth";
+import { setUser, updateUserSubscriptionModal } from "@/redux/reducers/auth";
 
 export default class LoadModel implements ILoadModel {
   id = null;
@@ -144,8 +144,7 @@ export default class LoadModel implements ILoadModel {
             user.loadSearchLimit--;
             await user.save(dispatch);
         } else {
-            user.isSubscriptionModal = true;
-            dispatch(setUser(user));
+            dispatch(updateUserSubscriptionModal());
             close?.();
         }
       } else {
@@ -162,7 +161,7 @@ export default class LoadModel implements ILoadModel {
 
   async checkSubscription(user: UserModel) {
     try {
-        return await user.hasActiveSubscription();
+        return await user?.hasActiveSubscription();
     } catch (err) {
         console.log(err)
         return false;

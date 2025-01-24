@@ -8,13 +8,9 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Colors } from '@/utils/colors';
 import { CustomOpenLink, CustomPhoneCall, CustomShowMoreText } from '@/components/customs';
 import dayjs from "dayjs";
+import { loadCardInterfaceProps } from '@/interface/components';
 
-interface loadInterface {
-  load: LoadModel,
-  onPress?: () => void;
-  showElement?: boolean;
-}
-const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
+const LoadCard = ({load, onPress, showElement = false}: loadCardInterfaceProps) => {
   const dispatch = useAppDispatch();
   const {user} = useAppSelector(state => state.auth);
   const {t} = useTranslation();
@@ -80,7 +76,7 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
   return (
     <ParentComponent
       {...(!showElement && { onPress })} 
-      className={`mb-4 bg-white ${showElement ? '' : 'p-4 shadow-md rounded-xl'}`}>
+      className={`mb-4 bg-white ${showElement ? 'overflow-visible' : 'p-4 shadow-md rounded-xl'}`}>
       {/* Top Row */}
       {!showElement && <View className="flex-row items-center justify-between mb-4">
         {/* Cargo Type and Weight */}
@@ -130,7 +126,7 @@ const LoadCard = ({load, onPress, showElement = false}: loadInterface) => {
 
           {/* Details */}
           <View className="space-y-2">
-            {!load.phone && <TouchableOpacity onPress={() => load.phoneFunction(user, dispatch)} className='flex-row items-center space-x-2'>
+            {!load.phone && <TouchableOpacity onPress={() => load.phoneFunction(user, dispatch, close)} className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
                 {load.loading ? <ActivityIndicator size={18} color="white" /> : <Ionicons name="call" size={18} color={Colors.light.tint} /> }
               </View>

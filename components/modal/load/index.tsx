@@ -4,6 +4,7 @@ import DynamicModal from '../dialog';
 import { LoadGridCard } from '@/components/cards';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { ModalItemProps } from '@/interface/components';
+import { updateLoad } from '@/redux/reducers/load';
 // import { updateLoad } from '@/redux/reducers/load';
 
 const LoadCardModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
@@ -16,10 +17,10 @@ const LoadCardModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
         </DynamicModal>;
     }
 
-    // useEffect(() => {
-        // load.openMessageCounter=+1;
-        // dispatch(updateLoad(load))
-    // }, []);
+    // React.useEffect(() => {
+    //     load.openMessageCounter=+1;
+    //     dispatch(updateLoad(load))
+    // }, [load]);
 
     return (
         <DynamicModal open={open} toggle={toggle}>

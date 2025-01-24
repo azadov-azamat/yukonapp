@@ -42,7 +42,7 @@ const ShowMoreText = ({ text }: { text: string }) => {
   };
 
   return (
-    <View className={`relative w-full overflow-hidden`}>
+    <View className={`relative w-full`}>
       {/* Text Content */}
       <ScrollView
         className={`overflow-hidden ${isExpanded ? 'max-h-screen' : `max-h-[${MAX_HEIGHT}px]`}`}
@@ -63,7 +63,7 @@ const ShowMoreText = ({ text }: { text: string }) => {
       {!isTruncated && (
         <TouchableOpacity
           onPress={toggleTextVisibility}
-          className={`absolute top-0 right-0 flex items-center justify-center w-8 h-8 bg-primary/20 rounded-full`}
+          className={`absolute top-0 z-10 -right-2 flex items-center justify-center w-8 h-8 bg-primary/20 rounded-full`}
         >
             <Ionicons name={isExpanded ? 'chevron-collapse' : 'chevron-expand'} size={17} color={Colors.light.tint}/>
         </TouchableOpacity>

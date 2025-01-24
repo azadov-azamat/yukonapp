@@ -6,6 +6,7 @@ import { AuthInitialProps} from "@/interface/redux/auth.interface";
 import Toast from 'react-native-toast-message';
 import { IUserModel } from "@/interface/redux/user.interface";
 import { UserSerializer } from "@/serializers";
+import UserModel from "@/models/user";
 
 export const getUserMe = createAsyncThunk('auth/getUserMe', async (id: number, {rejectWithValue}) => {
     try {
@@ -46,8 +47,14 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        setUser: (state, action) => {
+        setUser: (state, action) => {            
             state.user = action.payload
+        },
+        updateUserSubscriptionModal: (state) => {
+            if (state.user) {
+                state.user.isSubscriptionModal = !state.user.isSubscriptionModal;
+            }
+            console.log("state.user", state.user); 
         }
     },
     extraReducers: (builder) => {
@@ -91,5 +98,5 @@ export const authSlice = createSlice({
     }
 })
 
-export const {setUser} = authSlice.actions;
+export const {setUser, updateUserSubscriptionModal} = authSlice.actions;
 export default authSlice.reducer
