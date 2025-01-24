@@ -1,6 +1,7 @@
 import { IPlanModel } from "@/interface/redux/variable.interface";
 
 export default class PlanModel implements IPlanModel {
+    id = 0;
     nameRu: string = '';
     nameUz: string = '';
     nameCyrl: string = '';

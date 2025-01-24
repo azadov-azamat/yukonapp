@@ -13,6 +13,8 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import 'dayjs/locale/en';
 import 'dayjs/locale/ru';
 import 'dayjs/locale/uz';
+import { IPlanModel } from "@/interface/redux/variable.interface";
+import PlanModel from "@/models/plan";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -61,6 +63,20 @@ export function getCityName(city: any): string {
     return currentLanguage === 'uz' ? uzKey || fallbackText : ruKey || fallbackText;
 }
 
+export function getName(object: any, key: string): string {
+    const currentLanguage = i18n.language;
+
+    const uzKey = object[key + '_uz'] || object[key + 'Uz'];
+    const ruKey = object[key + '_ru'] || object[key + 'Ru'];
+    const cyrlKey = object[key + '_cyrl'] || object[key + 'Cyrl'];
+
+    const fallbackText = i18n.t('truck-type.not_specified');
+
+    // Return the value based on the current language
+    return currentLanguage === 'uz' ? uzKey || fallbackText : ruKey || fallbackText;
+}
+
+
 export const formatPrice = (x: number, hideSign?: boolean): string => {
     if (!x) return '0';
     let result = x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -96,6 +112,10 @@ export const deserializeUser = (data: IUserModel): UserModel => {
 
 export const deserializeLoad = (data: ILoadModel): LoadModel => {
     return new LoadModel(data);
+};
+
+export const deserializePlan = (data: IPlanModel): PlanModel => {
+    return new PlanModel(data);
 };
 
 export function removePhoneNumbers(text: string) {

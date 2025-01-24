@@ -1,5 +1,12 @@
+import PlanModel from "@/models/plan";
 import { IUserModel } from "./user.interface";
 
+export interface VariableInitialProps {
+    plans: PlanModel[] | [];
+    selectedPlan: PlanModel | null;
+    loading: boolean;
+    activeLoaders: number;
+}
 
 export interface CityInitialProps {
     cities: any;
