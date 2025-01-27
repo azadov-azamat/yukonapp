@@ -2,13 +2,13 @@ import React from 'react'
 import DynamicModal from '../dialog';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { ModalItemProps } from '@/interface/components';
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert, Linking } from "react-native";
 import { getPlans } from '@/redux/reducers/variable';
 import { formatPrice, getName } from '@/utils/general';
 import { useTranslation } from 'react-i18next';
-import { CustomButton, CustomOpenLink } from '@/components/customs';
+import { CustomButton } from '@/components/customs';
 import { Ionicons } from '@expo/vector-icons';
-// import RenderHTML from 'react-native-render-html';
+import RenderHTML from 'react-native-render-html';
 
 const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
     const dispatch = useAppDispatch();
@@ -32,16 +32,19 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
 
     if (loading) return "";
 
-    // const source = {
-    //     html: t('ask-to-support'),
-    //   };
-    
+    const parseHTML = (html: string) => {
+        // Oddiy HTML-ni JavaScript matnlariga aylantirish
+        return html.replace(/<a href="(.*?)".*?>(.*?)<\/a>/g, (_, href, text) => {
+          return `<Text onPress={() => Linking.openURL('${href}')} style={styles.link}>${text}</Text>`;
+        });
+      };
+
     return (
         <DynamicModal open={open} toggle={toggle}>
              <View className="relative flex-1">
                 {/* Header */}
                 <View className='flex-row items-start flex-1 gap-2 mb-4'>
-                    <Ionicons name='alert-circle-sharp'/>
+                    {/* <Ionicons name='alert-circle-sharp'/> */}
                     <Text className="text-base font-bold text-center text-red-600 light-0">
                         {t ('daily-limit-text')}
                     </Text>
@@ -62,15 +65,14 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
                     ))}
                 </ScrollView>
 
-                <View className='flex items-center gap-2 my-2'>
-                    <Ionicons name='alert-circle-sharp'/>
-                    <Text style={{ fontSize: 16, marginBottom: 8 }}>
-        {t('ask-to-support')} {/* Agar qo'shimcha matn kerak bo'lsa */}
-      </Text>
-      {/* <RenderHTML
-        contentWidth={300}
-        source={source}
-      /> */}
+                <View className='flex items-start gap-2 my-2'>
+                    <Text className='text-lg'>
+                        <RenderHTML
+                            contentWidth={100}
+                            source={{ html: t ('ask-to-support') }}
+                            baseStyle={{fontSize: 16, fontWeight: 'bold'}}
+                        />
+                    </Text>
                 </View>
                 
                     <CustomButton
