@@ -6,6 +6,7 @@ import { removePhoneNumbers } from "@/utils/general";
 import Toast from "react-native-toast-message";
 import UserModel from "./user";
 import { setUser, updateUserSubscriptionModal } from "@/redux/reducers/auth";
+import { phoneLoad } from "@/redux/reducers/variable";
 
 export default class LoadModel implements ILoadModel {
   id = null;
@@ -126,10 +127,10 @@ export default class LoadModel implements ILoadModel {
     successCallback: (response: any) => void;
     close?: () => void;
   }) {
-    this.loading = true;
+    dispatch(phoneLoad()); // loading true
 
     if (!user) {
-        this.loading = false;
+        dispatch(phoneLoad()); // loading false
         console.log("open auth modal"); // FUTURE
         return ''
     }
@@ -155,9 +156,10 @@ export default class LoadModel implements ILoadModel {
       }
     } catch (e) {
       console.error('An error occurred:', e);
+      dispatch(phoneLoad()); // loading false
     } finally {
-      this.loading = false;
-    //   close?.();
+      dispatch(phoneLoad()); // loading false
+      close?.();
     }
   }
 

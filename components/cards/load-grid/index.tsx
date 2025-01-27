@@ -13,6 +13,7 @@ const LoadCard = ({load, onPress, showElement = false, close}: loadCardInterface
   const dispatch = useAppDispatch();
   const {t} = useTranslation();
   const {user} = useAppSelector(state => state.auth);
+  const { phoneLoading } = useAppSelector(state => state.variable);
   
   function handleDetermineTon(weight: number) {
     if (weight < 0.5) {
@@ -127,14 +128,14 @@ const LoadCard = ({load, onPress, showElement = false, close}: loadCardInterface
           <View className="space-y-2">
             {!load.phone && <TouchableOpacity onPress={() => load.phoneFunction(user, dispatch, close)} className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                {load.loading ? <ActivityIndicator size={18} color="white" /> : <Ionicons name="call" size={18} color={Colors.light.tint} /> }
+                {phoneLoading ? <ActivityIndicator size={18} color={Colors.light.tint} /> : <Ionicons name="call" size={18} color={Colors.light.tint} /> }
               </View>
-              <Text className="text-base blue-500">
+              <Text className="text-base">
                 {t ('show-phone-number')}
               </Text>
             </TouchableOpacity>}
 
-            {load.phone && <View><CustomPhoneCall phoneNumber={load.phone} /></View>}
+            {load.phone && <View><CustomPhoneCall phoneNumber={load.phone} loading={phoneLoading} /></View>}
             
             {load.telegram && <View><CustomOpenLink url={load.telegram} /> </View>}
             

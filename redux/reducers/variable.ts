@@ -27,6 +27,7 @@ const initialState: VariableInitialProps = {
     plans: [], // Barcha rejalar ro'yxati
     selectedPlan: null, // Tanlangan reja
     loading: false,
+    phoneLoading: false,
     activeLoaders: 0, // Nechta process ishlayotganini hisoblash uchun
 }
 
@@ -35,17 +36,14 @@ const variableSlice = createSlice({
   initialState,
   reducers: {
     startLoading(state) {
-    //   state.activeLoaders += 1;
       state.loading = true;
     },
     stopLoading(state) {
-    //   state.activeLoaders -= 1;
-    //   if (state.activeLoaders <= 0) {
-    //     state.loading = false;
-    //     state.activeLoaders = 0;
-    //   }
       state.loading = false;
     },
+    phoneLoad(state) {
+        state.phoneLoading = !state.phoneLoading
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getPlans.pending, (state) => {
@@ -73,6 +71,6 @@ const variableSlice = createSlice({
   }
 });
 
-export const { startLoading, stopLoading } = variableSlice.actions;
+export const { startLoading, stopLoading, phoneLoad } = variableSlice.actions;
 
 export default variableSlice.reducer;

@@ -2,9 +2,9 @@ import { Colors } from '@/utils/colors';
 import { formatPhone } from '@/utils/general';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { TouchableOpacity, Text, Linking, Alert, View } from 'react-native';
+import { TouchableOpacity, Text, Linking, Alert, View, ActivityIndicator } from 'react-native';
 
-const PhoneCall = ({ phoneNumber }: { phoneNumber: string }) => {
+const PhoneCall = ({ phoneNumber, loading = false }: { phoneNumber: string; loading?: boolean }) => {
   const handlePress = async () => {
     if (!phoneNumber) {
       Alert.alert('Error', 'Phone number is missing!');
@@ -29,7 +29,7 @@ const PhoneCall = ({ phoneNumber }: { phoneNumber: string }) => {
   return (
     <TouchableOpacity onPress={handlePress} className='flex-row items-center space-x-2 '>
       <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-          <Ionicons name="call" size={18} color={Colors.light.tint} /> 
+          {loading ? <ActivityIndicator size={18} color={Colors.light.tint} /> : <Ionicons name="call" size={18} color={Colors.light.tint} />} 
       </View>
       <Text className="text-base blue-500">
           {formatPhone(phoneNumber)}

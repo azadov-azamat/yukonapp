@@ -94,7 +94,7 @@ const SearchLoadScreen = () => {
 
     React.useEffect(() => {
       if (!openModal) {
-        setViewId(null);
+        // setViewId(null);
       }
     }, [openModal])
     
@@ -127,6 +127,7 @@ const SearchLoadScreen = () => {
           arrival: undefined, // Parametrni tozalash uchun undefined qilib o'rnating
           departure: undefined
         });
+        handleClear();
       }
     }, []);
     

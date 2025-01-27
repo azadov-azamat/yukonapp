@@ -2,17 +2,17 @@ import React from 'react'
 import DynamicModal from '../dialog';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { ModalItemProps } from '@/interface/components';
-import { View, Text, TouchableOpacity, ScrollView, Alert, Linking } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, Alert, useWindowDimensions } from "react-native";
 import { getPlans } from '@/redux/reducers/variable';
 import { formatPrice, getName } from '@/utils/general';
 import { useTranslation } from 'react-i18next';
 import { CustomButton } from '@/components/customs';
-import { Ionicons } from '@expo/vector-icons';
 import RenderHTML from 'react-native-render-html';
 
 const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
     const dispatch = useAppDispatch();
     const {t} = useTranslation();
+    const { width } = useWindowDimensions();
     const {plans, loading} = useAppSelector(state => state.variable);
     const [selectedId, setSelected] = React.useState<number | null>(null);
     
@@ -31,14 +31,7 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
     };
 
     if (loading) return "";
-
-    const parseHTML = (html: string) => {
-        // Oddiy HTML-ni JavaScript matnlariga aylantirish
-        return html.replace(/<a href="(.*?)".*?>(.*?)<\/a>/g, (_, href, text) => {
-          return `<Text onPress={() => Linking.openURL('${href}')} style={styles.link}>${text}</Text>`;
-        });
-      };
-
+    
     return (
         <DynamicModal open={open} toggle={toggle}>
              <View className="relative flex-1">
@@ -51,7 +44,6 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
                 </View>
 
                 <ScrollView className="space-y-4">
-                    {/* Barcha rejalar ro'yxati */}
                     {plans.map((plan) => (
                         <TouchableOpacity
                             key={plan.id}
@@ -68,18 +60,18 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
                 <View className='flex items-start gap-2 my-2'>
                     <Text className='text-lg'>
                         <RenderHTML
-                            contentWidth={100}
+                            contentWidth={width}
                             source={{ html: t ('ask-to-support') }}
                             baseStyle={{fontSize: 16, fontWeight: 'bold'}}
                         />
                     </Text>
                 </View>
                 
-                    <CustomButton
-                        title={t ('subscribe')}
-                        onPress={() => Alert.alert("Obuna bo'lish")}
-                        buttonStyle="w-full p-3 bg-primary"
-                    />
+                <CustomButton
+                    title={t ('subscribe')}
+                    onPress={() => Alert.alert("Obuna bo'lish")}
+                    buttonStyle="w-full p-3 bg-primary"
+                />
             </View>
         </DynamicModal>
     )

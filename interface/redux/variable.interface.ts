@@ -5,6 +5,7 @@ export interface VariableInitialProps {
     plans: PlanModel[] | [];
     selectedPlan: PlanModel | null;
     loading: boolean;
+    phoneLoading: boolean;
     activeLoaders: number;
 }
 
