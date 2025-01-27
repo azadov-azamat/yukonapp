@@ -130,7 +130,7 @@ const LoadCard = ({load, onPress, showElement = false, close}: loadCardInterface
                 {load.loading ? <ActivityIndicator size={18} color="white" /> : <Ionicons name="call" size={18} color={Colors.light.tint} /> }
               </View>
               <Text className="text-base blue-500">
-                {t ('show-phone-number')} {String(user.isSubscriptionModal)}
+                {t ('show-phone-number')}
               </Text>
             </TouchableOpacity>}
 

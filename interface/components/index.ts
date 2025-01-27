@@ -21,8 +21,8 @@ export interface ButtonProps {
     disabled?: boolean; // Tugma faol yoki yo'qligi (ixtiyoriy, default: false)
     buttonStyle?: string | StyleProp<ViewStyle>; // Tugma uslubi
     textStyle?: string | StyleProp<TextStyle>; // Matn uslubi
-    isIcon: boolean;
-    iconName: keyof typeof Ionicons.glyphMap;
+    isIcon?: boolean;
+    iconName?: keyof typeof Ionicons.glyphMap;
     iconSize?: number;
 }
 

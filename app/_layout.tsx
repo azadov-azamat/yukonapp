@@ -7,6 +7,7 @@ import { StatusBar } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 import Toast from 'react-native-toast-message';
 import '@/utils/i18n';
+import { Colors } from "@/utils/colors";
 
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -17,16 +18,9 @@ function App() {
   return (
     <SafeAreaProvider>
         <Stack screenOptions={{
-          headerStyle: {
-            backgroundColor: 'transparent',
-          },
-          headerShadowVisible: false,
-          headerTintColor: '#000',
-          headerTransparent: true,
-          headerLeft: () => {
+          header: () => {
             return null;
           },
-          headerTitle: ''
           }}
           initialRouteName="index"
         >

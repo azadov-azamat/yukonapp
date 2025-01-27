@@ -286,7 +286,10 @@ const SearchLoadScreen = () => {
       }
     }
 
-    const toggleSubscriptionModal =()=> dispatch(updateUserSubscriptionModal())
+    const toggleSubscriptionModal =()=> {
+      dispatch(updateUserSubscriptionModal())
+      toggleModal();
+    }
     
     return (
         <View className="flex-1 bg-gray-100">

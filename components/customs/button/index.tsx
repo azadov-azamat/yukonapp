@@ -29,7 +29,7 @@ const Button: React.FC<ButtonProps> = ({
         <ActivityIndicator size={iconSize} color="white" />
       ) : (
         isIcon 
-        ? <TabBarIcon name={iconName} size={iconSize} color={'white'} className="m-0"/> 
+        ? <TabBarIcon name={iconName || 'search'} size={iconSize} color={'white'} className="m-0"/> 
         : 
           <Text className={`${buttonStyle && 'text-white'} text-lg ${textStyle}`}>{title}</Text>
       )}
