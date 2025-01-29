@@ -6,13 +6,14 @@ import { View, Text, TouchableOpacity, ScrollView, Alert, useWindowDimensions } 
 import { getPlans } from '@/redux/reducers/variable';
 import { formatPrice, getName } from '@/utils/general';
 import { useTranslation } from 'react-i18next';
-import { CustomButton } from '@/components/customs';
-import RenderHTML from 'react-native-render-html';
+import { CustomButton, CustomOpenLink } from '@/components/customs';
+import { useRouter } from "expo-router";
 
 const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
-    const dispatch = useAppDispatch();
+
+    const router = useRouter();
     const {t} = useTranslation();
-    const { width } = useWindowDimensions();
+    const dispatch = useAppDispatch();
     const {plans, loading} = useAppSelector(state => state.variable);
     const [selectedId, setSelected] = React.useState<number | null>(null);
     
@@ -31,6 +32,11 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
     };
 
     if (loading) return "";
+    
+    // const handleSubscribe = () => {
+    //     toggle();
+    //     router.push(`/subscription`)
+    // }
     
     return (
         <DynamicModal open={open} toggle={toggle}>
@@ -57,19 +63,13 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
                     ))}
                 </ScrollView>
 
-                <View className='flex items-start gap-2 my-2'>
-                    <Text className='text-lg'>
-                        <RenderHTML
-                            contentWidth={width}
-                            source={{ html: t ('ask-to-support') }}
-                            baseStyle={{fontSize: 16, fontWeight: 'bold'}}
-                        />
-                    </Text>
+                <View className='my-2'>
+                    <CustomOpenLink url='https://t.me/marina_laty' hasIcon={false} text={t ('ask-to-support')}/>
                 </View>
                 
                 <CustomButton
                     title={t ('subscribe')}
-                    onPress={() => Alert.alert("Obuna bo'lish")}
+                    onPress={() => Alert.alert("ishlanmoqda")}
                     buttonStyle="w-full p-3 bg-primary"
                 />
             </View>

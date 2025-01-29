@@ -7,6 +7,7 @@ import Toast from 'react-native-toast-message';
 import { IUserModel } from "@/interface/redux/user.interface";
 import { UserSerializer } from "@/serializers";
 import UserModel from "@/models/user";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getUserMe = createAsyncThunk('auth/getUserMe', async (id: number, {rejectWithValue}) => {
     try {
@@ -55,6 +56,11 @@ export const authSlice = createSlice({
                 state.user.isSubscriptionModal = !state.user.isSubscriptionModal;
             }
             console.log("state.user", state.user); 
+        },
+        logout: (state) => {
+            state.user = null;
+            state.auth = null;
+            AsyncStorage.clear();
         }
     },
     extraReducers: (builder) => {
@@ -98,5 +104,5 @@ export const authSlice = createSlice({
     }
 })
 
-export const {setUser, updateUserSubscriptionModal} = authSlice.actions;
+export const { setUser, updateUserSubscriptionModal, logout } = authSlice.actions;
 export default authSlice.reducer
