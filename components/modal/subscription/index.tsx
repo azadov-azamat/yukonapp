@@ -33,10 +33,10 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
 
     if (loading) return "";
     
-    // const handleSubscribe = () => {
-    //     toggle();
-    //     router.push(`/subscription`)
-    // }
+    const handleSubscribe = () => {
+        toggle(false);
+        router.push(`/subscription/${selectedId}`)
+    }
     
     return (
         <DynamicModal open={open} toggle={toggle}>
@@ -69,7 +69,8 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
                 
                 <CustomButton
                     title={t ('subscribe')}
-                    onPress={() => Alert.alert("ishlanmoqda")}
+                    onPress={handleSubscribe}
+                    disabled={!selectedId}
                     buttonStyle="w-full p-3 bg-primary"
                 />
             </View>

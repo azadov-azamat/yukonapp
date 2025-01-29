@@ -7,7 +7,6 @@ import { StatusBar } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 import Toast from 'react-native-toast-message';
 import '@/utils/i18n';
-import { Colors } from "@/utils/colors";
 
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -26,6 +25,7 @@ function App() {
         >
           <Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }}/> 
           <Stack.Screen name="forgot-password" options={{ headerShown: false, title: 'Forgot password' }}/> 
+          <Stack.Screen name="subscription" options={{ headerShown: false, title: 'Subscription' }}/> 
         </Stack>
 
         <StatusBar

@@ -47,7 +47,7 @@ export interface IPlanModel extends defaultData {
     descriptionUz: string;
     descriptionCyrl: string;
     planType: string;
-    durationInDays: number;
+    duration_in_days: number;
     price: number;
 }
 

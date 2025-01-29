@@ -8,7 +8,7 @@ export const useAuth = () => {
     const dispatch = useAppDispatch();
     const router = useRouter();
     const {auth, user, loading} = useAppSelector(state => state.auth);
-    // const [isNavigationReady, setIsNavigationReady] = React.useState(false);
+    const [isNavigationReady, setIsNavigationReady] = React.useState(false);
 
     async function getLocalstorageData() {
         const authData = await AsyncStorage.getItem('authenticate');
@@ -19,10 +19,10 @@ export const useAuth = () => {
         return null;
     }
     
-    React.useEffect(() => {
-        console.log("Auth loading state:", loading);
-        console.log("Auth user state:", user);
-    }, [loading, user]);
+    // React.useEffect(() => {
+    //     console.log("Auth loading state:", loading);
+    //     console.log("Auth user state:", user);
+    // }, [user]);
 
       React.useEffect(() => {
         const fetchUserData = async () => {
@@ -32,17 +32,17 @@ export const useAuth = () => {
           } else {
             router.replace("/");
           }
-        //   setIsNavigationReady(true);
+          setIsNavigationReady(true);
         };
     
         fetchUserData();
       }, [auth]);
     
       React.useEffect(()=> {
-        if (user) {
-          router.replace("/main/(tabs)/search");
+        if (user && isNavigationReady) {
+          router.replace("/(tabs)");
         }
-      }, [user]);
+      }, [user, isNavigationReady]);
 
   return { user, loading };
 };

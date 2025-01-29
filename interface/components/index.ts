@@ -52,7 +52,7 @@ export interface DirectionItemProps {
 
 export interface ModalItemProps {
     open: boolean;
-    toggle: () => void;
+    toggle: (item?: boolean) => void;
     children?: React.ReactNode;
 }
 

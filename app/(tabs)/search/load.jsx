@@ -287,9 +287,11 @@ const SearchLoadScreen = () => {
       }
     }
 
-    const toggleSubscriptionModal =()=> {
+    const toggleSubscriptionModal = (fetch = true) => {
       dispatch(updateUserSubscriptionModal())
-      toggleModal();
+      if (fetch) {
+        toggleModal();
+      }
     }
     
     return (

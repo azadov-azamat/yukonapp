@@ -9,7 +9,7 @@ export default class PlanModel implements IPlanModel {
     descriptionUz: string = '';
     descriptionCyrl: string = '';
     planType: string = '';
-    durationInDays: number = 0;
+    duration_in_days: number = 0;
     price: number = 0;
   
     constructor(data: Partial<IPlanModel>) {

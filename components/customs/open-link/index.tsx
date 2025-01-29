@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity, Text, Linking, Alert, View } from 'react-native';
 
-const OpenLink = ({ url, text = 'telegram', hasIcon = true }: { url: string, text?: string; hasIcon?: boolean }) => {
+const OpenLink = ({ url, text = 'telegram', hasIcon = true, textClass }: {textClass?: string; url: string, text?: string; hasIcon?: boolean }) => {
   const { t } = useTranslation(); 
   
   const handlePress = async () => {
@@ -31,7 +31,7 @@ const OpenLink = ({ url, text = 'telegram', hasIcon = true }: { url: string, tex
              {hasIcon && <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
                 <Ionicons name="share-social" size={18} color={Colors.light.tint} /> 
               </View>}
-              <Text className="text-base text-blue-500">
+              <Text className={`text-base text-blue-500 ${textClass}`}>
                 {t (text)}
               </Text>
     </TouchableOpacity>

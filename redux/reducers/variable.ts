@@ -17,7 +17,7 @@ export const getPlans = createAsyncThunk('variable/getPlans', async (_, {rejectW
 export const getPlanById = createAsyncThunk('variable/getPlanById', async (id: number, { rejectWithValue }) => {
     try {
         const response = await http.get(`/plans/${id}`);
-        return deserializePlan(await deserialize(response.data));
+        return response.data;
     } catch (error) {
         return rejectWithValue(error);
     }

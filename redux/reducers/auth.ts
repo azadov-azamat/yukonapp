@@ -55,7 +55,6 @@ export const authSlice = createSlice({
             if (state.user) {
                 state.user.isSubscriptionModal = !state.user.isSubscriptionModal;
             }
-            console.log("state.user", state.user); 
         },
         logout: (state) => {
             state.user = null;
