@@ -14,7 +14,7 @@ export default function ProfilePage() {
   
   const logoutFunction =()=> {
     dispatch(logout());
-    router.push('../');
+    router.push('/auth/login');
   }
   
   return (

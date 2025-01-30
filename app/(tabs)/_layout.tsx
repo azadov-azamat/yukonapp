@@ -39,7 +39,6 @@ export default function TabLayout() {
       if (userId || auth?.userId) {
         await dispatch(getUserMe(auth?.userId || userId)); 
       } else {
-        console.log("man brat fetcg user");
         router.push("/");
       }
       setIsNavigationReady(true);

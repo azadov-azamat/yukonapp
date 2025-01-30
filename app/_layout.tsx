@@ -24,16 +24,10 @@ function App() {
           }}
           initialRouteName="index"
         >
-          <Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }}/> 
-          <Stack.Screen name="forgot-password" options={{ headerShown: false, title: 'Forgot password' }}/> 
-          <Stack.Screen 
-              name="subscription" 
-              options={{ 
-                headerShown: true, 
-                header: () => <View>AS</View>, 
-                title: 'Subscription'
-              }}
-          /> 
+          <Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }} /> 
+          <Stack.Screen name="auth/login" options={{ headerShown: false }} /> 
+          <Stack.Screen name="forgot-password" options={{ headerShown: false, title: 'Forgot password' }} /> 
+          <Stack.Screen name="subscription" options={{headerShown: true}} /> 
         </Stack>
 
         <StatusBar
