@@ -1,33 +1,39 @@
 import React from 'react';
-import { View, Alert, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { useFormik } from 'formik';
 import { paymentValidationSchema } from '@/validations/form';
 import { CustomInput, CustomButton, CustomOpenLink } from '@/components/customs';
 import { useRouter } from "expo-router";
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { login } from '@/redux/reducers/auth';
-import Toast from 'react-native-toast-message';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
+import { createCard } from '@/redux/reducers/card';
 
 const PaymentForm = () => {
-  const router = useRouter();
   const dispatch = useAppDispatch();
   const {t} = useTranslation();
-  const { loading } = useAppSelector(state => state.auth)
+  const { loading } = useAppSelector(state => state.card)
+  
+  const extractNumbers = (input: string) => input.replace(/\D/g, '');
   
   const formik = useFormik({
-    initialValues: { cardNumber: '', expiry: '' },
+    initialValues: { number: '', expire: '' },
     validationSchema: paymentValidationSchema,
-    onSubmit: async (values) => {
-      console.log(values);
+    onSubmit: (values) => {
+      console.log('Formik submitted:', values);
+      const number = extractNumbers(values.number);
+      const expire = extractNumbers(values.expire);
+      const body = { number, expire };
+      console.log(body);
       
+      dispatch(createCard(body))
     },
   });
   
-  function extractNumbers(input: string) {
-    return input.replace(/\D/g, '');
-  }
+  React.useEffect(() => {
+    return ()=> {
+      formik.handleReset({ preventDefault: () => {} })
+    }
+  }, []);
   
   return (
     <View className="w-full">
@@ -35,25 +41,25 @@ const PaymentForm = () => {
       <CustomInput
         type='card'
         label={t ('payment-card.number')}
-        value={formik.values.cardNumber}
-        onChangeText={formik.handleChange('cardNumber')}
-        onBlur={formik.handleBlur('cardNumber')}
+        value={formik.values.number}
+        onChangeText={formik.handleChange('number')}
+        onBlur={formik.handleBlur('number')}
         placeholder="0000 0000 0000 0000"
         keyboardType="numeric"
-        error={formik.touched.cardNumber && formik.errors.cardNumber || null}
+        error={formik.touched.number ? formik.errors.number : null}
         divClass='mb-4'
         maxLength={19}
       />
 
       {/* Expiry */}
       <CustomInput
-      type='expiry'
+        type='expiry'
         label={t ('payment-card.expire')}
-        value={formik.values.expiry}
-        onChangeText={formik.handleChange('expiry')}
-        onBlur={formik.handleBlur('expiry')}
+        value={formik.values.expire}
+        onChangeText={formik.handleChange('expire')}
+        onBlur={formik.handleBlur('expire')}
         placeholder={t ('payment-card.month')}
-        error={formik.touched.expiry && formik.errors.expiry || null}
+        error={formik.touched.expire ? formik.errors.expire : null}
         divClass='mb-4'
         keyboardType="numeric"
       />
@@ -67,7 +73,7 @@ const PaymentForm = () => {
         onPress={formik.handleSubmit} 
         buttonStyle={'bg-primary mt-2'} 
       />
-      
+
       <CustomOpenLink 
         url='https://cdn.payme.uz/terms/main.html?target=_blank' 
         hasIcon={false} text={'accept-terms'} textClass='text-xs mt-2'/>

@@ -1,6 +1,6 @@
 import React from "react";
 import { CustomButton, CustomInput } from "@/components/customs";
-import { Keyboard, View, Text, FlatList } from "react-native";
+import { Keyboard, View, Text, FlatList, RefreshControl } from "react-native";
 import { EmptyStateCard, PopularDirectionCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
@@ -20,6 +20,7 @@ export default function MainPage() {
   const {loading: globalLoad} = useAppSelector(state => state.variable);
   
   const [searchText, setSearchText] = React.useState<string>('');
+  const [refreshing, setRefreshing] = React.useState(false);
   
   React.useEffect(()=> {
     dispatch(getTopSearches())
@@ -44,6 +45,16 @@ export default function MainPage() {
     dispatch(stopLoading());
     router.push(`/(tabs)/search?arrival=${getCityName(fetchedOrigin)}&departure=${getCityName(fetchedDestination)}`)
   }
+  
+  const onRefresh = () => {
+    setRefreshing(true);
+
+    // Ma'lumotlarni yangilash
+    setTimeout(() => {
+      dispatch(getTopSearches())
+      setRefreshing(false); // Yangilashni tugatish
+    }, 2000); // 2 soniyalik kechikish
+  };
   
   return (
     <View className="flex-1 p-4 bg-gray-100">
@@ -82,6 +93,7 @@ export default function MainPage() {
                   keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
                   ListEmptyComponent={<EmptyStateCard type="load"/>}
                   renderItem={({ item }) => <PopularDirectionCard {...item}/>}
+                  refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 />
             ) : (
               <FlatList

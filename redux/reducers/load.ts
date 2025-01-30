@@ -55,7 +55,8 @@ export const getLoadById = createAsyncThunk('load/getLoadById', async (id: strin
 export const updateLoad = createAsyncThunk('load/updateLoad', async (data: Partial<ILoadModel>, { rejectWithValue }) => {
     try {
         const response = await http.patch(`/loads/${data.id}`, LoadSerializer.serialize(data));
-        return deserializeLoad(await deserialize(response.data));
+        let load = await deserialize(response.data)        
+        return deserializeLoad(load);
     } catch (error) {
         return rejectWithValue(error);
     }

@@ -33,46 +33,48 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
 
     if (loading) return "";
     
-    const handleSubscribe = () => {
+    const handleSubscribe = (id: number) => {
         toggle(false);
-        router.push(`/subscription/${selectedId}`)
+        router.push(`/subscription/${id}`)
     }
     
     return (
         <DynamicModal open={open} toggle={toggle}>
-             <View className="relative flex-1">
+             <View className="flex-1">
                 {/* Header */}
-                <View className='flex-row items-start flex-1 gap-2 mb-4'>
+                <View className='flex-row items-start flex-1 gap-2'>
                     {/* <Ionicons name='alert-circle-sharp'/> */}
                     <Text className="text-base font-bold text-center text-red-600 light-0">
                         {t ('daily-limit-text')}
                     </Text>
                 </View>
 
-                <ScrollView className="space-y-4">
+                <ScrollView className="my-3 space-y-4">
                     {plans.map((plan) => (
                         <TouchableOpacity
                             key={plan.id}
                             onPress={() => handleSelectPlan(plan?.id)}
-                            className={`p-4 bg-white border rounded-lg shadow-md ${selectedId === plan.id ? 'border-primary' :'border-border-color'} `}
+                            className={`p-4 bg-white border rounded-lg border-border-color`}
                         >
                             <Text className="text-lg font-semibold text-gray-800">{getName(plan, 'name')}</Text>
                             <Text className="mt-2 text-sm text-gray-600">{getName(plan, 'description')}</Text>
-                            <Text className="mt-4 text-xl font-bold text-gray-900">{formatPrice(plan.price)}</Text>
+                            <View className='flex-row items-center justify-between flex-1 mt-4'>
+                                <Text className="text-xl font-bold text-gray-900">{formatPrice(plan.price)}</Text>
+                                <CustomButton
+                                    title={t ('subscribe')}
+                                    onPress={() => handleSubscribe(plan.id)}
+                                    disabled={!selectedId}
+                                    buttonStyle="py-1 px-3 bg-primary"
+                                    textStyle='text-base'
+                                />                
+                            </View>
                         </TouchableOpacity>
                     ))}
                 </ScrollView>
 
-                <View className='my-2'>
-                    <CustomOpenLink url='https://t.me/marina_laty' hasIcon={false} text={t ('ask-to-support')}/>
-                </View>
+                <CustomOpenLink url='https://t.me/marina_laty' hasIcon={false} text={t ('ask-to-support')}/>
                 
-                <CustomButton
-                    title={t ('subscribe')}
-                    onPress={handleSubscribe}
-                    disabled={!selectedId}
-                    buttonStyle="w-full p-3 bg-primary"
-                />
+
             </View>
         </DynamicModal>
     )

@@ -123,7 +123,7 @@
     "resend-code": "Отправить код повторно",
     "confirm": "Подтвердить",
     "enter-confirm-code": "Введите код подтверждения",
-    "send-this-phone": "Код подтверждения отправлен на следующий номер:\n <strong id=\"phoneNumber\">{phone}</strong>",
+    "send-this-phone": "Код подтверждения отправлен на следующий номер: {phone}",
     "confirm-code": "Код подтверждения"
   },
   "load-filters": {

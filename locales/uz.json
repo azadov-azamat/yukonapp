@@ -125,7 +125,7 @@
     "resend-code": "Kodni qayta yuborish",
     "confirm": "Tasdiqlash",
     "enter-confirm-code": "Tasdiqlash kodini kiriting",
-    "send-this-phone": "Tasdiqlash kodi quyidagi raqamga yuborildi:\n <strong id=\"phoneNumber\">{phone}</strong>",
+    "send-this-phone": "Tasdiqlash kodi quyidagi raqamga yuborildi: {phone}",
     "confirm-code": "Tasdiqlash kodi"
   },
   "load-filters": {

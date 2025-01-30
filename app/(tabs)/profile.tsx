@@ -4,7 +4,7 @@ import { Colors } from "@/utils/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 
 export default function ProfilePage() {
   const router = useRouter();

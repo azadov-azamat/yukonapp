@@ -125,7 +125,7 @@
     "resend-code": "Кодни қайта юбориш",
     "confirm": "Тасдиқлаш",
     "enter-confirm-code": "Тасдиқлаш кодини киритинг",
-    "send-this-phone": "Тасдиқлаш коди қуйидаги рақамга юборилди:\n <strong id=\"phoneNumber\">{phone}</strong>",
+    "send-this-phone": "Тасдиқлаш коди қуйидаги рақамга юборилди: {phone}",
     "confirm-code": "Тасдиқлаш коди"
   },
   "load-filters": {

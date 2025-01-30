@@ -1,4 +1,4 @@
-import { Text, View, FlatList, Keyboard } from 'react-native'
+import { Text, View, FlatList, Keyboard, RefreshControl } from 'react-native'
 import React from 'react'
 import { OPTIONS } from '@/utils/constants'
 import { CustomBadgeSelector, CustomButton, CustomInput } from '@/components/customs'
@@ -49,6 +49,7 @@ const SearchLoadScreen = () => {
     const [viewId, setViewId] = React.useState(null);
     const [isGridView, setIsGridView] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
+    const [refreshing, setRefreshing] = React.useState(false);
     
     const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} /> : 
                                                                 <LoadGridCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />);
@@ -126,6 +127,22 @@ const SearchLoadScreen = () => {
         handleClear();
       }
     }, []);
+    
+    const onRefresh = () => {
+      if (arrival || origin) {
+        setRefreshing(true);
+        dispatch(clearLoads());
+        // Ma'lumotlarni yangilash
+        setTimeout(() => {
+          if( arrival) {
+            debouncedFetchExtract();
+          } else {
+            debouncedFetchLoads();
+          }
+          setRefreshing(false); // Yangilashni tugatish
+        }, 2000); // 2 soniyalik kechikish
+      }
+    };
     
     const handleSwapCities = () => {
       setOrigin((prevOrigin) => {
@@ -378,6 +395,7 @@ const SearchLoadScreen = () => {
                   </View>}
                   ListEmptyComponent={<EmptyStateCard type="load"/>}
                   renderItem={({ item }) => <RenderLoadItem item={item} />}
+                  refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               />
             )}
             <LoadModal open={openModal} toggle={toggleModal}/>

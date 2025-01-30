@@ -133,7 +133,7 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
 
           {/* Details */}
           <View className="space-y-2">
-            {!load.phone && <TouchableOpacity onPress={() => load.phoneFunction(user, dispatch, close)} className='flex-row items-center space-x-2'>
+            {!load.phone && <TouchableOpacity disabled={phoneLoading} onPress={() => load.phoneFunction(user, dispatch, close)} className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
                 {phoneLoading ? <ActivityIndicator size={18} color={Colors.light.tint} /> : <Ionicons name="call" size={18} color={Colors.light.tint} /> }
               </View>
