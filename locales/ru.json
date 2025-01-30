@@ -416,7 +416,8 @@
     "search": "Поиск",
     "bookmarks": "Избранные",
     "edit": "Добавить объявление | Редактировать",
-    "subscriptions": "Подписки"
+    "subscriptions": "Подписки",
+    "payment": "Оплата"
   },
   "date-range": {
     "title": "Дата",

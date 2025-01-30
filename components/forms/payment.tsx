@@ -25,29 +25,37 @@ const PaymentForm = () => {
     },
   });
   
+  function extractNumbers(input: string) {
+    return input.replace(/\D/g, '');
+  }
+  
   return (
     <View className="w-full">
       {/* Card number */}
       <CustomInput
+        type='card'
         label={t ('payment-card.number')}
         value={formik.values.cardNumber}
         onChangeText={formik.handleChange('cardNumber')}
         onBlur={formik.handleBlur('cardNumber')}
         placeholder="0000 0000 0000 0000"
         keyboardType="numeric"
-        error={formik.touched.cardNumber && formik.errors.cardNumber}
+        error={formik.touched.cardNumber && formik.errors.cardNumber || null}
         divClass='mb-4'
+        maxLength={19}
       />
 
       {/* Expiry */}
       <CustomInput
+      type='expiry'
         label={t ('payment-card.expire')}
         value={formik.values.expiry}
         onChangeText={formik.handleChange('expiry')}
         onBlur={formik.handleBlur('expiry')}
         placeholder={t ('payment-card.month')}
-        error={formik.touched.expiry && formik.errors.expiry}
+        error={formik.touched.expiry && formik.errors.expiry || null}
         divClass='mb-4'
+        keyboardType="numeric"
       />
 
       <Text className="text-xs text-gray-500">{t ('card-data-info')}</Text>

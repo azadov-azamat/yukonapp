@@ -9,12 +9,19 @@ import { CustomOpenLink, CustomPhoneCall, CustomShowMoreText } from '@/component
 import dayjs from "dayjs";
 import { loadCardInterfaceProps } from '@/interface/components';
 
-const LoadCard = ({load, onPress, showElement = false, close}: loadCardInterfaceProps) => {
+const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}: loadCardInterfaceProps) => {
   const dispatch = useAppDispatch();
   const {t} = useTranslation();
-  const {user} = useAppSelector(state => state.auth);
+  const { user } = useAppSelector(state => state.auth);
   const { phoneLoading } = useAppSelector(state => state.variable);
   
+  React.useEffect(() => {
+    if (isUpdate) {
+        load.openMessageCounter++;
+        load.save(dispatch);
+    }
+  }, [isUpdate]);
+
   function handleDetermineTon(weight: number) {
     if (weight < 0.5) {
       return t('post.weight-kg', { weight: weight * 1000 });

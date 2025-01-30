@@ -65,10 +65,6 @@ const SearchLoadScreen = () => {
     const toggleSetId = (item) => {
       setViewId(item.id);
       dispatch(setLoad(item))
-      // if (item.openMessageCounter) {
-      //   item.openMessageCounter=+1;
-      //   dispatch(updateLoad(item))        
-      // }
     }
     
     const debouncedFetchExtract = React.useCallback(
@@ -86,7 +82,7 @@ const SearchLoadScreen = () => {
     React.useEffect(() => {
       if (viewId) {
         toggleModal();
-        dispatch(getLoadById(viewId));
+        dispatch(getLoadById(viewId)).unwrap();
       } else {
         dispatch(clearLoad())
       }
@@ -94,11 +90,11 @@ const SearchLoadScreen = () => {
 
     React.useEffect(() => {
       if (!openModal) {
-        // setViewId(null);
+        setViewId(null);
       }
     }, [openModal])
     
-        // 3. Arrival va departure page yuklanganda o'rnatiladi
+    // 3. Arrival va departure page yuklanganda o'rnatiladi
     React.useEffect(() => {
       if (arrival) {
         setSearchText(`${arrival || ''} ${departure || ''}`);

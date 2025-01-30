@@ -1,58 +1,69 @@
-import { CustomInput } from "@/components/customs";
-// import { useSearchParams } from "expo-router/build/hooks";
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getPlanById } from "@/redux/reducers/variable";
 import { formatPrice, getName } from "@/utils/general";
 import { useTranslation } from "react-i18next";
 import PaymentForm from "@/components/forms/payment";
+import { Ionicons } from "@expo/vector-icons";
+import { ContentPaymentPageLoader } from "@/components/content-loader";
 
 export default function Subscription() {
-  const {id} = useLocalSearchParams(); 
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-  const { selectedPlan } = useAppSelector(state => state.variable);
+    const router = useRouter()
+    const {id} = useLocalSearchParams(); 
+    const { t } = useTranslation();
+    const dispatch = useAppDispatch();
+    const { selectedPlan } = useAppSelector(state => state.variable);
   
-  React.useEffect(() => {
-    if (id) {
-        dispatch(getPlanById(Number(id))).unwrap();
+    React.useEffect(() => {
+        if (id) {
+            dispatch(getPlanById(Number(id))).unwrap();
+        }
+    }, [id]);
+    
+    if  (!selectedPlan) {
+        return <ContentPaymentPageLoader/>
     }
-  }, [id]);
-  
-  if  (!selectedPlan) {
-    return <Text>Waiting...</Text>
-  }
-  return (
-    <View className="items-center justify-center flex-1 p-4 bg-gray-100">
-      {/* Header */}
-        <View className="">
-            <View>
-                <Text className="mb-4 text-2xl font-bold text-gray-800">
-                    {t ('payment-card.title')}
-                </Text>
-            </View>
 
-            {/* Subscription Details */}
-            <View className="w-auto p-4 mb-6 bg-blue-100 rounded-lg">
-                <Text className="text-lg font-bold">{getName(selectedPlan, 'name')}</Text>
-                <Text className="mt-2 text-sm text-gray-600">
-                {getName(selectedPlan, 'description')}
-                </Text>
-                <View className="flex-row items-center flex-1 mt-2 space-x-2">
-                <Text className="text-lg font-bold">
-                {formatPrice(selectedPlan?.price || 0)} 
-                </Text>
-                <Text className="text-sm text-gray-600">
-                {t ('for-' + selectedPlan?.duration_in_days)}
-                </Text>
+    return (
+        <View className="relative items-center justify-center flex-1 p-4 bg-gray-100">
+            <TouchableOpacity onPress={() => router.back()} className="absolute top-0 left-0 right-0 flex-row items-center flex-1 px-4 space-x-2 h-14">
+                <Ionicons name="arrow-back" size={22}/>
+                <Text className="text-xl font-bold">{t ('pages.payment')}</Text>
+            </TouchableOpacity>
+        {/* Header */}
+            <View className="w-full">
+                <View className="flex-row items-center justify-between w-full !h-10 mb-4">
+                    <Text className="text-xl font-bold text-gray-800">
+                        {t ('payment-card.title')}
+                    </Text>
+                    <Image
+                        source={require("@/assets/images/pay-me.png")}
+                        resizeMode="contain" // or 'cover', 'stretch', etc.
+                        className="w-20 h-10"
+                    />
                 </View>
-            </View>
 
-            {/* Form */}
-            <PaymentForm/>
+                {/* Subscription Details */}
+                <View className="w-auto h-40 p-4 mb-6 bg-blue-100 rounded-lg">
+                    <Text className="text-lg font-bold">{getName(selectedPlan, 'name')}</Text>
+                    <Text className="mt-2 text-sm text-gray-600">
+                    {getName(selectedPlan, 'description')}
+                    </Text>
+                    <View className="flex-row items-center flex-1 mt-2 space-x-2">
+                    <Text className="text-lg font-bold">
+                    {formatPrice(selectedPlan?.price || 0)} 
+                    </Text>
+                    <Text className="text-sm text-gray-600">
+                    {t ('for-' + selectedPlan?.duration_in_days)}
+                    </Text>
+                    </View>
+                </View>
+
+                {/* Form */}
+                <PaymentForm/>
+            </View>
         </View>
-    </View>
-  );
+    );
 }

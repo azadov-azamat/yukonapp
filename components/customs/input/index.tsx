@@ -19,6 +19,34 @@ const Input: React.FC<InputProps> = ({
   const {t} = useTranslation();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false); // Parolni ko'rsatish holati
 
+  function formatExpiryDate(value: string) {
+    value = value.slice(0, 5);
+    if (value.length === 2) {
+      return value.slice(0, 2) + '/' + value.slice(2);
+    }
+
+    return value;
+  }
+  
+  function formatCardNumber(value: string) {
+    return value.replace(/(\d{4})(?=\d)/g, '$1 ');
+  }
+  
+  function updateValue(text: string) {
+    let value = text;
+    if (type === 'card') {
+      value = formatCardNumber(value);
+    } else if (type === 'expiry') {
+      value = formatExpiryDate(value);
+    }
+
+    if (onChangeText) {
+      onChangeText(value);
+    }
+
+    // event.target.value = value;
+  }
+  
   return (
     <View className={`relative ${divClass}`}>
       {/* Label */}
@@ -39,7 +67,7 @@ const Input: React.FC<InputProps> = ({
             error ? 'border-primary-red' : 'border-border-color'
           }`}
           value={value}
-          onChangeText={onChangeText}
+          onChangeText={updateValue}
           onBlur={onBlur}
           placeholder={placeholder}
           secureTextEntry={type === 'password' && !isPasswordVisible}

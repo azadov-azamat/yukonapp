@@ -111,7 +111,7 @@ export default class LoadModel implements ILoadModel {
             this.openMessageCounter += 1;
             this.loading = false;
         }}
-);
+    );
   }
 
   async handleFunction({
@@ -131,7 +131,6 @@ export default class LoadModel implements ILoadModel {
 
     if (!user) {
         dispatch(phoneLoad()); // loading false
-        console.log("open auth modal"); // FUTURE
         return ''
     }
 

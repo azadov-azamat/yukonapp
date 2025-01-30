@@ -416,7 +416,8 @@
     "search": "Izlash",
     "bookmarks": "Saralangan e'lonlarim",
     "edit": "E'lon qo'shish | Taxrirlash",
-    "subscriptions": "Obunalar"
+    "subscriptions": "Obunalar",
+    "payment" : "To'lov"
   },
   "date-range": {
     "title": "Sana",
