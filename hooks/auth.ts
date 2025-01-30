@@ -1,48 +1,48 @@
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { getUserMe } from "@/redux/reducers/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useRouter } from "expo-router";
-import React from "react";
+// import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+// import { getUserMe } from "@/redux/reducers/auth";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { useRouter } from "expo-router";
+// import React from "react";
 
-export const useAuth = () => {
-    const dispatch = useAppDispatch();
-    const router = useRouter();
-    const {auth, user, loading} = useAppSelector(state => state.auth);
-    const [isNavigationReady, setIsNavigationReady] = React.useState(false);
+// export const useAuth = () => {
+//     const dispatch = useAppDispatch();
+//     const router = useRouter();
+//     const {auth, user, loading} = useAppSelector(state => state.auth);
+//     const [isNavigationReady, setIsNavigationReady] = React.useState(false);
 
-    async function getLocalstorageData() {
-        const authData = await AsyncStorage.getItem('authenticate');
-        if (authData) {
-            const { userId } = JSON.parse(authData);
-            return userId;
-        }
-        return null;
-    }
+//     async function getLocalstorageData() {
+//         const authData = await AsyncStorage.getItem('authenticate');
+//         if (authData) {
+//             const { userId } = JSON.parse(authData);
+//             return userId;
+//         }
+//         return null;
+//     }
     
-    // React.useEffect(() => {
-    //     console.log("Auth loading state:", loading);
-    //     console.log("Auth user state:", user);
-    // }, [user]);
+//     // React.useEffect(() => {
+//     //     console.log("Auth loading state:", loading);
+//     //     console.log("Auth user state:", user);
+//     // }, [user]);
 
-      React.useEffect(() => {
-        const fetchUserData = async () => {
-          const userId = await getLocalstorageData();
-          if (userId || auth?.userId) {
-            await dispatch(getUserMe(auth?.userId || userId)); 
-          } else {
-            router.replace("/");
-          }
-          setIsNavigationReady(true);
-        };
+//       React.useEffect(() => {
+//         const fetchUserData = async () => {
+//           const userId = await getLocalstorageData();
+//           if (userId || auth?.userId) {
+//             await dispatch(getUserMe(auth?.userId || userId)); 
+//           } else {
+//             router.replace("/");
+//           }
+//           setIsNavigationReady(true);
+//         };
     
-        fetchUserData();
-      }, [auth]);
+//         fetchUserData();
+//       }, [auth]);
     
-      React.useEffect(()=> {
-        if (user && isNavigationReady) {
-          router.replace("/(tabs)");
-        }
-      }, [user, isNavigationReady]);
+//       React.useEffect(()=> {
+//         if (user && isNavigationReady) {
+//           router.replace("/(tabs)");
+//         }
+//       }, [user, isNavigationReady]);
 
-  return { user, loading };
-};
+//   return { user, loading };
+// };

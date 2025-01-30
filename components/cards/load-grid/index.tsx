@@ -8,6 +8,7 @@ import { Colors } from '@/utils/colors';
 import { CustomOpenLink, CustomPhoneCall, CustomShowMoreText } from '@/components/customs';
 import dayjs from "dayjs";
 import { loadCardInterfaceProps } from '@/interface/components';
+import { ButtonBookmark } from '@/components/buttons';
 
 const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}: loadCardInterfaceProps) => {
   const dispatch = useAppDispatch();
@@ -30,10 +31,17 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
     }
   }
   
-  function isMarkedExpired() {
+  function isMarkedExpired(): boolean {
     return !!user?.markedExpiredLoads.find((item) => item === load.id);
   }
  
+  const isBookmark =(): boolean => {
+    console.log("tushdi");
+    
+    const ids = user?.bookmarkedLoadIds    
+    return ids?.includes(String(load.id)) || false;
+  }
+  
   function formatPaymentType(type: string) {
     return t ('post.payment-type', {
       type: t ('payment-type.' + type),
@@ -100,12 +108,7 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
           <View className="px-3 py-1 rounded-full bg-primary">
             <Text className="text-sm text-white">{t (load.isWebAd ? 'site' : 'telegram')}</Text>
           </View>
-          <TouchableOpacity
-            onPress={() => null}
-            className="items-center justify-center w-6 h-6 bg-gray-200 rounded-full"
-          >
-            <Ionicons name="bookmark-outline" size={16} color="#6b7280" />
-          </TouchableOpacity>
+          <ButtonBookmark model={load} paramName='bookmarkedLoadIds'/>
         </View>
       </View>}
 

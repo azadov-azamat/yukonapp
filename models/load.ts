@@ -55,6 +55,14 @@ export default class LoadModel implements ILoadModel {
     return Math.round(this.distance / 1000).toString();
   }
 
+  isBookmark(user: UserModel): boolean {
+    const ids = user?.bookmarkedLoadIds    
+    console.log(ids);
+    console.log(ids?.includes(String(this.id)));
+    
+    return ids?.includes(String(this.id));
+  }
+
   get distanceInHours(): string {
     const seconds = this.distanceSeconds;
     if (!seconds) return '0h';

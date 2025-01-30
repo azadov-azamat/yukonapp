@@ -27,7 +27,11 @@ export default function MainPage() {
     const fetchUserData = async () => {
       const userId = await getLocalstorageData();
       if (userId || auth?.userId) {
-        await dispatch(getUserMe(auth?.userId || userId)); 
+        let res = await dispatch(getUserMe(auth?.userId || userId)); 
+        if (res.type === 'auth/getUserMe/fulfilled') {
+          router.push("/(tabs)");
+        }
+        
       } else {
         router.push("/");
       }
@@ -37,12 +41,6 @@ export default function MainPage() {
     fetchUserData();
   }, [auth]);
 
-  React.useEffect(()=> {
-    if (user && isNavigationReady) {
-      router.push("/(tabs)");
-    }
-  }, [user, isNavigationReady]);
-  
   function Working() {
     Alert.alert('Tugatilmagan', `Ishlash jarayonida`);
     // router.push('/forgot-password')
