@@ -8,7 +8,7 @@ const languages = [
     { code: "uz-Cyrl", label: "Ўзбекча", icon: require("@/assets/svg/uz-Cyrl.svg") },
 ];
 
-const LanguageSelector = () => {
+const LanguageSelector = ({view = 'dropdown'}) => {
   const { t, i18n } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(
@@ -25,7 +25,7 @@ const LanguageSelector = () => {
   };
 
   return (
-    <View className="relative">
+    view === 'dropdown' ? <View className="relative">
       {/* Dropdown Trigger */}
       <TouchableOpacity
         onPress={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -42,7 +42,7 @@ const LanguageSelector = () => {
 
       {/* Dropdown List */}
       {isDropdownOpen && (
-        <View className="absolute right-0 z-10 w-32 bg-white rounded-md shadow-md top-14">
+        <View className="absolute right-0 z-[1000] w-32 bg-white rounded-md shadow-md top-14">
           <FlatList
             data={languages}
             keyExtractor={(item) => item.code}
@@ -62,6 +62,8 @@ const LanguageSelector = () => {
           />
         </View>
       )}
+    </View> : <View>
+      
     </View>
   );
 };

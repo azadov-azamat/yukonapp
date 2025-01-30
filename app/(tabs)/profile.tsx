@@ -1,3 +1,4 @@
+import { CustomLanguageSelector } from "@/components/customs";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout } from "@/redux/reducers/auth";
 import { Colors } from "@/utils/colors";
@@ -44,18 +45,18 @@ export default function ProfilePage() {
         <MenuItem
           title="profile.bookmarks"
           icon="bookmark"
-          // onPress={() => navigation.navigate("Orders")}
+          onPress={() => router.push('/profile/bookmarks')}
         />
         <MenuItem
           title="profile.subscriptions"
           icon="cart"
-          // onPress={() => navigation.navigate("Wishlist")}
+          onPress={() => router.push('/profile/bookmarks')}
         />
       
         <MenuItem title="profile.notifications" icon="notifications" />
         <MenuItem title="profile.help" icon="help-circle" />
         <MenuItem title="About" icon="information-circle" />
-
+        <CustomLanguageSelector/>
         {/* Log Out */}
         <TouchableOpacity onPress={logoutFunction} className="absolute bottom-0 flex-row items-center px-4 py-4 bg-white border-b rounded-lg -right-4 -left-4 border-border-color">
           <Ionicons name="log-out-outline" size={24} color="#FF3D00" />

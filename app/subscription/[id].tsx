@@ -37,17 +37,6 @@ export default function Subscription() {
       
     return (
         <View className="relative items-center justify-center flex-1 p-4 bg-gray-100">
-            <TouchableOpacity onPress={() => router.back()} className="absolute top-0 left-0 right-0 z-10 flex-row items-center justify-between flex-1 px-4 bg-white h-14">
-                <View className="flex-row items-center space-x-2">
-                    <Ionicons name="arrow-back" size={22}/> 
-                    <Text className="text-xl font-bold">{t ('pages.payment')}</Text>
-                </View>
-                <Image
-                        source={require("@/assets/images/pay-me.png")}
-                        resizeMode="contain" // or 'cover', 'stretch', etc.
-                        className="w-20 h-10"
-                />
-            </TouchableOpacity>
         {/* Header */}
             <View className="w-full">
         
