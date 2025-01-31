@@ -31,17 +31,6 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
     }
   }
   
-  function isMarkedExpired(): boolean {
-    return !!user?.markedExpiredLoads.find((item) => item === load.id);
-  }
- 
-  const isBookmark =(): boolean => {
-    console.log("tushdi");
-    
-    const ids = user?.bookmarkedLoadIds    
-    return ids?.includes(String(load.id)) || false;
-  }
-  
   function formatPaymentType(type: string) {
     return t ('post.payment-type', {
       type: t ('payment-type.' + type),
@@ -86,7 +75,7 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
     return `${(price ? formatPrice(price, originId === 1 && destinationId === 1) : '') + prepayment}`;
   }
   
-  const ParentComponent = showElement ? View : TouchableOpacity;
+  const ParentComponent = showElement ? View : TouchableOpacity; 
   
   return (
     <ParentComponent

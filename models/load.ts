@@ -153,8 +153,6 @@ export default class LoadModel implements ILoadModel {
             await user.save(dispatch);
         } else {
             dispatch(updateUserSubscriptionModal());
-            console.log(close);
-            
             close?.();
         }
       } else {

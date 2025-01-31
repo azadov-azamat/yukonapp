@@ -83,9 +83,9 @@ const SearchLoadScreen = () => {
     React.useEffect(() => {
       if (viewId) {
         toggleModal();
-        dispatch(getLoadById(viewId)).unwrap();
+        dispatch(getLoadById(viewId));
       } else {
-        dispatch(clearLoad())
+        // dispatch(clearLoad())
       }
     }, [viewId])
 
