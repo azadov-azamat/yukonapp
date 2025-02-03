@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Platform, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; // Ikonkalar uchun kutubxona
 import { InputProps } from '@/interface/components';
 import { useTranslation } from 'react-i18next';
@@ -48,7 +48,7 @@ const Input: React.FC<InputProps> = ({
   }
   
   return (
-    <View className={`relative ${divClass}`}>
+    <View style={[styles.container]} className={`relative ${divClass}`}>
       {/* Label */}
       {label && <Text className="mb-1 text-lg font-semibold">{label}</Text>}
       
@@ -60,9 +60,7 @@ const Input: React.FC<InputProps> = ({
         
         {/* Input */}
         <TextInput
-          style={{
-            outline: 'none'
-          }}
+          style={[styles.input]}
           className={`text-lg h-12 flex-1 ${
             error ? 'border-primary-red' : 'border-border-color'
           }`}
@@ -94,5 +92,16 @@ const Input: React.FC<InputProps> = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  input: {
+    flex: 1,
+    height: 48,
+    fontSize: 18,
+    lineHeight: Platform.OS === 'ios' ? 21.5 : Platform.OS === 'web' ? 48 : null,
+    textAlignVertical: Platform.OS === 'ios' ? 'center' : null,
+    outlineStyle: 'none',
+  },
+});
 
 export default Input;

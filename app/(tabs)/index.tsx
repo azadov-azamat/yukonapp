@@ -61,7 +61,7 @@ export default function MainPage() {
       <View className="flex-row items-center mb-6">
                 <CustomInput
                     value={searchText}
-                    onChangeText={(text) => setSearchText(text)} 
+                    onChangeText={(text) => setSearchText(text)}
                     placeholder={t ('search-by-destination-main')}
                     divClass='flex-1'
                     onSubmitEditing={() => {
@@ -71,15 +71,15 @@ export default function MainPage() {
                     returnKeyType="search"
                 />
                 <CustomButton
-                     iconName='search' 
-                     isIcon 
+                     iconName='search'
+                     isIcon
                      onPress={debouncedFetchExtract}
                      loading={globalLoad}
                      disabled={globalLoad}
                      buttonStyle="w-auto p-3 bg-primary ml-2"
                 />
             </View>
-  
+
        <View className="">
           {/* Header */}
           <Text className="mb-4 text-lg font-bold text-center">

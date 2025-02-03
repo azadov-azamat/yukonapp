@@ -3,7 +3,7 @@ import { Stack, useRouter } from "expo-router";
 import {Provider} from 'react-redux';
 import { store } from "@/redux/store";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { Image, StatusBar, View, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView, StyleSheet, Image, StatusBar, View, Text, TouchableOpacity } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 import Toast from 'react-native-toast-message';
 import '@/utils/i18n';
@@ -17,9 +17,16 @@ NativeWindStyleSheet.setOutput({
 function App() {
   const {t} = useTranslation();
   const router = useRouter()
+
+  const styles = StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: '#f7f7f7',
+    },
+  });
   
   return (
-    <SafeAreaProvider>
+    <SafeAreaView style={styles.safeArea}>
         <Stack screenOptions={{
             // header: () => {
             //   return null;
@@ -59,7 +66,7 @@ function App() {
           backgroundColor="white"
         />
         <Toast />
-    </SafeAreaProvider>
+    </SafeAreaView>
   )
 }
 

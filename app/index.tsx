@@ -7,6 +7,7 @@ import { getUserMe } from "@/redux/reducers/auth";
 import { useRouter } from "expo-router";
 import { CustomLanguageSelector } from "@/components/customs";
 import { TabBarIcon } from "@/components/navigation/tab-bar-icon";
+
 export default function MainPage() {
   
   const dispatch = useAppDispatch();
