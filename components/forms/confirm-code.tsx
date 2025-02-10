@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Alert, Text } from 'react-native';
 import { useFormik } from 'formik';
 import { paymentValidationSchema } from '@/validations/form';
-import { CustomInput, CustomButton, CustomOpenLink } from '@/components/customs';
+import { CustomInput, CustomButton, CustomOpenLink } from '@/components/custom';
 import { useRouter } from "expo-router";
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { login } from '@/redux/reducers/auth';

@@ -64,3 +64,8 @@ export interface loadCardInterfaceProps {
     close?: () => void;
     isUpdate?: boolean;
 }
+
+export interface HeaderProps {
+    title: string; // Title of the header
+    goToRoute: string; // Route to navigate when back button is clicked
+}

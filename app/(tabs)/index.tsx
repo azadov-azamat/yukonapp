@@ -1,5 +1,5 @@
 import React from "react";
-import { CustomButton, CustomInput } from "@/components/customs";
+import { CustomButton, CustomInput } from "@/components/custom";
 import { Keyboard, View, Text, FlatList, RefreshControl } from "react-native";
 import { EmptyStateCard, PopularDirectionCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -59,26 +59,26 @@ export default function MainPage() {
   return (
     <View className="flex-1 p-4 bg-gray-100">
       <View className="flex-row items-center mb-6">
-                <CustomInput
-                    value={searchText}
-                    onChangeText={(text) => setSearchText(text)}
-                    placeholder={t ('search-by-destination-main')}
-                    divClass='flex-1'
-                    onSubmitEditing={() => {
-                      Keyboard.dismiss(); // Klaviaturani yopish
-                      debouncedFetchExtract(); // Funksiyani ishga tushirish
-                    }}
-                    returnKeyType="search"
-                />
-                <CustomButton
-                     iconName='search'
-                     isIcon
-                     onPress={debouncedFetchExtract}
-                     loading={globalLoad}
-                     disabled={globalLoad}
-                     buttonStyle="w-auto p-3 bg-primary ml-2"
-                />
-            </View>
+        <CustomInput
+          value={searchText}
+          onChangeText={(text) => setSearchText(text)}
+          placeholder={t ('search-by-destination-main')}
+          divClass='flex-1'
+          onSubmitEditing={() => {
+            Keyboard.dismiss(); // Klaviaturani yopish
+            debouncedFetchExtract(); // Funksiyani ishga tushirish
+          }}
+          returnKeyType="search"
+        />
+        <CustomButton
+           iconName='search'
+           isIcon
+           onPress={debouncedFetchExtract}
+           loading={globalLoad}
+           disabled={globalLoad}
+           buttonStyle="w-auto p-3 bg-primary ml-2"
+        />
+      </View>
 
        <View className="">
           {/* Header */}
