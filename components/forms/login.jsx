@@ -43,8 +43,7 @@ const LoginForm = () => {
   });
 
   function Working() {
-    // Alert.alert('Tugatilmagan', `Ishlash jarayonida`);
-    router.push('/forgot-password')
+    router.replace('/auth/forgot-password')
   }
   
   return (
