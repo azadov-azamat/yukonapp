@@ -1,10 +1,6 @@
 import { Deserializer } from "jsonapi-serializer";
 import {AuthDataProps} from "@/interface/redux/auth.interface";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import UserModel from "@/models/user";
-import { IUserModel } from "@/interface/redux/user.interface";
-import { ILoadModel } from "@/interface/redux/load.interface";
-import LoadModel from "@/models/load";
 import i18n from 'i18next';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -13,8 +9,6 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import 'dayjs/locale/en';
 import 'dayjs/locale/ru';
 import 'dayjs/locale/uz';
-import { IPlanModel } from "@/interface/redux/variable.interface";
-import PlanModel from "@/models/plan";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -105,18 +99,6 @@ export function deserialize(models: unknown) {
 export async function authenticate(data: AuthDataProps, id?: string) {
     await AsyncStorage.setItem('authenticate', JSON.stringify({...data, id}));
 }
-
-export const deserializeUser = (data: IUserModel): UserModel => {
-    return new UserModel(data);
-};
-
-export const deserializeLoad = (data: ILoadModel): LoadModel => {
-    return new LoadModel(data);
-};
-
-export const deserializePlan = (data: IPlanModel): PlanModel => {
-    return new PlanModel(data);
-};
 
 export function removePhoneNumbers(text: string) {
     const phoneNumberPattern =

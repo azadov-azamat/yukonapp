@@ -80,30 +80,29 @@ export default function MainPage() {
         />
       </View>
 
-       <View className="">
-          {/* Header */}
-          <Text className="mb-4 text-lg font-bold text-center">
-            {t ("top-five-searches")}
-          </Text>
+      <View className="">
+        {/* Header */}
+        <Text className="mb-4 text-lg font-bold text-center">
+          {t ("top-five-searches")}
+        </Text>
 
-          {
-            !loading ? (
-                <FlatList
-                  data={topSearches}
-                  keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
-                  ListEmptyComponent={<EmptyStateCard type="load"/>}
-                  renderItem={({ item }) => <PopularDirectionCard {...item}/>}
-                  refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                />
-            ) : (
+        {
+          !loading ? (
               <FlatList
-                data={[1, 2, 3, 4]}
-                keyExtractor={(item) => item.toString()}
-                renderItem={() => <ContentLoaderTopSearches />}
+                data={topSearches}
+                keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
+                ListEmptyComponent={<EmptyStateCard type="load"/>}
+                renderItem={({ item }) => <PopularDirectionCard {...item}/>}
+                refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               />
-            )
-          }
-
+          ) : (
+            <FlatList
+              data={[1, 2, 3, 4]}
+              keyExtractor={(item) => item.toString()}
+              renderItem={() => <ContentLoaderTopSearches />}
+            />
+          )
+        }
       </View>
     </View>
   );
