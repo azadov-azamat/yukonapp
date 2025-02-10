@@ -71,12 +71,12 @@ export default function MainPage() {
           returnKeyType="search"
         />
         <CustomButton
-           iconName='search'
-           isIcon
-           onPress={debouncedFetchExtract}
-           loading={globalLoad}
-           disabled={globalLoad}
-           buttonStyle="w-auto p-3 bg-primary ml-2"
+          onPress={debouncedFetchExtract}
+          buttonStyle="w-auto p-3 bg-primary ml-2"
+          loading={globalLoad}
+          disabled={globalLoad}
+          isIcon={true}
+          icon="search"
         />
       </View>
 

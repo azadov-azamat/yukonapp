@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import Button from "@/components/custom/button"; // Import custom button
 import { HeaderProps } from "@/interface/components"; // Import HeaderProps
+import ArrowBackIcon from "@/assets/svg/arrow-back.svg";
 
 const CustomHeader: React.FC<HeaderProps> = ({ title, goToRoute }) => {
   const router = useRouter();
@@ -15,7 +16,7 @@ const CustomHeader: React.FC<HeaderProps> = ({ title, goToRoute }) => {
         buttonStyle="bg-gray-200 px-3 py-1 rounded-md" // Tailwind-like styles
         textStyle="text-black"
         isIcon={true} // Use an icon instead of text
-        iconName="arrow-back" // Change icon name if necessary
+        icon="arrow-back" // Pass the Ionicon name here
         iconSize={24}
       />
       <Text style={styles.title}>{title}</Text>
