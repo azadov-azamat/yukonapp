@@ -98,8 +98,8 @@ function App() {
 const styles = StyleSheet.create({
     safeArea: {
       flex: 1,
-      backgroundColor: '#fff', // '#f7f7f7'
-			paddingBottom: Platform.OS === 'android' ? 0 : 20,
+      backgroundColor: '#f7f7f7',
+      paddingBottom: Platform.OS === 'ios' ? 20 : 0,
     },
     loaderContainer: {
       flex: 1, // Takes full height

@@ -18,7 +18,7 @@ const Subscriptions: React.FC<{subscription: SubscriptionModel}> = ({subscriptio
         </View>
   
         <View className="text-[#00235B] text-4xl font-bold mb-8">
-          {formatPrice(subscription.plan?.price)}
+          <Text>{formatPrice(subscription.plan?.price)}</Text>
           {/* {subscription..toLocaleString()} */}
         </View>
   

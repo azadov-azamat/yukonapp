@@ -80,8 +80,6 @@ const variableSlice = createSlice({
         state.loading = true;
     });
     builder.addCase(getSubscriptions.fulfilled, (state, action) => {
-        console.log(action.payload.subscriptions);
-        
         state.subscriptions = action.payload.subscriptions;
         state.pagination = action.payload.pagination;
         state.loading = false;

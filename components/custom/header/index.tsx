@@ -1,15 +1,15 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { ExternalPathString, RelativePathString, useRouter } from "expo-router";
-import Button from "@/components/custom/button"; // Import custom button
+import { useRouter } from "expo-router";
 import { HeaderProps } from "@/interface/components"; // Import HeaderProps
+import { CustomButton } from "..";
 
 const CustomHeader: React.FC<HeaderProps> = ({ title, goToRoute }) => {
   const router = useRouter();
 
   return (
     <View style={styles.header}>
-      <Button
+      <CustomButton
         title="Back"
         onPress={() => router.push(goToRoute)} // Navigate to the given route
         buttonStyle="bg-gray-200 px-3 py-1 rounded-md" // Tailwind-like styles
@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
+    textTransform: 'capitalize'
   },
 });
 

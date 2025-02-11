@@ -40,11 +40,7 @@ export const updateVehicle = createAsyncThunk('vehicle/updateVehicle', async (da
     try {
         const response = await http.patch(`/vehicles/${data.id}`, VehicleSerializer.serialize(data));
         let vehicle = await deserialize(response.data)
-        console.log("vehicle des", vehicle);
-        vehicle = deserializeVehicle(vehicle)
-        console.log(vehicle);
-
-        return vehicle;
+        return deserializeVehicle(vehicle);
     } catch (error) {
         return rejectWithValue(error);
     }
@@ -55,6 +51,23 @@ export const createVehicle = createAsyncThunk('vehicle/createVehicle', async (da
     try {
         const response = await http.post('/vehicles', data);
         return deserializeVehicle(await deserialize(response.data));
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
+// Fetch Vehicles (Search)
+export const searchVehicles = createAsyncThunk('vehicle/searchVehicles', async (query: any, { rejectWithValue }) => {
+    try {
+        const response = await http.get('/vehicles/search', { params: query });
+        let deserializedData = await deserialize(response.data.data)
+        deserializedData.map((item: IVehicleModel) => deserializeVehicle(item));
+    
+        return {
+                vehicles: deserializedData, 
+                pagination: response.data?.data.meta.pagination,
+                stats: response.data.stats
+            };
     } catch (error) {
         return rejectWithValue(error);
     }
@@ -89,6 +102,23 @@ export const vehicleSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
+           // Search Loads
+           builder.addCase(searchVehicles.fulfilled, (state, action) => {
+            state.vehicles = [...state.vehicles, ...action.payload?.vehicles];
+            state.pagination = action.payload.pagination;
+            state.stats = action.payload.stats;
+            state.loading = false;
+        });
+        builder.addCase(searchVehicles.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(searchVehicles.rejected, (state) => {
+            state.vehicles = [];
+            state.pagination = null;
+            state.stats = null;
+            state.loading = false;
+        });
+
         // Get Vehicle Countries
         builder.addCase(getVehicleCountries.fulfilled, (state, action) => {
 			state.activeCountries = action.payload;

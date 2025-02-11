@@ -52,8 +52,7 @@ export const searchLoads = createAsyncThunk('load/searchLoads', async (query: an
         const response = await http.get('/loads/search', { params: query });
         let deserializedData = await deserialize(response.data.data)
         deserializedData.map((item: ILoadModel) => deserializeLoad(item));
-        
-
+    
         return {
                 loads: deserializedData, 
                 pagination: response.data?.data.meta.pagination,
@@ -79,11 +78,7 @@ export const updateLoad = createAsyncThunk('load/updateLoad', async (data: Parti
     try {
         const response = await http.patch(`/loads/${data.id}`, LoadSerializer.serialize(data));
         let load = await deserialize(response.data)        
-        console.log("load des", load);
-        load = deserializeLoad(load)
-        console.log(load);
-        
-        return load;
+        return deserializeLoad(load);
     } catch (error) {
         return rejectWithValue(error);
     }

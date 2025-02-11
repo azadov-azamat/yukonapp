@@ -57,9 +57,6 @@ export default class LoadModel implements ILoadModel {
 
   isBookmark(user: UserModel): boolean {
     const ids = user?.bookmarkedLoadIds    
-    console.log(ids);
-    console.log(ids?.includes(String(this.id)));
-    
     return ids?.includes(String(this.id));
   }
 

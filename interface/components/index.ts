@@ -1,4 +1,5 @@
 import LoadModel from "@/models/load";
+import VehicleModel from "@/models/vehicle";
 import { Ionicons } from "@expo/vector-icons";
 import { ExternalPathString, RelativePathString } from "expo-router";
 import { NativeSyntheticEvent, TextInputFocusEventData } from "react-native";
@@ -60,6 +61,14 @@ export interface ModalItemProps {
 
 export interface loadCardInterfaceProps {
     load: LoadModel,
+    onPress?: () => void;
+    showElement?: boolean;
+    close?: () => void;
+    isUpdate?: boolean;
+}
+
+export interface vehicleCardInterfaceProps {
+    vehicle: VehicleModel,
     onPress?: () => void;
     showElement?: boolean;
     close?: () => void;
