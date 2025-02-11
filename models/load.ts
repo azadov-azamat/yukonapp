@@ -5,7 +5,7 @@ import { updateLoad } from "@/redux/reducers/load";
 import { removePhoneNumbers } from "@/utils/general";
 import Toast from "react-native-toast-message";
 import UserModel from "./user";
-import { setUser, updateUserSubscriptionModal } from "@/redux/reducers/auth";
+import { updateUserSubscriptionModal } from "@/redux/reducers/auth";
 import { phoneLoad } from "@/redux/reducers/variable";
 
 export default class LoadModel implements ILoadModel {

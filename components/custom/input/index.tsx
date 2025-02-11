@@ -4,13 +4,13 @@ import { MaterialIcons } from '@expo/vector-icons'; // Ikonkalar uchun kutubxona
 import { InputProps } from '@/interface/components';
 import { useTranslation } from 'react-i18next';
 
-const Input: React.FC<InputProps> = ({ 
-  label, 
-  value, 
-  onChangeText, 
-  onBlur, 
-  placeholder, 
-  error, 
+const Input: React.FC<InputProps> = ({
+  label,
+  value,
+  onChangeText,
+  onBlur,
+  placeholder,
+  error,
   type,
   divClass,
   loading = false,
@@ -27,11 +27,11 @@ const Input: React.FC<InputProps> = ({
 
     return value;
   }
-  
+
   function formatCardNumber(value: string) {
     return value.replace(/(\d{4})(?=\d)/g, '$1 ');
   }
-  
+
   function updateValue(text: string) {
     let value = text;
     if (type === 'card') {
@@ -46,18 +46,18 @@ const Input: React.FC<InputProps> = ({
 
     // event.target.value = value;
   }
-  
+
   return (
     <View style={[styles.container]} className={`relative ${divClass}`}>
       {/* Label */}
       {label && <Text className="mb-1 text-lg font-semibold">{label}</Text>}
-      
+
       <View className="flex-row items-center px-3 text-lg bg-white border rounded-md border-border-color">
         {/* Telefon uchun prefix */}
         {type === 'phone' && (
           <Text className="mr-2 text-lg">+998</Text>
         )}
-        
+
         {/* Input */}
         <TextInput
           style={[styles.input]}
@@ -72,7 +72,7 @@ const Input: React.FC<InputProps> = ({
           keyboardType={type === 'phone' ? 'phone-pad' : 'default'}
           {...rest}
         />
-        
+
         {/* Parol uchun ko'rish/ko'rmaslik icon */}
         {type === 'password' && (
           <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
@@ -86,7 +86,7 @@ const Input: React.FC<InputProps> = ({
 
         {loading && <ActivityIndicator size="small" color="gray" />}
       </View>
-      
+
       {/* Error */}
       {error && <Text className="absolute -bottom-[18px] text-primary-red">{t (error)}</Text>}
     </View>
@@ -98,12 +98,11 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 48,
     fontSize: 18,
-    lineHeight: Platform.OS === 'ios' ? 21.5 : Platform.OS === 'web' ? 48 : null,
-    textAlignVertical: Platform.OS === 'ios' ? 'center' : null,
-    outlineStyle: 'none',
+    lineHeight: Platform.OS === 'ios' ? 21.5 : Platform.OS === 'web' ? 48 : undefined,
+    textAlignVertical: Platform.OS === 'ios' ? 'center' : 'auto',
   },
   container: {
-    zIndex: null
+    zIndex: undefined,
   }
 });
 

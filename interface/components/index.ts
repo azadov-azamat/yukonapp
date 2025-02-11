@@ -73,16 +73,13 @@ export interface HeaderProps {
 }
 
 export interface InputSelectorProps {
-    label: string;
-    value: string;
-    onChangeText: (value: string) => void;
-    onBlur: () => void;
-    placeholder?: string;
-    error?: string;
-    type?: string;
-    divClass?: string; // Optional class name if you need
-    loading?: boolean;
-    items: Item[]; // Data for the picker options
-    style?: ViewStyle;
-    inputStyle?: TextStyle;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  error?: string;
+  type?: string;
+  divClass?: string;
+  loading?: boolean;
+  [key: string]: any; // This allows passing other props like style, etc.
 }

@@ -3,8 +3,9 @@ import React, { useState } from 'react'
 import { CustomInputSelector } from "@/components/custom";
 
 const SearchVehicleScreen = () => {
-  const [selectedValue, setSelectedValue] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+	const [selectedValue, setSelectedValue] = useState<string>(""); // Initialize with "" to avoid null
+  const [error, setError] = useState<string>("");
 
   const handleValueChange = (value: string) => {
     setSelectedValue(value);
@@ -24,19 +25,18 @@ const SearchVehicleScreen = () => {
 
   return (
     <ScrollView className="flex-1 bg-gray-100">
-      <Text>SearchVehicleScreen</Text>
       <View style={styles.container}>
-        <Input
-          label="Choose an option"
-          value={selectedValue}
-          onChangeText={handleValueChange}
-          onBlur={() => console.log('Input blurred')}
-          placeholder="Select an option"
-          error={error}
-          items={pickerItems}
-          loading={false}
-        />
-      </View>
+				<CustomInputSelector
+					label="Choose an option"
+					value={selectedValue}
+					onChange={handleValueChange}
+					placeholder="Select an option"
+					error={error}
+					loading={loading}
+					items={pickerItems}
+					search={false}
+				/>
+			</View>
     </ScrollView>
   )
 }
@@ -47,6 +47,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    // padding: 20,
   },
 });
