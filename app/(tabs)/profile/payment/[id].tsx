@@ -10,7 +10,7 @@ import { ContentPaymentPageLoader } from "@/components/content-loader";
 import ConfirmCodeForm from "@/components/forms/confirm-code";
 import { getVerifyToken } from "@/redux/reducers/card";
 
-export default function Subscription() {
+export default function Payment() {
     const router = useRouter()
     const {id} = useLocalSearchParams(); 
     const { t } = useTranslation();

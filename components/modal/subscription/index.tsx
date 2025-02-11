@@ -35,7 +35,7 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
     
     const handleSubscribe = (id: number) => {
         toggle(false);
-        router.push(`/profile/subscription/${id}`)
+        router.push(`/profile/payment/${id}`)
     }
     
     return (
