@@ -2,6 +2,8 @@ import React from "react";
 import { View } from "react-native";
 import ViewSelector from "@/components/view-selector";
 import { viewSelectorTabs } from "@/interface/components";
+import BookmarksLoadScreen from "./load";
+import BookmarksVehicleScreen from "./vehicle";
 
 export default function BookmarksPage() {
   const [selectedTab, setSelectedTab] = React.useState('load'); 
@@ -20,8 +22,8 @@ export default function BookmarksPage() {
         onTabSelect={(value: string) => setSelectedTab(value)}
       />
        <View className="flex-1 w-full">
-        {/* {selectedTab === 'load' && <SearchLoadScreen />} */}
-        {/* {selectedTab === 'vehicle' && <SearchVehicleScreen />} */}
+        {selectedTab === 'load' && <BookmarksLoadScreen />}
+        {selectedTab === 'vehicle' && <BookmarksVehicleScreen />}
       </View>
     </View>
   );

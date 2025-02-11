@@ -6,7 +6,6 @@ import { getPlanById } from "@/redux/reducers/variable";
 import { formatPrice, getName } from "@/utils/general";
 import { useTranslation } from "react-i18next";
 import PaymentForm from "@/components/forms/payment";
-import { Ionicons } from "@expo/vector-icons";
 import { ContentPaymentPageLoader } from "@/components/content-loader";
 import ConfirmCodeForm from "@/components/forms/confirm-code";
 import { getVerifyToken } from "@/redux/reducers/card";

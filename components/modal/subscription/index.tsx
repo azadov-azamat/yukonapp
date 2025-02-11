@@ -7,7 +7,7 @@ import { getPlans } from '@/redux/reducers/variable';
 import { formatPrice, getName } from '@/utils/general';
 import { useTranslation } from 'react-i18next';
 import { CustomButton, CustomOpenLink } from '@/components/custom';
-import { useRouter } from "expo-router";
+import { RelativePathString, useRouter } from "expo-router";
 
 const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
 
@@ -35,7 +35,7 @@ const SubscriptionModal: React.FC<ModalItemProps> = ({ open, toggle }) => {
     
     const handleSubscribe = (id: number) => {
         toggle(false);
-        router.push(`/subscription/${id}`)
+        router.push(`/profile/subscription/${id}`)
     }
     
     return (

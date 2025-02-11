@@ -25,7 +25,19 @@ export default function ProfileLayout() {
           header: () => (
             <CustomHeader
               title={t ("pages.bookmarks")}
-              goToRoute={"/(tabs)/profile" as RelativePathString} // Navigate back to Profile
+              goToRoute={"/profile" as RelativePathString} // Navigate back to Profile
+            />
+          ),
+        }}
+      />
+      {/* Subscription subroute */}
+      <Stack.Screen
+        name="subscription/[id]"
+        options={{
+          header: () => (
+            <CustomHeader
+              title={t ("pages.payment")}
+              goToRoute={"/profile" as RelativePathString} // Navigate back to Profile
             />
           ),
         }}

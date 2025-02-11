@@ -4,6 +4,27 @@ import { LoadInitialProps, ILoadModel } from "@/interface/redux/load.interface";
 import { deserialize } from "@/utils/general";
 import { deserializeLoad } from "@/utils/deserializer";
 import { LoadSerializer } from "@/serializers";
+import { UrlParamsDataProps } from "@/interface/search/search.interface";
+
+// Fetch Bookmarks Searches
+export const getBookmarks = createAsyncThunk('load/getBookmarks', async (data, { rejectWithValue }) => {
+    try {
+        const response = await http.get('/loads', {
+            params: data
+        });
+        let deserializedData = await deserialize(response.data)
+        deserializedData.map((item: ILoadModel) => deserializeLoad(item));
+        
+
+        return {
+                loads: deserializedData, 
+                pagination: response.data?.meta.pagination,
+                stats: response.data.stats
+            };
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
 
 // Fetch Top Searches
 export const getTopSearches = createAsyncThunk('load/getTopSearches', async (_, { rejectWithValue }) => {
@@ -80,6 +101,7 @@ export const createLoad = createAsyncThunk('load/createLoad', async (data: ILoad
 
 const initialState: LoadInitialProps = {
     loads: [],
+    bookmarks: [],
     load: null,
     topSearches: [],
     latestAds: [],
@@ -116,6 +138,25 @@ export const loadSlice = createSlice({
         });
         builder.addCase(getTopSearches.rejected, (state) => {
             state.loading = false;
+        });
+    
+        // Bookmarks
+        builder.addCase(getBookmarks.fulfilled, (state, action) => {
+            console.log(action.payload?.loads);
+            
+            state.bookmarks = action.payload?.loads;
+            state.pagination = action.payload.pagination;
+            state.stats = action.payload.stats;
+            state.loading = false;
+        });
+        builder.addCase(getBookmarks.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(getBookmarks.rejected, (state) => {
+            state.loading = false;
+            state.bookmarks = [];
+            state.pagination = null;
+            state.stats = null;
         });
 
         // Latest Ads

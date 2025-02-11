@@ -1,12 +1,7 @@
-import { TouchableOpacity, View, Alert } from "react-native";
+import { View, Alert } from "react-native";
 import LoginForm from '@/components/forms/login';
 import React from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { getUserMe } from "@/redux/reducers/auth";
-import { useRouter } from "expo-router";
 import { CustomLanguageSelector } from "@/components/custom";
-import { TabBarIcon } from "@/components/navigation/tab-bar-icon";
 
 export default function MainPage() {
   return (

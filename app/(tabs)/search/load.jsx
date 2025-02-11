@@ -394,7 +394,7 @@ const SearchLoadScreen = () => {
                         loading={cargoLoad}
                     />
                   </View>}
-                  ListEmptyComponent={<EmptyStateCard type="load"/>}
+                  ListEmptyComponent={<EmptyStateCard type="bookmarks-load"/>}
                   renderItem={({ item }) => <RenderLoadItem item={item} />}
                   refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               />
