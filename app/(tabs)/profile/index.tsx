@@ -1,4 +1,4 @@
-import { CustomLanguageSelector } from "@/components/customs";
+import { CustomLanguageSelector } from "@/components/custom";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { logout } from "@/redux/reducers/auth";
 import { Colors } from "@/utils/colors";
@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { View, Text, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -13,9 +14,10 @@ export default function ProfilePage() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => state.auth)
   
-  const logoutFunction =()=> {
+  const logoutFunction = async () => {
+    await AsyncStorage.clear();
     dispatch(logout());
-    router.push('/auth/login');
+    router.replace('/auth');
   }
   
   return (
@@ -45,12 +47,12 @@ export default function ProfilePage() {
         <MenuItem
           title="profile.bookmarks"
           icon="bookmark"
-          onPress={() => router.push('/profile/bookmarks')}
+          onPress={() => router.replace('/(tabs)/profile/bookmarks')}
         />
         <MenuItem
           title="profile.subscriptions"
           icon="cart"
-          onPress={() => router.push('/profile/bookmarks')}
+          onPress={() => router.replace('/(tabs)/profile/bookmarks')}
         />
       
         <MenuItem title="profile.notifications" icon="notifications" />

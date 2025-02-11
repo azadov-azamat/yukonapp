@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { http } from "@/config/api";
 import { LoadInitialProps, ILoadModel } from "@/interface/redux/load.interface";
-import { deserialize, deserializeLoad } from "@/utils/general";
+import { deserialize } from "@/utils/general";
+import { deserializeLoad } from "@/utils/deserializer";
 import { LoadSerializer } from "@/serializers";
 
 // Fetch Top Searches

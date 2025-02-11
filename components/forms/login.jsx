@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Alert } from 'react-native';
 import { useFormik } from 'formik';
 import { loginValidationSchema } from '@/validations/form';
-import { CustomInput, CustomButton } from '@/components/customs';
+import { CustomInput, CustomButton } from '@/components/custom';
 import { useRouter } from "expo-router";
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { login } from '@/redux/reducers/auth';
@@ -27,7 +27,7 @@ const LoginForm = () => {
               type: 'success',
               text1: t ('success.login')
           });
-          router.push("/(tabs)");
+          router.replace("/(tabs)");
         })
         .catch(err => {
           switch(err.status) {
@@ -43,8 +43,7 @@ const LoginForm = () => {
   });
 
   function Working() {
-    // Alert.alert('Tugatilmagan', `Ishlash jarayonida`);
-    router.push('/forgot-password')
+    router.replace('/auth/forgot-password')
   }
   
   return (

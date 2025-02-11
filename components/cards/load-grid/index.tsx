@@ -5,7 +5,7 @@ import { dateFromNow, formatPrice, getCityName, removePhoneNumbers } from '@/uti
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Colors } from '@/utils/colors';
-import { CustomOpenLink, CustomPhoneCall, CustomShowMoreText } from '@/components/customs';
+import { CustomOpenLink, CustomPhoneCall, CustomShowMoreText } from '@/components/custom';
 import dayjs from "dayjs";
 import { loadCardInterfaceProps } from '@/interface/components';
 import { ButtonBookmark } from '@/components/buttons';

@@ -1,7 +1,7 @@
 import { Text, View, FlatList, Keyboard, RefreshControl } from 'react-native'
 import React from 'react'
 import { OPTIONS } from '@/utils/constants'
-import { CustomBadgeSelector, CustomButton, CustomInput } from '@/components/customs'
+import { CustomBadgeSelector, CustomButton, CustomInput } from '@/components/custom'
 import LoadRouteSelector from '@/components/load-route-selector'
 import { EmptyStateCard, LoadGridCard, LoadListCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
@@ -329,11 +329,12 @@ const SearchLoadScreen = () => {
                     returnKeyType="search"
                 />
                 <CustomButton
-                     iconName='search' 
-                     isIcon 
-                     onPress={debouncedFetchExtract}
-                     loading={loading}
-                     buttonStyle="w-auto p-3 bg-primary ml-2"
+                  onPress={debouncedFetchExtract}
+                  buttonStyle="w-auto p-3 bg-primary ml-2"
+                  loading={loading}
+                  disabled={!searchText}
+                  isIcon={true}
+                  icon="search"
                 />
             </View>)}
             <View className='my-1'/>

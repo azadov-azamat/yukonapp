@@ -64,3 +64,23 @@ export interface loadCardInterfaceProps {
     close?: () => void;
     isUpdate?: boolean;
 }
+
+export interface HeaderProps {
+    title: string; // Title of the header
+    goToRoute: string; // Route to navigate when back button is clicked
+}
+
+export interface InputSelectorProps {
+    label: string;
+    value: string;
+    onChangeText: (value: string) => void;
+    onBlur: () => void;
+    placeholder?: string;
+    error?: string;
+    type?: string;
+    divClass?: string; // Optional class name if you need
+    loading?: boolean;
+    items: Item[]; // Data for the picker options
+    style?: ViewStyle;
+    inputStyle?: TextStyle;
+}

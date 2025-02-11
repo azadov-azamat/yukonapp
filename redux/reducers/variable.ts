@@ -1,7 +1,8 @@
 import { IPlanModel, VariableInitialProps } from './../../interface/redux/variable.interface';
 // globalLoadingSlice.js
 import { http } from '@/config/api';
-import { deserialize, deserializePlan } from '@/utils/general';
+import { deserialize } from '@/utils/general';
+import { deserializePlan } from '@/utils/deserializer';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const getPlans = createAsyncThunk('variable/getPlans', async (_, {rejectWithValue}) => {

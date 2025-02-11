@@ -1,12 +1,12 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 import {http} from "@/config/api";
-import {authenticate, deserialize, deserializeUser} from "../../utils/general";
+import { deserializeUser } from "../../utils/deserializer";
+import { authenticate, deserialize } from "../../utils/general";
 import { AuthInitialProps} from "@/interface/redux/auth.interface";
 import Toast from 'react-native-toast-message';
 import { IUserModel } from "@/interface/redux/user.interface";
 import { UserSerializer } from "@/serializers";
-import UserModel from "@/models/user";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getUserMe = createAsyncThunk('auth/getUserMe', async (id: number, {rejectWithValue}) => {

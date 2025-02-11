@@ -102,6 +102,9 @@ const styles = StyleSheet.create({
     textAlignVertical: Platform.OS === 'ios' ? 'center' : null,
     outlineStyle: 'none',
   },
+  container: {
+    zIndex: null
+  }
 });
 
 export default Input;
