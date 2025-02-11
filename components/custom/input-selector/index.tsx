@@ -5,17 +5,6 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { InputSelectorProps } from '@/interface/components';
 import { useTranslation } from 'react-i18next';
 
-const data = [
-	{ label: 'Item 1', value: '1' },
-	{ label: 'Item 2', value: '2' },
-	{ label: 'Item 3', value: '3' },
-	{ label: 'Item 4', value: '4' },
-	{ label: 'Item 5', value: '5' },
-	{ label: 'Item 6', value: '6' },
-	{ label: 'Item 7', value: '7' },
-	{ label: 'Item 8', value: '8' },
-];
-
 const Input: React.FC<InputSelectorProps> = ({
   label,
   value,
@@ -25,6 +14,9 @@ const Input: React.FC<InputSelectorProps> = ({
   type,
   divClass,
   loading = false,
+	items,
+	valueField,
+	labelField,
   ...rest
 }) => {
   const {t} = useTranslation();
@@ -50,11 +42,11 @@ const Input: React.FC<InputSelectorProps> = ({
 			selectedTextStyle={styles.selectedTextStyle}
 			inputSearchStyle={styles.inputSearchStyle}
 			iconStyle={styles.iconStyle}
-			data={data}
+			data={items}
 			search
 			maxHeight={300}
-			labelField="label"
-			valueField="value"
+			labelField={labelField}
+			valueField={valueField}
 			placeholder="Select item"
 			searchPlaceholder="Search..."
 			value={value}
@@ -120,7 +112,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 	},
 	dropdownStyle: {
-    borderRadius: 12, // Curved border radius for the dropdown list
-    marginTop: 8, // Add margin between input and dropdown
+    borderRadius: 12,
+    marginTop: 6,
   },
 });

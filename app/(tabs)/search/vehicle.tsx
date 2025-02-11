@@ -1,9 +1,14 @@
 import { StyleSheet, Text, View, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { CustomInputSelector } from "@/components/custom";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { getVehicleCountries } from "@/redux/reducers/vehicle";
+import { useTranslation } from 'react-i18next';
 
 const SearchVehicleScreen = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+	const dispatch = useAppDispatch();
+	// const { t } = useTranslation();
+  const {countries, loading} = useAppSelector(state => state.vehicle);
 	const [selectedValue, setSelectedValue] = useState<string>(""); // Initialize with "" to avoid null
   const [error, setError] = useState<string>("");
 
@@ -17,11 +22,9 @@ const SearchVehicleScreen = () => {
     }
   };
 
-  const pickerItems = [
-    { label: 'Option 1', value: 'option1' },
-    { label: 'Option 2', value: 'option2' },
-    { label: 'Option 3', value: 'option3' },
-  ];
+	React.useEffect(()=> {
+    dispatch(getVehicleCountries())
+  },  []);
 
   return (
     <ScrollView className="flex-1 bg-gray-100">
@@ -33,7 +36,9 @@ const SearchVehicleScreen = () => {
 					placeholder="Select an option"
 					error={error}
 					loading={loading}
-					items={pickerItems}
+					items={countries}
+					labelField="name_uz"
+          valueField="name_uz"
 					search={false}
 				/>
 			</View>

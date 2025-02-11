@@ -82,6 +82,47 @@ export const LoadSerializer = new Serializer('load', {
   },
 });
 
+// Vehicle Serializer
+export const VehicleSerializer = new Serializer('vehicle', {
+  attributes: [
+    'originCityName',
+    'originCity',
+    'originCountry',
+    'destinationCityNames',
+    'destinationCityIds',
+    'destinationCountryIds',
+    'openMessageCounter',
+    'phoneViewCounter',
+    'weight',
+    'volume',
+    'description',
+    'truckType',
+    'truckType2',
+    'url',
+    'createdAt',
+    'updatedAt',
+    'publishedDate',
+    'isArchived',
+    'telegramUserId',
+    'telegramMessageId',
+    'isWebAd',
+  ],
+  relationships: {
+    owner: {
+      ref: 'id',
+      attributes: [],
+    },
+    originCity: {
+      ref: 'id',
+      attributes: [],
+    },
+    originCountry: {
+      ref: 'id',
+      attributes: [],
+    },
+  },
+});
+
 // City Serializer
 export const CitySerializer = new Serializer('city', {
   attributes: [

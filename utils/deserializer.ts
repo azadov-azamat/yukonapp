@@ -4,6 +4,8 @@ import { ILoadModel } from "@/interface/redux/load.interface";
 import LoadModel from "@/models/load";
 import { IPlanModel } from "@/interface/redux/variable.interface";
 import PlanModel from "@/models/plan";
+import { IVehicleModel } from "@/interface/redux/vehicle.interface";
+import VehicleModel from "@/models/vehicle";
 
 export const deserializeUser = (data: IUserModel): UserModel => {
     return new UserModel(data);
@@ -12,6 +14,11 @@ export const deserializeUser = (data: IUserModel): UserModel => {
 export const deserializeLoad = (data: ILoadModel): LoadModel => {
     return new LoadModel(data);
 };
+
+export const deserializeVehicle = (data: IVehicleModel): VehicleModel => {
+	return new VehicleModel(data);
+};
+
 
 export const deserializePlan = (data: IPlanModel): PlanModel => {
     return new PlanModel(data);

@@ -1,9 +1,12 @@
 import { defaultData, ICityModel, ICountryModel } from "./variable.interface";
 
-export interface LoadInitialProps {
+export interface VehicleInitialProps {
     vehicle: IVehicleModel | null;
     vehicles: IVehicleModel[] | [];
+    countries: ICountryModel[] | [];
     loading: boolean;
+    pagination: any;
+    stats: any;
 }
 
 
@@ -33,7 +36,7 @@ export interface IVehicleModel extends defaultData{
     invalidButtonCounter: number;
     originCity?: ICityModel;
     originCountry?: ICountryModel;
-  
+
     // phoneFunction(close?: () => void): Promise<void>;
     // urlFunction(): Promise<void>;
     // handleFunction(endpoint: string, successCallback: (response: any) => void, close?: () => void): Promise<void>;
