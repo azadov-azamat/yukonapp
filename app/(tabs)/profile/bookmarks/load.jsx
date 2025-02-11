@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next'
 import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/content-loader'
 import { startLoading, stopLoading } from '@/redux/reducers/variable'
-import { LoadModal } from '@/components/modal'
+import { LoadModal, SubscriptionModal } from '@/components/modal'
 
 const BookmarksLoadScreen = () => {
     const route = useRoute();
@@ -24,17 +24,11 @@ const BookmarksLoadScreen = () => {
     const [page, setPage] = React.useState(1);
     
     const [viewId, setViewId] = React.useState(null);
-    const [isGridView, setIsGridView] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
     
-    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} /> : 
-                                                                <LoadGridCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />);
-    const RenderContentLoadItem = React.memo(() => isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
-    
-    const toggleView = () => {
-      setIsGridView((prev) => !prev);
-    };
+    const RenderLoadItem = React.memo(({ item }) => <LoadGridCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />);
+    const RenderContentLoadItem = React.memo(() => <ContentLoaderLoadGrid />);
     
     const toggleModal = () => {
       setOpenModal(!openModal)
@@ -57,6 +51,15 @@ const BookmarksLoadScreen = () => {
       }
     }, [openModal])
 
+    React.useEffect(() => {
+      if (viewId) {
+        toggleModal();
+        dispatch(getLoadById(viewId));
+      } else {
+        // dispatch(clearLoad())
+      }
+    }, [viewId])
+    
     const onRefresh = () => {
         setRefreshing(true);
         // dispatch(clearLoads());
@@ -85,6 +88,13 @@ const BookmarksLoadScreen = () => {
         dispatch(clearLoads())
       } else {
         setPage(previus => previus + 1); 
+      }
+    }
+    
+    const toggleSubscriptionModal = (fetch = true) => {
+      dispatch(updateUserSubscriptionModal())
+      if (fetch) {
+        toggleModal();
       }
     }
     
@@ -119,6 +129,7 @@ const BookmarksLoadScreen = () => {
               />
             )}
             <LoadModal open={openModal} toggle={toggleModal}/>
+            <SubscriptionModal open={!!user?.isSubscriptionModal || false} toggle={toggleSubscriptionModal}/>
         </View>
     )
 }

@@ -177,10 +177,6 @@ const SearchLoadScreen = () => {
       checkAndFetch();
     };
 
-    const handleBookmark = () => {
-        console.log('Bookmark clicked!');
-    };
-
     function requestParams() {
         let query = {
           limit: limit,
@@ -263,10 +259,6 @@ const SearchLoadScreen = () => {
         } finally {
           dispatch(stopLoading());
         }
-    };
-
-    const handleDateSelect = (range) => {
-      console.log("Tanlangan sana diapazoni:", range);
     };
 
     const onChange = (value) => {
