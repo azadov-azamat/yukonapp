@@ -1,7 +1,9 @@
 import LoadModel from "@/models/load";
 import { Ionicons } from "@expo/vector-icons";
+import { ExternalPathString, RelativePathString } from "expo-router";
 import { NativeSyntheticEvent, TextInputFocusEventData } from "react-native";
 import { StyleProp, TextInputProps, TextStyle, ViewStyle } from "react-native";
+import { Item } from "react-native-picker-select";
 
 export interface InputProps extends TextInputProps {
     label?: string | null; // Optional label
@@ -15,7 +17,7 @@ export interface InputProps extends TextInputProps {
     divClass?: string;
   }
 
-export interface ButtonProps {
+export interface ButtonComponentProps {
     title?: string; // Tugma matni
     onPress: () => void; // Bosilganda chaqiriladigan funksiya
     loading?: boolean; // Yuklanish holati (ixtiyoriy, default: false)
@@ -23,7 +25,7 @@ export interface ButtonProps {
     buttonStyle?: string | StyleProp<ViewStyle>; // Tugma uslubi
     textStyle?: string | StyleProp<TextStyle>; // Matn uslubi
     isIcon?: boolean;
-    iconName?: keyof typeof Ionicons.glyphMap;
+    icon?: keyof typeof Ionicons.glyphMap;
     iconSize?: number;
 }
 
@@ -67,7 +69,7 @@ export interface loadCardInterfaceProps {
 
 export interface HeaderProps {
     title: string; // Title of the header
-    goToRoute: string; // Route to navigate when back button is clicked
+    goToRoute: RelativePathString | ExternalPathString; // Route to navigate when back button is clicked
 }
 
 export interface InputSelectorProps {

@@ -27,7 +27,7 @@ const Input: React.FC<InputSelectorProps> = ({
         onValueChange={(newValue) => onChangeText(newValue)}
         items={items}
         placeholder={{ label: placeholder, value: null }}
-        onBlur={onBlur}
+        onDonePress={onBlur}
         style={{
           inputIOS: [styles.input, inputStyle], // Custom styles for iOS
           inputAndroid: [styles.input, inputStyle], // Custom styles for Android

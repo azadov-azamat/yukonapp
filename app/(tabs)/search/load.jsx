@@ -349,7 +349,7 @@ const SearchLoadScreen = () => {
                 </Text>
               </View>
               <CustomButton
-                iconName={isGridView ? 'list' : 'grid'} // Icon for toggle
+                icon={isGridView ? 'list' : 'grid'} // Icon for toggle
                 isIcon
                 iconSize={18}
                 onPress={toggleView}

@@ -1,9 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { ExternalPathString, RelativePathString, useRouter } from "expo-router";
 import Button from "@/components/custom/button"; // Import custom button
 import { HeaderProps } from "@/interface/components"; // Import HeaderProps
-import ArrowBackIcon from "@/assets/svg/arrow-back.svg";
 
 const CustomHeader: React.FC<HeaderProps> = ({ title, goToRoute }) => {
   const router = useRouter();

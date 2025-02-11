@@ -1,8 +1,9 @@
 import React from "react";
 import { TouchableOpacity, Text, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";  // Import Ionicons
+import { ButtonComponentProps } from "@/interface/components";
 
-const Button: React.FC<ButtonProps> = ({
+const Button: React.FC<ButtonComponentProps> = ({
   title,
   onPress,
   loading = false, // Default loading state
