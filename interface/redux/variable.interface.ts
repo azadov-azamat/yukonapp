@@ -1,11 +1,14 @@
 import PlanModel from "@/models/plan";
 import { IUserModel } from "./user.interface";
+import SubscriptionModel from "@/models/subscription";
 
 export interface VariableInitialProps {
     plans: PlanModel[] | [];
+    subscriptions: SubscriptionModel[] | [];
     selectedPlan: PlanModel | null;
     loading: boolean;
     phoneLoading: boolean;
+    pagination: any;
     activeLoaders: number;
 }
 

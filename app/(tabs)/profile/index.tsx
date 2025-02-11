@@ -47,12 +47,12 @@ export default function ProfilePage() {
         <MenuItem
           title="profile.bookmarks"
           icon="bookmark"
-          onPress={() => router.replace('/(tabs)/profile/bookmarks')}
+          onPress={() => router.replace('/profile/bookmarks')}
         />
         <MenuItem
           title="profile.subscriptions"
           icon="cart"
-          onPress={() => router.replace('/(tabs)/profile/bookmarks')}
+          onPress={() => router.replace('/profile/subscriptions')}
         />
       
         <MenuItem title="profile.notifications" icon="notifications" />

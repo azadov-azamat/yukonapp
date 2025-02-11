@@ -3,6 +3,7 @@ import { IPlanModel, ISubscriptionModel } from "@/interface/redux/variable.inter
 import dayjs from 'dayjs';
 
 export default class SubscriptionModel implements ISubscriptionModel {
+    id: number = 0;
     paymentSource: string = '';
     endDate: string | null = null;
     startDate: string | null = null;
