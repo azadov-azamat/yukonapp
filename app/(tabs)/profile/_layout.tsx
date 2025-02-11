@@ -1,7 +1,9 @@
-import { Stack } from "expo-router";
+import { RelativePathString, Stack } from "expo-router";
 import { CustomHeader } from "@/components/custom";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileLayout() {
+  const { t } = useTranslation();
   return (
     <Stack screenOptions={{ headerShown: true }}>
       {/* Main profile screen */}
@@ -10,8 +12,8 @@ export default function ProfileLayout() {
         options={{
           header: () => (
             <CustomHeader
-              title="Profile"
-              goToRoute="/" // Navigate to Main tab
+              title={t ('pages.profile')}
+              goToRoute={"/" as RelativePathString} // Navigate to Main tab
             />
           ),
         }}
@@ -22,8 +24,8 @@ export default function ProfileLayout() {
         options={{
           header: () => (
             <CustomHeader
-              title="Bookmarks"
-              goToRoute="/profile" // Navigate back to Profile
+              title={t ("pages.bookmarks")}
+              goToRoute={"/(tabs)/profile" as RelativePathString} // Navigate back to Profile
             />
           ),
         }}
