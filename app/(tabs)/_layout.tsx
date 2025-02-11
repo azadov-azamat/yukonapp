@@ -72,9 +72,12 @@ export default function TabLayout() {
           elevation: 0, // Remove shadow for Android
           shadowOpacity: 0, // Remove shadow for iOS
         },
+				tabBarLabelStyle: {
+					// paddingTop: 100,
+				},
         tabBarStyle: isTabHidden
           ? { display: "none" } // Hide tab bar for `profile` and its subroutes
-          : {}, // Default tab bar style
+          : { height: 60 }, // Default tab bar style
       }}
     >
       <Tabs.Screen

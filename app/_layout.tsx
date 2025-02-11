@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {Provider} from 'react-redux';
 import { store } from "@/redux/store";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { SafeAreaView, StyleSheet, Image, StatusBar, View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet, Image, StatusBar, View, ActivityIndicator, Platform } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
@@ -72,7 +72,7 @@ function App() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView edges={['top']} style={styles.safeArea}>
         <Stack
           screenOptions={{
             headerShown: false,
@@ -98,7 +98,8 @@ function App() {
 const styles = StyleSheet.create({
     safeArea: {
       flex: 1,
-      backgroundColor: '#f7f7f7',
+      backgroundColor: '#fff', // '#f7f7f7'
+			paddingBottom: Platform.OS === 'android' ? 0 : 20,
     },
     loaderContainer: {
       flex: 1, // Takes full height
