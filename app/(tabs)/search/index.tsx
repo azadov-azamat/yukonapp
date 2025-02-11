@@ -6,7 +6,7 @@ import SearchLoadScreen from "./load.jsx";
 import SearchVehicleScreen from "./vehicle";
 
 export default function SearchPage() {
-  const [selectedTab, setSelectedTab] = React.useState('load'); 
+  const [selectedTab, setSelectedTab] = React.useState('vehicle'); 
   
   const tabs: viewSelectorTabs[] = [
     { label: 'bookmarks.load', value: 'load', icon: 'cube' },

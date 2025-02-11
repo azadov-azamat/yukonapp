@@ -1,9 +1,11 @@
-import { defaultData, ICityModel, ICountryModel } from "./variable.interface";
+import { defaultData, ICityModel, ICountryModel, vehicleCountriesProps } from "./variable.interface";
 
 export interface VehicleInitialProps {
     vehicle: IVehicleModel | null;
     vehicles: IVehicleModel[] | [];
     countries: ICountryModel[] | [];
+    activeCountries: vehicleCountriesProps[] | [];
+    activeCities: vehicleCountriesProps[] | [];
     loading: boolean;
     pagination: any;
     stats: any;

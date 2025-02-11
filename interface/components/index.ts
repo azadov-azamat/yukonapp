@@ -3,7 +3,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { ExternalPathString, RelativePathString } from "expo-router";
 import { NativeSyntheticEvent, TextInputFocusEventData } from "react-native";
 import { StyleProp, TextInputProps, TextStyle, ViewStyle } from "react-native";
-import { Item } from "react-native-picker-select";
 
 export interface InputProps extends TextInputProps {
     label?: string | null; // Optional label
@@ -72,14 +71,18 @@ export interface HeaderProps {
     goToRoute: RelativePathString | ExternalPathString; // Route to navigate when back button is clicked
 }
 
-export interface InputSelectorProps {
-  label: string;
-  value: string;
+export interface InputSelectorProps<T> {
+  label?: string;
+  value: any;
   onChange: (value: string) => void;
-  placeholder?: string;
+  clearValue?: () => void;
+  placeholder: string;
   error?: string;
   type?: string;
   divClass?: string;
   loading?: boolean;
+  disabled?: boolean;
+  rightData?: (item: T) => React.ReactElement | null;
+  rowItem: (item: T) => React.ReactElement | null;
   [key: string]: any; // This allows passing other props like style, etc.
 }

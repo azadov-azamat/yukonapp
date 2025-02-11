@@ -6,10 +6,20 @@ import { deserializeVehicle } from "@/utils/deserializer";
 import { VehicleSerializer } from "@/serializers";
 
 // Fetch Vehicle Countries
-export const getVehicleCountries = createAsyncThunk('vehicle/countries', async (_, { rejectWithValue }) => {
+export const getVehicleCountries = createAsyncThunk('vehicle/getVehicleCountries', async (_, { rejectWithValue }) => {
     try {
         const response = await http.get('/vehicles/countries');
-        return await deserialize(response.data);
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
+// Fetch Vehicle Country cities
+export const getVehicleCountryCities = createAsyncThunk('vehicle/getVehicleCountryCities', async (id: number, { rejectWithValue }) => {
+    try {
+        const response = await http.get(`/vehicles/country/${id}/cities`);
+        return response.data;
     } catch (error) {
         return rejectWithValue(error);
     }
@@ -53,6 +63,8 @@ export const createVehicle = createAsyncThunk('vehicle/createVehicle', async (da
 const initialState: VehicleInitialProps = {
     vehicles: [],
     countries: [],
+    activeCountries: [],
+    activeCities: [],
     vehicle: null,
     pagination: null,
     stats: null,
@@ -79,13 +91,27 @@ export const vehicleSlice = createSlice({
     extraReducers: (builder) => {
         // Get Vehicle Countries
         builder.addCase(getVehicleCountries.fulfilled, (state, action) => {
-						state.countries = action.payload;
+			state.activeCountries = action.payload;
             state.loading = false;
         });
         builder.addCase(getVehicleCountries.pending, (state) => {
             state.loading = true;
         });
         builder.addCase(getVehicleCountries.rejected, (state) => {
+            state.activeCountries = [];
+            state.loading = false;
+        });
+
+        // Get Vehicle Country cities
+        builder.addCase(getVehicleCountryCities.fulfilled, (state, action) => {
+			state.activeCities = action.payload;
+            state.loading = false;
+        });
+        builder.addCase(getVehicleCountryCities.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(getVehicleCountryCities.rejected, (state) => {
+            state.activeCities = [];
             state.loading = false;
         });
 

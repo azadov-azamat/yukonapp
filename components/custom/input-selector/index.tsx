@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet, Platform, Text, View, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import { InputSelectorProps } from '@/interface/components';
 import { useTranslation } from 'react-i18next';
+import { Ionicons } from '@expo/vector-icons';
+import { getName } from '@/utils/general';
 
-const Input: React.FC<InputSelectorProps> = ({
+const Input: React.FC<InputSelectorProps<any>> = ({
   label,
   value,
   onChange,
@@ -17,23 +18,23 @@ const Input: React.FC<InputSelectorProps> = ({
 	items,
 	valueField,
 	labelField,
+  clearValue,
+  rightData,
+  rowItem,
+  disabled,
   ...rest
 }) => {
   const {t} = useTranslation();
 
-	const renderItem = (item: { label: string, value: string }) => (
-    <View style={styles.item}>
-      <Text style={styles.textItem}>{item.label}</Text>
-      {item.value === value && (
-        <AntDesign
-          style={styles.icon}
-          color="black"
-          name="Safety"
-          size={20}
-        />
-      )}
+	const renderItem = (item: any, labelField: string) => {
+    
+    return (
+      <View style={styles.item}>
+        {rowItem(item)}
+        {rightData && rightData(item)}
     </View>
-  );
+    )
+  };
 
 	return (
 		<Dropdown
@@ -43,19 +44,16 @@ const Input: React.FC<InputSelectorProps> = ({
 			inputSearchStyle={styles.inputSearchStyle}
 			iconStyle={styles.iconStyle}
 			data={items}
-			search
-			maxHeight={300}
-			labelField={labelField}
+			maxHeight={300}      
+      disable={disabled}
+			labelField={value && value[labelField] ? labelField : t ('payment-type.not_specified')}
 			valueField={valueField}
-			placeholder="Select item"
-			searchPlaceholder="Search..."
-			value={value}
-			onChange={onChange}
+			placeholder={t (placeholder)}
+			// searchPlaceholder="Search..."
+			// value={value}
+			onChange={(item) => onChange(item)}
 			containerStyle={styles.dropdownStyle}
-			// renderLeftIcon={() => (
-			// 	<AntDesign style={styles.icon} color="black" name="Safety" size={20} />
-			// )}
-			renderItem={renderItem}
+			renderItem={(item) => renderItem(item, labelField)}
 			{...rest}
 		/>
 	);

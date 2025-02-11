@@ -70,7 +70,6 @@ export function getName(object: any, key: string): string {
     return currentLanguage === 'uz' ? uzKey || fallbackText : ruKey || fallbackText;
 }
 
-
 export const formatPrice = (x: number, hideSign?: boolean): string => {
     if (!x) return '0';
     let result = x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');

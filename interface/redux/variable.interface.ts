@@ -84,6 +84,13 @@ export interface itemCityProps extends defaultData {
     type?: string;
 }
 
+export interface vehicleCountriesProps extends defaultData  {
+    name_uz: string;
+    name_ru: string;
+    country_id?: string;
+    vehicle_count: string;
+}
+
 export interface defaultData {
     id?: number | null;
     createdAt?: string;
