@@ -29,10 +29,27 @@ export const locationSearch = createAsyncThunk('city/locationSearch', async (tex
   }
 );
 
+export const getCityByIds = createAsyncThunk('city/getCityByIds', async ({ids}: {ids: string, vehicleId: string}, { rejectWithValue }) => {
+  try {
+    const response = await http.get(`cities/ids`, {
+      params: {
+        cityIds: ids
+      }
+    });
+    let deserializedData = await deserialize(response.data)
+    deserializedData.map((item: ICityModel) => deserializeCity(item));
+    return deserializedData;
+  } catch (error) {
+    return rejectWithValue(error);  // Return the error if request fails
+  }
+}
+);
+
 // Initial state of the city reducer
 const initialState: CityInitialProps = {
   cities: [], // To store the fetched cities
   extractCity: null,
+  vehicleCities: [],
   loading: false, // To track the loading state
 };
 
@@ -62,6 +79,18 @@ const citySlice = createSlice({
     builder.addCase(locationSearch.rejected, (state, action) => {
       state.loading = false;
       state.cities = [];
+    });
+
+    builder.addCase(getCityByIds.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getCityByIds.fulfilled, (state, action) => {      
+      state.vehicleCities[action.meta?.arg?.vehicleId as any] = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(getCityByIds.rejected, (state, action) => {
+      state.loading = false;
+      state.vehicleCities = [];
     });
   },
 });

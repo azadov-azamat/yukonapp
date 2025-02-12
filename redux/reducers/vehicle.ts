@@ -104,7 +104,7 @@ export const vehicleSlice = createSlice({
     extraReducers: (builder) => {
            // Search Loads
            builder.addCase(searchVehicles.fulfilled, (state, action) => {
-            state.vehicles = [...state.vehicles, ...action.payload?.vehicles];
+            state.vehicles = action.payload?.vehicles;
             state.pagination = action.payload.pagination;
             state.stats = action.payload.stats;
             state.loading = false;

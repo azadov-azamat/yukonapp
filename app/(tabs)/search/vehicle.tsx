@@ -53,7 +53,7 @@ const SearchVehicleScreen = () => {
     debounce(() => {
       fetchVehicles();
     }, 300), // 300ms ichida faqat bitta chaqiruv amalga oshiriladi
-    [selectedCountry]
+    [selectedCountry, selectedCity]
   )
 
   const handleCountryChange = (item: any) => setSelectedCountry(item);
@@ -79,9 +79,18 @@ const SearchVehicleScreen = () => {
 
   React.useEffect(() => {
     if (selectedCountry) {
-      dispatch(getVehicleCountryCities(selectedCountry.id || 0))
+      dispatch(getVehicleCountryCities(selectedCountry.id || 0));
+      debouncedFetchVehicles();
     }  
   }, [selectedCountry])
+
+  React.useEffect(() => {
+    console.log("selectedCity", selectedCity);
+    
+    if (selectedCity) {
+      debouncedFetchVehicles();
+    }
+  }, [selectedCity])
 
   React.useEffect(() => {
     return () => {
@@ -150,6 +159,7 @@ const SearchVehicleScreen = () => {
     if (selectedCountry) {
       query.origin_country_id = selectedCountry.id;
     }
+  console.log("selectedCity query", selectedCity);
   
     if (selectedCity) {
       query.origin_city_id = selectedCity.id;

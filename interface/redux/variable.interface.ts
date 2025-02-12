@@ -1,6 +1,7 @@
 import PlanModel from "@/models/plan";
 import { IUserModel } from "./user.interface";
 import SubscriptionModel from "@/models/subscription";
+import CityModel from "@/models/city";
 
 export interface VariableInitialProps {
     plans: PlanModel[] | [];
@@ -14,6 +15,7 @@ export interface VariableInitialProps {
 
 export interface CityInitialProps {
     cities: any;
+    vehicleCities: CityModel[] | [];
     extractCity: extractCityProps | null;
     loading: boolean;
 }

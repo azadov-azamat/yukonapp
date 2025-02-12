@@ -6,22 +6,38 @@ import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { Colors } from '@/utils/colors';
 import { CustomOpenLink, CustomPhoneCall, CustomShowMoreText } from '@/components/custom';
-import dayjs from "dayjs";
 import { vehicleCardInterfaceProps } from '@/interface/components';
 import { ButtonBookmark } from '@/components/buttons';
+import { getCityByIds } from '@/redux/reducers/city';
+import CityModel from '@/models/city';
 
 const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = false}: vehicleCardInterfaceProps) => {
   const dispatch = useAppDispatch();
   const {t} = useTranslation();
   const { user } = useAppSelector(state => state.auth);
   const { phoneLoading } = useAppSelector(state => state.variable);
-  
+  const { vehicleCities } = useAppSelector(state => state.city);
+    
   React.useEffect(() => {
     if (isUpdate) {
       vehicle.openMessageCounter++;
       vehicle.save(dispatch);
     }
   }, [isUpdate]);
+
+    const destinationCityIds = React.useMemo(() => vehicle.destinationCityIds.length ? vehicle.destinationCityIds.join(',') : '', [vehicle.destinationCityIds]);
+
+    // React.useEffect(() => {
+    //   dispatch(getCityByIds({ids: destinationCityIds, vehicleId: String(vehicle.id)}));
+    // }, []);
+  
+  const cities: any = React.useMemo(() => {
+    if (vehicle.id && !vehicleCities[vehicle.id]) {
+      dispatch(getCityByIds({ids: destinationCityIds, vehicleId: String(vehicle.id)}));
+      return ''
+    }
+    return vehicleCities[vehicle.id || 1];
+  }, [vehicle.id, vehicleCities])
 
   function handleDetermineTon(weight: number) {
     if (weight < 0.5) {
@@ -31,48 +47,10 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
     }
   }
   
-  function formatPaymentType(type: string) {
-    return t ('post.payment-type', {
-      type: t ('payment-type.' + type),
-    });
-  }
-  
-  React.useEffect(() => {
-    
-  }, [vehicle.telegram, vehicle.phone, vehicle.loading]);
+  React.useEffect(() => {}, [vehicle.telegram, vehicle.phone, vehicle.loading]);
   
   if (!user) {
     return null;
-  }
-  
-  function formatLoadReadyDate(loadReadyDate: string | Date): string {
-    const { t } = useTranslation(); // i18n translate hook
-    const date = dayjs(loadReadyDate);
-    const today = dayjs();
-    const tomorrow = dayjs().add(1, 'day');
-  
-    if (date.isSame(today, 'day')) {
-      return `${t('today')}, ${date.format('D MMMM')}`; // "Bugun, 23 Yanvar"
-    } else if (date.isSame(tomorrow, 'day')) {
-      return `${t('tomorrow')}, ${date.format('D MMMM')}`; // "Ertaga, 24 Yanvar"
-    } else {
-      return date.format('D MMMM'); // "25 Yanvar"
-    }
-  }
-  
-  function formatPriceAndPrepayment(
-    price: number,
-    hasPrepayment: boolean,
-    prepaymentAmount: number,
-    originId: number,
-    destinationId: number,
-  ) {
-    const prepayment = hasPrepayment
-      ? prepaymentAmount
-        ? ` (${t ('prepayment')} ${formatPrice(prepaymentAmount)})`
-        : ` (${t ('has-prepayment')})`
-      : '';
-    return `${(price ? formatPrice(price, originId === 1 && destinationId === 1) : '') + prepayment}`;
   }
   
   const ParentComponent = showElement ? View : TouchableOpacity; 
@@ -102,11 +80,18 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
       </View>}
 
       {/* Origin and Destination */}
-      <View className="flex-row items-center justify-between my-4">
+      <View className="flex-col items-start my-4">
         {/* Origin */}
-        <View className="items-start flex-1">
+        <View className="flex-row items-center flex-1 w-full space-x-2">
           <Text className="text-lg font-bold">{getCityName(vehicle?.originCity)}</Text>
-          <Text className="text-gray-500">{vehicle.originCountry?.icon + " " + getCityName(vehicle.originCountry)}</Text>
+          <View className='flex-row items-center space-x-1'>
+            <Text className="text-gray-500">
+            {vehicle.originCountry?.icon}
+            </Text>
+            <Text className="text-gray-500">
+              {getCityName(vehicle.originCountry)}
+            </Text>
+          </View>
         </View>
 
         {/* Path Line */}
@@ -114,8 +99,7 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
 
         {/* Destination */}
         <View className="items-end flex-1">
-          {/* <Text className="text-lg font-bold">{getCityName(vehicle.destinationCity)}</Text> */}
-          {/* <Text className="text-gray-500">{vehicle.destinationCountry?.icon + " " + getCityName(vehicle.destinationCountry)}</Text> */}
+          {cities && cities.map((city: CityModel, key: any) => <Text key={key} className="text-md">{getCityName(city)}{(key + 1) !== cities.length && ","}</Text>)}          
         </View>
       </View>
 
