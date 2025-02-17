@@ -93,7 +93,7 @@ export default function TabLayout() {
         name="search"
         initialParams={{ arrival: '', departure: '' }}
         options={{
-          title: t('pages.cargo'),
+          title: t('search'),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon size={24} name={focused ? "search" : "search-outline"} color={color} />
           ),
