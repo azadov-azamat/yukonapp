@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "@/redux/store";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, View, ActivityIndicator, Platform, StatusBar } from "react-native";
+import { StyleSheet, View, Platform, StatusBar } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
@@ -11,7 +11,7 @@ import Toast from 'react-native-toast-message';
 import { NativeWindStyleSheet } from "nativewind";
 import '@/utils/i18n';
 
-import { Provider as PaperProvider } from "react-native-paper";
+import { Provider as PaperProvider, ActivityIndicator, MD2Colors } from "react-native-paper";
 import { ThemeProvider, useTheme } from "@/config/ThemeContext"; // ✅ Import the Theme Context
 
 NativeWindStyleSheet.setOutput({

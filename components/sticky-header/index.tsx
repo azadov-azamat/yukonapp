@@ -5,27 +5,31 @@ import {
   Animated,
   StyleSheet,
   ScrollView,
+  RefreshControl,
   NativeScrollEvent,
   NativeSyntheticEvent,
 } from "react-native";
+import { useTheme } from "@/config/ThemeContext";
 
 interface StickyHeaderProps {
   title?: string;
-  children: ReactNode; // Allow custom content inside
+  children: ReactNode;
+  refreshing?: boolean; // ✅ Add refreshing prop
+  onRefresh?: () => void; // ✅ Add onRefresh prop
 }
 
 const HEADER_HEIGHT = 80;
-const SCROLL_THRESHOLD = 100; // Pixels before color transition
+const SCROLL_THRESHOLD = 100;
 
-const StickyHeader: React.FC<StickyHeaderProps> = ({ title = "Sticky Header", children }) => {
+const StickyHeader: React.FC<StickyHeaderProps> = ({
+  title = "Sticky Header",
+  children,
+  refreshing = false, // ✅ Default to false
+  onRefresh = () => {}, // ✅ Default empty function
+}) => {
   const scrollY = useRef(new Animated.Value(0)).current;
 
-  // Interpolate background color based on scroll position
-  const headerBackgroundColor = scrollY.interpolate({
-    inputRange: [0, SCROLL_THRESHOLD],
-    outputRange: ["#ffffff", "#007AFF"], // Adjust to your colors
-    extrapolate: "clamp",
-  });
+  const { theme } = useTheme();
 
   // Scroll event handler
   const handleScroll = Animated.event<NativeSyntheticEvent<NativeScrollEvent>>(
@@ -36,16 +40,17 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ title = "Sticky Header", ch
   return (
     <View style={styles.container}>
       {/* Animated Sticky Header */}
-      <Animated.View style={[styles.header, { backgroundColor: headerBackgroundColor }]}>
+      <Animated.View style={[styles.header, { backgroundColor: theme.colors.primary }]}>
         <Text style={styles.headerText}>{title}</Text>
       </Animated.View>
 
-      {/* Scrollable Content (Passed from Parent) */}
+      {/* Scrollable Content with Refresh Control */}
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
-        scrollEventThrottle={16} // Smooth animation updates
+        scrollEventThrottle={16}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} // ✅ Move RefreshControl here
       >
         {children}
       </ScrollView>

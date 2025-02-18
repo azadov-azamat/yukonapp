@@ -11,7 +11,10 @@ import { getExtractCity } from "@/redux/reducers/city";
 import { startLoading, stopLoading } from "@/redux/reducers/variable";
 import { useRouter } from "expo-router";
 import { getCityName } from "@/utils/general";
-// import StickyHeader from "@/components/sticky-header"; // Import the Sticky Header
+import { Appbar, List, Card } from "react-native-paper"; // ✅ Import Appbar from Paper
+import { useTheme } from "@/config/ThemeContext";
+import StickyHeader from "@/components/sticky-header"; // Import the Sticky Header
+import { FlashList } from "@shopify/flash-list";
 
 export default function MainPage() {
   const dispatch = useAppDispatch();
@@ -22,6 +25,8 @@ export default function MainPage() {
   
   const [searchText, setSearchText] = React.useState<string>('');
   const [refreshing, setRefreshing] = React.useState(false);
+
+  const { theme } = useTheme();
   
   React.useEffect(()=> {
     dispatch(getTopSearches())
@@ -56,9 +61,9 @@ export default function MainPage() {
       setRefreshing(false); // Yangilashni tugatish
     }, 2000); // 2 soniyalik kechikish
   };
-  
+
   return (
-    // <StickyHeader title="Home">
+    <StickyHeader refreshing={refreshing} onRefresh={onRefresh}>
       <View className="flex-1 p-4 bg-gray-100">
         <View className="flex-row items-center mb-6">
           <CustomInput
@@ -90,23 +95,24 @@ export default function MainPage() {
 
           {
             !loading ? (
-                <FlatList
-                  data={topSearches}
-                  keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
-                  ListEmptyComponent={<EmptyStateCard type="load"/>}
-                  renderItem={({ item }) => <PopularDirectionCard {...item}/>}
-                  refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                />
+              <FlashList
+                data={topSearches}
+                keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
+                ListEmptyComponent={<EmptyStateCard type="load" />}
+                renderItem={({ item }) => <PopularDirectionCard {...item} />}
+                estimatedItemSize={100}
+              />
             ) : (
-              <FlatList
+              <FlashList
                 data={[1, 2, 3, 4]}
                 keyExtractor={(item) => item.toString()}
                 renderItem={() => <ContentLoaderTopSearches />}
+                estimatedItemSize={50} // ✅ Adjust for smaller placeholders
               />
             )
           }
         </View>
       </View>
-    // </StickyHeader>
+    </StickyHeader>
   );
 }

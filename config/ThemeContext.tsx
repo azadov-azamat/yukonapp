@@ -1,6 +1,11 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DefaultTheme as PaperDefaultTheme, DarkTheme as PaperDarkTheme } from "react-native-paper";
+import {
+  DefaultTheme as PaperDefaultTheme,
+  DarkTheme as PaperDarkTheme,
+  MD3LightTheme,
+  MD3DarkTheme
+} from "react-native-paper";
 import { Appearance } from "react-native";
 
 const defaultTheme = PaperDefaultTheme || {
