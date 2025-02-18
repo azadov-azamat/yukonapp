@@ -1,12 +1,41 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DefaultTheme, DarkTheme } from "react-native-paper";
+import { DefaultTheme as PaperDefaultTheme, DarkTheme as PaperDarkTheme } from "react-native-paper";
 import { Appearance } from "react-native";
 
+const defaultTheme = PaperDefaultTheme || {
+  colors: {
+    primary: "#3498db",
+    background: "#ffffff",
+    text: "#333333",
+  },
+};
+
+const LightTheme = {
+  ...defaultTheme,
+  colors: {
+    ...(defaultTheme.colors || {}),
+    // primary: "#3498db",
+    // background: "#ffffff",
+  },
+  customStyles: {}
+};
+
+const DarkTheme = {
+  ...(PaperDarkTheme || defaultTheme),
+  colors: {
+    ...(PaperDarkTheme?.colors || defaultTheme.colors),
+    // primary: "#FF5733",
+    // background: "#121212",
+  },
+  customStyles: {}
+};
+
+// ✅ Create ThemeContext with default values
 const ThemeContext = createContext({
   isDarkMode: false,
   toggleTheme: () => {},
-  theme: DefaultTheme,
+  theme: LightTheme,
 });
 
 export const ThemeProvider = ({ children }) => {
@@ -32,7 +61,7 @@ export const ThemeProvider = ({ children }) => {
     <ThemeContext.Provider value={{
       isDarkMode,
       toggleTheme,
-      theme: isDarkMode ? DarkTheme : DefaultTheme
+      theme: isDarkMode ? DarkTheme : LightTheme
     }}>
       {children}
     </ThemeContext.Provider>
