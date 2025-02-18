@@ -45,7 +45,7 @@ const SearchVehicleScreen = () => {
     
   const RenderLoadItem = React.memo(({ item }: {item: VehicleModel}) => isGridView ? <VehicleGridCard onPress={() => toggleSetId(item)} vehicle={item} close={toggleModal} /> : 
     <VehicleListCard onPress={() => toggleSetId(item)} vehicle={item} close={toggleModal} />);
-  const RenderContentLoadItem = React.memo(() => isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
+  const RenderContentLoadItem = React.memo(() => !isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
 
   const isLast = pagination?.totalPages === page;
 
@@ -80,15 +80,13 @@ const SearchVehicleScreen = () => {
   React.useEffect(() => {
     if (selectedCountry) {
       dispatch(getVehicleCountryCities(selectedCountry.id || 0));
-      debouncedFetchVehicles();
+      checkAndFetch();
     }  
   }, [selectedCountry])
 
   React.useEffect(() => {
-    console.log("selectedCity", selectedCity);
-    
     if (selectedCity) {
-      debouncedFetchVehicles();
+      checkAndFetch();
     }
   }, [selectedCity])
 
@@ -159,7 +157,6 @@ const SearchVehicleScreen = () => {
     if (selectedCountry) {
       query.origin_country_id = selectedCountry.id;
     }
-  console.log("selectedCity query", selectedCity);
   
     if (selectedCity) {
       query.origin_city_id = selectedCity.id;
@@ -192,7 +189,7 @@ const SearchVehicleScreen = () => {
         ? prevSelected.filter((itemValue) => itemValue !== value)
         : [...prevSelected, value]
     );
-    debouncedFetchVehicles();
+    checkAndFetch();
   };
   
   const onChange = (value: string) => {
@@ -206,7 +203,7 @@ const SearchVehicleScreen = () => {
         ? prevSelected.filter((itemValue) => itemValue !== value)
         : [...prevSelected, value]
     );
-    debouncedFetchVehicles();
+    checkAndFetch();
   };
   
   // const debouncedFetchExtract = React.useCallback(
@@ -236,6 +233,14 @@ const SearchVehicleScreen = () => {
       dispatch(clearVehicles())
     } else {
       setPage(previus => previus + 1); 
+    }
+  }
+  
+  const checkAndFetch =()=> {
+    if (selectedCountry) {
+      setPage(1);
+      dispatch(clearVehicles());
+      debouncedFetchVehicles();
     }
   }
   

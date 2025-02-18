@@ -15,7 +15,7 @@ export interface VariableInitialProps {
 
 export interface CityInitialProps {
     cities: any;
-    vehicleCities: CityModel[] | [];
+    vehicleCities: { [key: number]: CityModel[] | [] };
     extractCity: extractCityProps | null;
     loading: boolean;
 }

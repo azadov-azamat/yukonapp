@@ -276,6 +276,7 @@ const SearchLoadScreen = () => {
     
     const checkAndFetch =()=> {
       if (origin) {
+        setPage(1);
         dispatch(clearLoads());
         debouncedFetchExtract();
       }
@@ -285,7 +286,6 @@ const SearchLoadScreen = () => {
     
     const handleViewMore = () => {
       if (isLast) {
-        setPage(1)
         dispatch(clearLoads())
       } else {
         setPage(previus => previus + 1); 

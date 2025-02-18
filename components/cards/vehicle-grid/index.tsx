@@ -25,19 +25,51 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
     }
   }, [isUpdate]);
 
-    const destinationCityIds = React.useMemo(() => vehicle.destinationCityIds.length ? vehicle.destinationCityIds.join(',') : '', [vehicle.destinationCityIds]);
+  // Memoize destinationCityIds to prevent unnecessary recalculations
+  const destinationCityIds = React.useMemo(() => 
+    vehicle.destinationCityIds?.length ? vehicle.destinationCityIds.join(',') : '', 
+    [vehicle.destinationCityIds]
+  );
 
-    // React.useEffect(() => {
-    //   dispatch(getCityByIds({ids: destinationCityIds, vehicleId: String(vehicle.id)}));
-    // }, []);
-  
-  const cities: any = React.useMemo(() => {
-    if (vehicle.id && !vehicleCities[vehicle.id]) {
-      dispatch(getCityByIds({ids: destinationCityIds, vehicleId: String(vehicle.id)}));
-      return ''
-    }
-    return vehicleCities[vehicle.id || 1];
-  }, [vehicle.id, vehicleCities])
+  // Memoize the cities check
+  const shouldFetchCities = React.useMemo(() => {
+    const hasVehicleId = Boolean(vehicle.id);
+    const citiesNotLoaded = !vehicleCities[vehicle.id || 0];
+    const hasDestinationIds = Boolean(destinationCityIds);
+    const notAlreadyFetching = !vehicle.loading; // Add loading state to prevent duplicate requests
+
+    return hasVehicleId && citiesNotLoaded && hasDestinationIds && notAlreadyFetching;
+  }, [vehicle.id, vehicleCities, destinationCityIds, vehicle.loading]);
+
+  // Single useEffect for city fetching
+  React.useEffect(() => {
+    let isMounted = true;
+
+    const fetchCities = async () => {
+      if (shouldFetchCities && isMounted) {
+        try {
+          await dispatch(getCityByIds({
+            ids: destinationCityIds, 
+            vehicleId: String(vehicle.id)
+          }));
+        } catch (error) {
+          console.error('Failed to fetch cities:', error);
+        }
+      }
+    };
+
+    fetchCities();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [shouldFetchCities, destinationCityIds, vehicle.id]);
+
+  // Remove the console.log that might trigger re-renders
+  const cities = React.useMemo(() => 
+    vehicleCities[vehicle.id || 1],
+    [vehicle.id, vehicleCities]
+  );
 
   function handleDetermineTon(weight: number) {
     if (weight < 0.5) {
@@ -98,8 +130,12 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
         {/* <View className="h-[2px] bg-gradient-to-r from-blue-400 to-transparent flex-1 mx-4" /> */}
 
         {/* Destination */}
-        <View className="items-end flex-1">
-          {cities && cities.map((city: CityModel, key: any) => <Text key={key} className="text-md">{getCityName(city)}{(key + 1) !== cities.length && ","}</Text>)}          
+        <View className="flex-row flex-wrap flex-1">
+          {cities?.map((city: CityModel, index: number) => (
+            <Text key={city.id} className="text-md">
+              {getCityName(city)}{index !== (cities.length - 1) ? ', ' : ''}
+            </Text>
+          ))}
         </View>
       </View>
 
