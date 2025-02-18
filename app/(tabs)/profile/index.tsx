@@ -5,21 +5,25 @@ import { Colors } from "@/utils/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { Button, Text } from "react-native-paper";
+import { useTheme } from "@/config/ThemeContext";
 
 export default function ProfilePage() {
   const router = useRouter();
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => state.auth)
+  const { isDarkMode, toggleTheme } = useTheme();
   
   const logoutFunction = async () => {
     await AsyncStorage.clear();
     dispatch(logout());
     router.replace('/auth');
   }
-  
+
   return (
     <View className="relative flex-1 px-4 pt-8 bg-gray-100">
     {/* Header */}
@@ -64,6 +68,13 @@ export default function ProfilePage() {
           <Ionicons name="log-out-outline" size={24} color="#FF3D00" />
           <Text className="ml-4 text-base text-red-500">{t ('profile.logout')}</Text>
         </TouchableOpacity>
+
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text variant="titleLarge">Current Theme: {isDarkMode ? "Dark" : "Light"}</Text>
+          <Button mode="contained" onPress={toggleTheme} style={{ marginTop: 20 }}>
+            Toggle Theme
+          </Button>
+        </View>
       </View>
   </View>
 );
