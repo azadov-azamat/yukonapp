@@ -72,7 +72,7 @@ const LanguageSelector = ({view = 'dropdown'}) => {
         </View>
       )}
     </View> : (
-      <View className="absolute top-0 bottom-0 left-0 right-0 items-end flex-1 h-screen m-2">
+      <View className="absolute top-0 bottom-0 left-0 right-0 items-end flex-1 m-2">
         <TouchableOpacity
           onPress={handleOpen}
           className="flex items-center justify-center w-12 h-12 bg-gray-200 border-2 rounded-md border-border-color"

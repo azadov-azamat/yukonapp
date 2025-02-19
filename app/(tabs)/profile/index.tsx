@@ -68,7 +68,6 @@ export default function ProfilePage() {
               icon="cart"
               onPress={() => router.replace('/profile/subscriptions')}
             />
-
             <MenuItem title="profile.notifications" icon="notifications" />
             <MenuItem title="profile.help" icon="help-circle" />
             <MenuItem title="About" icon="information-circle" /> */}
@@ -83,7 +82,6 @@ export default function ProfilePage() {
               </Button>
             </View> */}
           </View>
-
         </View>
       </View>
     </SafeAreaProvider>
