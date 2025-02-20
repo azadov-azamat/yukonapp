@@ -10,6 +10,8 @@ import { getUserMe } from '@/redux/reducers/auth';
 import Toast from 'react-native-toast-message';
 import { NativeWindStyleSheet } from "nativewind";
 import '@/utils/i18n';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 import { Provider as PaperProvider, ActivityIndicator, MD2Colors } from "react-native-paper";
 import { ThemeProvider, useTheme } from "@/config/ThemeContext"; // ✅ Import the Theme Context
@@ -61,11 +63,11 @@ function App() {
     return (
       <PaperProvider theme={theme}>
         <SafeAreaProvider>
-          <SafeAreaView style={[styles.safeArea, { backgroundColor: theme?.colors?.background || '#f7f7f7' }]}>
-            <View style={styles.loaderContainer}>
-              <ActivityIndicator size="large" color={theme?.colors.primary} />
-            </View>
-          </SafeAreaView>
+            <SafeAreaView className="flex-1 pb-[20px] ios:pb-5 bg-[#f7f7f7] dark:bg-black">
+              <View className="items-center justify-center flex-1">
+                <ActivityIndicator size="large" color={theme?.colors.primary} />
+              </View>
+            </SafeAreaView>
         </SafeAreaProvider>
       </PaperProvider>
     );
@@ -73,30 +75,22 @@ function App() {
 
   return (
     <PaperProvider theme={theme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        {isAuthenticated ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="auth" />}
-      </Stack>
+      <GestureHandlerRootView style={{  flex: 1 }}>
+        <BottomSheetModalProvider>
+          <Stack screenOptions={{ headerShown: false }}>
+            {isAuthenticated ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="auth" />}
+          </Stack>
 
-      <StatusBar
-        barStyle={isDarkMode ? "light-content" : "dark-content"}
-        backgroundColor={theme.colors.primary}
-      />
-      <Toast />
+          <StatusBar
+            barStyle={isDarkMode ? "light-content" : "dark-content"}
+            backgroundColor={theme?.colors.background}
+          />
+          <Toast />
+        </BottomSheetModalProvider>
+      </GestureHandlerRootView>
     </PaperProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    paddingBottom: Platform.OS === 'ios' ? 20 : 0,
-  },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
 
 export default function RootLayout() {
   return (

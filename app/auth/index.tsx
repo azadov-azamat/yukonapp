@@ -8,7 +8,7 @@ export default function MainPage() {
     <>
       <View className="absolute top-0 left-0 right-0 flex-row items-center justify-end px-4 py-3">
         {/* Language Selector */}
-        <CustomLanguageSelector />
+        <CustomLanguageSelector view="auth" />
       </View>
       <LoginForm />
     </>

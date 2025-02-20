@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { HeaderProps } from "@/interface/components"; // Import HeaderProps
-import { CustomButton } from "..";
+import CustomButton from "../button";
 
 const CustomHeader: React.FC<HeaderProps> = ({ title, goToRoute }) => {
   const router = useRouter();
