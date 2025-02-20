@@ -27,7 +27,7 @@ const SettingItem = ({ icon, title, onPress, showToggle, isToggled, onToggle }: 
     return (
         <TouchableOpacity 
     onPress={onPress}
-    className="flex-row items-center px-4 py-3 border-b border-border-color dark:border-gray-700"
+    className={`flex-row items-center px-4 py-3 border-b border-border-color dark:border-gray-700`}
   >
     <View className="w-8">{icon}</View>
     <Text className="flex-1 ml-3 text-lg text-black dark:text-white">{t(title)}</Text>
@@ -88,7 +88,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
   const router = useRouter();
   const { isDarkMode, toggleTheme, themeName } = useTheme();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['90%'], []);
+  const snapPoints = useMemo(() => ['60%'], []);
 
   useImperativeHandle(ref, () => ({
     open: () => {
