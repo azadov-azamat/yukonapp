@@ -48,11 +48,13 @@ const Input: React.FC<InputProps> = ({
   }
 
   return (
-    <View style={[styles.container]} className={`relative ${divClass}`}>
+    <View style={[styles.container]} className={`relative = ${divClass}`}>
       {/* Label */}
       {label && <Text className="mb-1 text-lg font-semibold">{label}</Text>}
 
-      <View className="flex-row items-center px-3 text-lg bg-white border rounded-md border-border-color">
+      <View className={`flex-row items-center px-3 text-lg bg-white border rounded-md ${
+            error ? 'border-primary-red' : 'border-border-color'
+          }`}>
         {/* Telefon uchun prefix */}
         {type === 'phone' && (
           <Text className="mr-2 text-lg">+998</Text>
@@ -61,9 +63,7 @@ const Input: React.FC<InputProps> = ({
         {/* Input */}
         <TextInput
           style={[styles.input]}
-          className={`text-lg h-12 flex-1 ${
-            error ? 'border-primary-red' : 'border-border-color'
-          }`}
+          className={`text-lg h-12 flex-1 focus-visible:outline-0 focus:outline-0 `}
           value={value}
           onChangeText={updateValue}
           onBlur={onBlur}

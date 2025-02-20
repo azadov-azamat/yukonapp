@@ -15,6 +15,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 import { Provider as PaperProvider, ActivityIndicator, MD2Colors } from "react-native-paper";
 import { ThemeProvider, useTheme } from "@/config/ThemeContext"; // ✅ Import the Theme Context
+import { SettingsProvider } from "@/hooks/context/settings";
 
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -75,17 +76,20 @@ function App() {
 
   return (
     <PaperProvider theme={theme}>
-      <GestureHandlerRootView style={{  flex: 1 }}>
+      <GestureHandlerRootView style={{ flex: 1, zIndex: 1000000 }}>
         <BottomSheetModalProvider>
-          <Stack screenOptions={{ headerShown: false }}>
-            {isAuthenticated ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="auth" />}
-          </Stack>
-
-          <StatusBar
-            barStyle={isDarkMode ? "light-content" : "dark-content"}
-            backgroundColor={theme?.colors.background}
-          />
-          <Toast />
+          <SettingsProvider>
+          <View style={{ flex: 1 }}>
+            <Stack screenOptions={{ headerShown: false }}>
+              {isAuthenticated ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="auth" />}
+            </Stack>
+            <StatusBar
+              barStyle={isDarkMode ? "light-content" : "dark-content"}
+              backgroundColor={theme?.colors.background}
+            />
+            <Toast />
+          </View>
+          </SettingsProvider>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </PaperProvider>

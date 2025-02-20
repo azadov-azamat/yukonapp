@@ -11,6 +11,7 @@ import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-cont
 
 import { Button, Text } from "react-native-paper";
 import { useTheme } from "@/config/ThemeContext";
+import React from "react";
 
 export default function ProfilePage() {
   const router = useRouter();

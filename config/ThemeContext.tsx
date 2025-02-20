@@ -41,9 +41,10 @@ const ThemeContext = createContext({
   isDarkMode: false,
   toggleTheme: () => {},
   theme: LightTheme,
+  themeName: "light"
 });
 
-export const ThemeProvider = ({ children }) => {
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [isDarkMode, setIsDarkMode] = useState(Appearance.getColorScheme() === "dark");
 
   useEffect(() => {
@@ -66,7 +67,8 @@ export const ThemeProvider = ({ children }) => {
     <ThemeContext.Provider value={{
       isDarkMode,
       toggleTheme,
-      theme: isDarkMode ? DarkTheme : LightTheme
+      theme: isDarkMode ? DarkTheme : LightTheme,
+      themeName: isDarkMode ? "dark" : "light"
     }}>
       {children}
     </ThemeContext.Provider>
