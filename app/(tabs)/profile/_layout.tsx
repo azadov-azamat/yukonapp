@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 export default function ProfileLayout() {
   const { t } = useTranslation();
   return (
-    <Stack screenOptions={{ headerShown: true }}>
+    <Stack screenOptions={{ headerShown: false }}>
       {/* Main profile screen */}
       <Stack.Screen
         name="index"

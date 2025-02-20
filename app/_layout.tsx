@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "@/redux/store";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { StyleSheet, View, Platform, StatusBar } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -26,6 +26,7 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const { theme, isDarkMode } = useTheme();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -72,19 +73,15 @@ function App() {
 
   return (
     <PaperProvider theme={theme}>
-      <SafeAreaProvider>
-        <SafeAreaView edges={['top']} style={[styles.safeArea, { backgroundColor: theme?.colors?.background || '#f7f7f7' }]}>
-          <Stack screenOptions={{ headerShown: false }}>
-            {isAuthenticated ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="auth" />}
-          </Stack>
+      <Stack screenOptions={{ headerShown: false }}>
+        {isAuthenticated ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="auth" />}
+      </Stack>
 
-          <StatusBar
-            barStyle={isDarkMode ? "light-content" : "dark-content"}
-            backgroundColor={theme?.colors.background}
-          />
-          <Toast />
-        </SafeAreaView>
-      </SafeAreaProvider>
+      <StatusBar
+        barStyle={isDarkMode ? "light-content" : "dark-content"}
+        backgroundColor={theme.colors.primary}
+      />
+      <Toast />
     </PaperProvider>
   );
 }

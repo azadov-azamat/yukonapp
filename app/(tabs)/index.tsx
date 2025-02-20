@@ -1,6 +1,6 @@
 import React from "react";
 import { CustomButton, CustomInput } from "@/components/custom";
-import { Keyboard, View, Text, FlatList, RefreshControl } from "react-native";
+import { Keyboard, View, Text, FlatList, ScrollView, StyleSheet, RefreshControl, TouchableOpacity } from "react-native";
 import { EmptyStateCard, PopularDirectionCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
@@ -11,10 +11,15 @@ import { getExtractCity } from "@/redux/reducers/city";
 import { startLoading, stopLoading } from "@/redux/reducers/variable";
 import { useRouter } from "expo-router";
 import { getCityName } from "@/utils/general";
-import { Appbar, List, Card } from "react-native-paper"; // ✅ Import Appbar from Paper
+import { Appbar, List, Card, TextInput } from "react-native-paper"; // ✅ Import Appbar from Paper
 import { useTheme } from "@/config/ThemeContext";
 import StickyHeader from "@/components/sticky-header"; // Import the Sticky Header
 import { FlashList } from "@shopify/flash-list";
+import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+
+const HEADER_HEIGHT = 50;
 
 export default function MainPage() {
   const dispatch = useAppDispatch();
@@ -27,6 +32,7 @@ export default function MainPage() {
   const [refreshing, setRefreshing] = React.useState(false);
 
   const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
   
   React.useEffect(()=> {
     dispatch(getTopSearches())
@@ -63,56 +69,133 @@ export default function MainPage() {
   };
 
   return (
-    <StickyHeader refreshing={refreshing} onRefresh={onRefresh}>
-      <View className="flex-1 p-4 bg-gray-100">
-        <View className="flex-row items-center mb-6">
-          <CustomInput
-            value={searchText}
-            onChangeText={(text) => setSearchText(text)}
-            placeholder={t ('search-by-destination-main')}
-            divClass='flex-1'
-            onSubmitEditing={() => {
-              Keyboard.dismiss(); // Klaviaturani yopish
-              debouncedFetchExtract(); // Funksiyani ishga tushirish
-            }}
-            returnKeyType="search"
-          />
-          <CustomButton
-            onPress={debouncedFetchExtract}
-            buttonStyle="w-auto p-3 bg-primary ml-2"
-            loading={globalLoad}
-            disabled={globalLoad}
-            isIcon={true}
-            icon="search"
-          />
-        </View>
-
-        <View className="">
-          {/* Header */}
-          <Text className="mb-4 text-lg font-bold text-center">
-            {t ("top-searches")}
-          </Text>
-
-          {
-            !loading ? (
-              <FlashList
-                data={topSearches}
-                keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
-                ListEmptyComponent={<EmptyStateCard type="load" />}
-                renderItem={({ item }) => <PopularDirectionCard {...item} />}
-                estimatedItemSize={100}
+    <View style={{ flex: 1 }}>
+      <LinearGradient
+        colors={['#623bff', '#CCADFF', '#FFFFFF']}
+        locations={[0, 0.5, 1]}  // 50% gradient, 50% white
+        style={{ flex: 1 }}
+        start={{ x: 0, y: 0 }}   // Start from the top
+        end={{ x: 0, y: 1 }}     // End at the bottom
+      >
+        <StickyHeader />
+        <View style={styles.scrollWrapper}>
+          <ScrollView
+            style={{ flex: 1, paddingTop: (HEADER_HEIGHT + insets.top) }}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            // onScroll={handleScroll}
+            scrollEventThrottle={16}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor="#007AFF" // iOS spinner color
+                colors={["#007AFF"]} // Android spinner color
+                progressViewOffset={insets.top} // ✅ Moves spinner below header
               />
-            ) : (
-              <FlashList
-                data={[1, 2, 3, 4]}
-                keyExtractor={(item) => item.toString()}
-                renderItem={() => <ContentLoaderTopSearches />}
-                estimatedItemSize={50} // ✅ Adjust for smaller placeholders
-              />
-            )
-          }
+            }
+            bounces={true}
+            alwaysBounceVertical={true}
+          >
+            <View className="flex-1 px-4 pt-7 bg-gray-100 rounded-2xl">
+              <View className="flex-row items-center mb-6">
+                <View style={styles.inputWrapper}>
+                  <TextInput
+                    mode="outlined"
+                    placeholder={t ('search-by-destination')}
+                    value={searchText}
+                    onChangeText={(text) => setSearchText(text)}
+                    style={styles.input}
+                    returnKeyType="search" // Changes the keyboard button to "Search"
+                    theme={{
+                      roundness: 25,
+                      colors: {
+                        outline: '#623bff', // Outline color
+                      },
+                    }}
+                    onSubmitEditing={() => { // Triggered when Enter is pressed
+                      Keyboard.dismiss();
+                      debouncedFetchExtract();
+                    }}
+                  />
+                  <TouchableOpacity
+                    style={styles.iconButton}
+                    onPress={() => {
+                      Keyboard.dismiss();
+                      debouncedFetchExtract();
+                    }}>
+                    <Ionicons name="search" size={24} color="#623bff" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View className="">
+                {/* Header */}
+                <Text className="mb-4 text-lg font-bold text-center">
+                  {t ("top-searches")}
+                </Text>
+
+                {
+                  !loading ? (
+                    <FlashList
+                      data={topSearches}
+                      keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
+                      ListEmptyComponent={<EmptyStateCard type="load" />}
+                      renderItem={({ item }) => <PopularDirectionCard {...item} />}
+                      estimatedItemSize={100}
+                    />
+                  ) : (
+                    <FlashList
+                      data={[1, 2, 3, 4]}
+                      keyExtractor={(item) => item.toString()}
+                      renderItem={() => <ContentLoaderTopSearches />}
+                      estimatedItemSize={50} // ✅ Adjust for smaller placeholders
+                    />
+                  )
+                }
+              </View>
+            </View>
+          </ScrollView>
         </View>
-      </View>
-    </StickyHeader>
+      </LinearGradient>
+    </View>
   );
 }
+
+
+// Styles
+const styles = StyleSheet.create({
+  scrollWrapper: {
+    flex: 1,
+    zIndex: 1, // ✅ Ensures content is behind the header
+    overflow: "visible",
+  },
+  scrollContent: {
+    // paddingBottom: 180,
+    // minHeight: "100%", // ✅ Ensure content is scrollable
+  },
+  inputWrapper: {
+    position: 'relative',
+    width: '100%',
+    justifyContent: 'center',
+  },
+  input: {
+    width: '100%',
+    backgroundColor: '#fff',
+    overflow: 'hidden',
+    elevation: 2, // Slight shadow effect
+    width: '100%',
+    paddingLeft: 10,
+  },
+  iconButton: {
+    position: 'absolute',
+    right: 15,
+    top: '50%',
+    transform: [{ translateY: -12 }],
+    borderRadius: 20,
+    width: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
