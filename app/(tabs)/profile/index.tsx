@@ -94,7 +94,6 @@ export default function ProfilePage() {
 // Menu Item Component
 const MenuItem = ({ title, icon, color, textColor, onPress }: {title: string; icon: keyof typeof Ionicons.glyphMap; onPress?: () => void}) => {
   const {t} = useTranslation();
-  console.log(Colors.light.tint)
 
   return (
     <TouchableOpacity className="flex-row items-center px-2 py-4 bg-white border-b rounded-lg border-border-color" onPress={onPress}>

@@ -89,8 +89,8 @@ export default function MainPage() {
               <RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
-                tintColor="#007AFF" // iOS spinner color
-                colors={["#007AFF"]} // Android spinner color
+                tintColor="#FFF" // iOS spinner color
+                colors={["#FFF"]} // Android spinner color
                 progressViewOffset={insets.top} // ✅ Moves spinner below header
               />
             }

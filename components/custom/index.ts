@@ -8,3 +8,4 @@ export {default as CustomPhoneCall} from './phone-call';
 export {default as CustomOpenLink} from './open-link';
 export {default as CustomShowMoreText} from './show-more-text';
 export {default as CustomInputSelector} from './input-selector';
+export {default as CustomIconButton} from './icon-button';

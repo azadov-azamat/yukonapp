@@ -12,8 +12,8 @@ export default function TabLayout() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { auth, user } = useAppSelector(state => state.auth);
-  const pathname = usePathname(); // Get the current path (e.g., "/(tabs)/profile" or "/(tabs)/profile/bookmarks")
-  const isTabHidden = pathname.startsWith("/profile");
+  const pathname = usePathname();
+  const isTabHidden = pathname.startsWith("/profile/");
 
   const [isNavigationReady, setIsNavigationReady] = useState(false);
 
@@ -75,7 +75,10 @@ export default function TabLayout() {
 				tabBarLabelStyle: {
 					// paddingTop: 100,
 				},
-        tabBarStyle: { height: 60 }, // Default tab bar style
+        tabBarStyle: {
+          height: 60,
+          display: isTabHidden ? 'none' : 'flex', // Hide tabs for profile children
+        },
       }}
     >
       <Tabs.Screen

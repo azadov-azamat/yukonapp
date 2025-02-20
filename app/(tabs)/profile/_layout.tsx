@@ -1,6 +1,18 @@
-import { RelativePathString, Stack } from "expo-router";
-import { CustomHeader } from "@/components/custom";
+import { RelativePathString, Stack, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
+import { Appbar } from 'react-native-paper';
+
+const CustomHeader = ({ title, goToRoute }) => {
+  const router = useRouter();
+
+  return (
+    <Appbar.Header>
+      <Appbar.BackAction onPress={() => router.replace(goToRoute)} />
+      <Appbar.Content title={title} />
+      <Appbar.Action icon="dots-vertical" onPress={() => router.replace(goToRoute)} />
+    </Appbar.Header>
+  )
+}
 
 export default function ProfileLayout() {
   const { t } = useTranslation();
@@ -10,22 +22,18 @@ export default function ProfileLayout() {
       <Stack.Screen
         name="index"
         options={{
-          header: () => (
-            <CustomHeader
-              title={t ('pages.profile')}
-              goToRoute={"/" as RelativePathString} // Navigate to Main tab
-            />
-          ),
+          headerShown: false
         }}
       />
       {/* Bookmarks subroute */}
       <Stack.Screen
         name="bookmarks"
         options={{
+          headerShown: true,
           header: () => (
             <CustomHeader
               title={t ("pages.bookmarks")}
-              goToRoute={"/profile" as RelativePathString} // Navigate back to Profile
+              goToRoute={"/profile" as RelativePathString}
             />
           ),
         }}

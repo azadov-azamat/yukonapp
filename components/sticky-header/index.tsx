@@ -6,6 +6,8 @@ import {
 } from "react-native";
 import { useTheme } from "@/config/ThemeContext";
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { Button, Icon, MD3Colors } from 'react-native-paper';
+import { CustomIconButton } from "@/components/custom";
 
 interface StickyHeaderProps {
   title?: string;
@@ -14,7 +16,6 @@ interface StickyHeaderProps {
 const HEADER_HEIGHT = 50;
 
 const StickyHeader: React.FC<StickyHeaderProps> = ({
-  title = "Sticky Header",
   style,
 }) => {
   const { theme } = useTheme();
@@ -22,7 +23,19 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({
 
   return (
     <View style={[styles.header, { backgroundColor: 'transparent', marginTop: insets.top }]}>
-      <Text style={styles.headerText}>{title}</Text>
+      <View style={styles.leftIcons}>
+        <CustomIconButton
+          icon="menu"
+          onPress={() => console.log("Icon clicked")}
+        />
+      </View>
+
+      <View style={styles.leftIcons}>
+        <CustomIconButton
+          icon="bell"
+          onPress={() => console.log("Icon clicked")}
+        />
+      </View>
     </View>
   );
 };
@@ -37,18 +50,23 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 10, // ✅ Ensure header is above content
-    justifyContent: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    paddingHorizontal: 10,
     elevation: 4,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
   },
-  headerText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "white",
+  leftIcons: {
+    flexDirection: "column",
+    gap: 10,
+  },
+  rightIcons: {
+    flexDirection: "column",
+    gap: 10,
   },
 });
 
