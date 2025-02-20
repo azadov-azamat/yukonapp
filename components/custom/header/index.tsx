@@ -2,23 +2,24 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { HeaderProps } from "@/interface/components"; // Import HeaderProps
-import { CustomButton } from "..";
+import CustomButton from "../button";
 
-const CustomHeader: React.FC<HeaderProps> = ({ title, goToRoute }) => {
+const CustomHeader: React.FC<HeaderProps> = ({ title, goToRoute, rightComponent }) => {
   const router = useRouter();
 
   return (
-    <View style={styles.header}>
+    <View className="flex-row items-center py-2.5 px-4 bg-[#f8f9fa]">
       <CustomButton
         title="Back"
-        onPress={() => router.push(goToRoute)} // Navigate to the given route
-        buttonStyle="bg-gray-200 px-3 py-1 rounded-md" // Tailwind-like styles
+        onPress={() => router.push(goToRoute)}
+        buttonStyle="bg-gray-200 px-3 py-1 rounded-md"
         textStyle="text-black"
-        isIcon={true} // Use an icon instead of text
-        icon="arrow-back" // Pass the Ionicon name here
+        isIcon={true}
+        icon="arrow-back"
         iconSize={24}
       />
-      <Text style={styles.title}>{title}</Text>
+      <Text className="flex-1 text-lg font-bold text-center capitalize">{title}</Text>
+      {rightComponent}
     </View>
   );
 };
