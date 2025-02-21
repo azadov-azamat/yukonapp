@@ -206,7 +206,7 @@
     "avtovoz": "Автовоз",
     "isotherm": "Изотерма",
     "any": "Ҳар қандай",
-    "faw": "Faw",
+    "faw": "FAW",
     "dump": "Самосвал",
     "kia_bongo": "Kia Bongo",
     "not_specified": "Ҳар қандай"
@@ -423,5 +423,6 @@
     "today": "Бугунги",
     "yesterday": "Кечаги",
     "last-three-days": "3 кунлик"
-  }
+  },
+  "subscription_date": "Обуна муддати"
 }

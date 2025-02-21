@@ -71,24 +71,16 @@ const SETTINGS_CONFIG: SettingConfig[] = [
     title: 'Privacy',
   },
   {
-    icon: 'lock-closed-outline',
-    title: 'Security',
-  },
-  {
     icon: 'help-circle-outline',
     title: 'Help',
-  },
-  {
-    icon: 'information-circle-outline',
-    title: 'About',
-  },
+  }
 ];
 
 const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
   const router = useRouter();
   const { isDarkMode, toggleTheme, themeName } = useTheme();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['60%'], []);
+  const snapPoints = useMemo(() => ['50%'], []);
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -98,6 +90,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
       bottomSheetRef.current?.close();
     },
   }));
+console.log("themeName", themeName);
 
   const renderBackdrop = useCallback(
     (props: any) => (
@@ -124,9 +117,9 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
         backgroundColor: isDarkMode ? '#9CA3AF' : '#6B7280',
       }}
     >
-      <BottomSheetView className="flex-1">
+      <BottomSheetView className="flex-1 dark">
         <View className="pt-4">
-          <Text className="px-4 pb-2 text-3xl font-bold text-gray-800 dark:text-white">
+          <Text className="px-4 pb-2 text-3xl font-bold text-black dark:text-white">
             Settings
           </Text>
           

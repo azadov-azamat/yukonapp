@@ -424,5 +424,6 @@
     "today": "Сегодня",
     "yesterday": "Вчера",
     "last-three-days": "последние 3 дня"
-  }
+  },
+  "subscription_date": "Срок подписки"
 }

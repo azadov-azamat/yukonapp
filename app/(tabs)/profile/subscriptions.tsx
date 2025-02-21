@@ -44,28 +44,30 @@ export default function SubscriptionsPage() {
       };
       
     return (
-        <View className="items-center flex-1 px-4 pt-4 bg-white">
-        <ViewSelector
-            tabs={tabs}
-            selectedTab={status}
-            onTabSelect={(value: string) => setStatus(value)}
-        />
-        <View className="flex-1 w-full">
-        {loading ? (
-              <FlatList
-              data={[1, 2, 3, 4]} // Foydalanilmaydigan placeholder massiv
-              keyExtractor={(item) => item.toString()}
-              renderItem={() => <ContentSubscriptionLoader />}
+        <View className="items-center flex-1 px-4 pt-4 bg-white dark:bg-black">
+            <ViewSelector
+                tabs={tabs}
+                selectedTab={status}
+                onTabSelect={(value: string) => setStatus(value)}
             />
-            ) : ( <FlatList
-                  data={subscriptions}
-                  keyExtractor={(item) => item?.id?.toString()}
-                  showsVerticalScrollIndicator={false}
-                  ListEmptyComponent={<EmptyStateCard type={"subscription-" + status}/>}
-                  renderItem={({ item }) => <SubscriptionCard subscription={item}/>}
-                  refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-              />)}
-        </View>
+            <View className="flex-1 w-full">
+                {loading ? (
+                    <FlatList
+                        data={[1, 2, 3, 4]}
+                        keyExtractor={(item) => item.toString()}
+                        renderItem={() => <ContentSubscriptionLoader />}
+                    />
+                ) : (
+                    <FlatList
+                        data={subscriptions}
+                        keyExtractor={(item) => item?.id?.toString()}
+                        showsVerticalScrollIndicator={false}
+                        ListEmptyComponent={<EmptyStateCard type={`subscription-${status}`} />}
+                        renderItem={({ item }) => <SubscriptionCard subscription={item} />}
+                        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                    />
+                )}
+            </View>
         </View>
     );
 }

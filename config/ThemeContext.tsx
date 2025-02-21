@@ -20,8 +20,8 @@ const LightTheme = {
   ...defaultTheme,
   colors: {
     ...(defaultTheme.colors || {}),
-    // primary: "#3498db",
-    // background: "#ffffff",
+    primary: "#000000",
+    background: "#ffffff",
   },
   customStyles: {}
 };
@@ -44,6 +44,17 @@ const ThemeContext = createContext({
   themeName: "light"
 });
 
+// Add this function before the ThemeProvider
+const applyThemeVariables = (theme: typeof LightTheme) => {
+  if (typeof document !== 'undefined') {
+    const root = document.documentElement;
+    Object.entries(theme.colors).forEach(([key, value]) => {
+      const cssVar = `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`;
+      root.style.setProperty(cssVar, String(value));
+    });
+  }
+};
+
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [isDarkMode, setIsDarkMode] = useState(Appearance.getColorScheme() === "dark");
 
@@ -56,6 +67,12 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     };
     loadTheme();
   }, []);
+
+  // Add this useEffect to apply CSS variables when theme changes
+  useEffect(() => {
+    const currentTheme = isDarkMode ? DarkTheme : LightTheme;
+    applyThemeVariables(currentTheme);
+  }, [isDarkMode]);
 
   const toggleTheme = async () => {
     const newTheme = !isDarkMode;
