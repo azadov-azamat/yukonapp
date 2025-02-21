@@ -157,13 +157,18 @@ export const loadSlice = createSlice({
         // Latest Ads
         builder.addCase(getLatestAds.fulfilled, (state, action) => {
             state.loading = false;
+            state.latestAdsLoading = false;
             state.latestAds = action.payload;
         });
         builder.addCase(getLatestAds.pending, (state) => {
+            if (action.meta.arg?.showLoading) {
+                state.latestAdsLoading = true;
+            }
             state.loading = true;
         });
         builder.addCase(getLatestAds.rejected, (state) => {
             state.loading = false;
+            state.latestAdsLoading = false;
         });
 
         // Search Loads

@@ -8,7 +8,7 @@ const CardLoader = () => {
       <ContentLoader
         speed={2}
         width="100%"
-        height={60}
+        height={57}
         backgroundColor="#E5E7EB" // skeletonBg
         foregroundColor="#D1D5DB" // skeletonFg
       >

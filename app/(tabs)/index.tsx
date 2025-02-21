@@ -1,10 +1,10 @@
 import React from "react";
 import { CustomButton, CustomInput } from "@/components/custom";
 import { Keyboard, View, Text, FlatList, ScrollView, StyleSheet, RefreshControl, TouchableOpacity } from "react-native";
-import { EmptyStateCard, PopularDirectionCard } from "@/components/cards";
+import { EmptyStateCard, PopularDirectionCard, LoadListCard, LoadGridCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
-import { clearLoads, getTopSearches } from "@/redux/reducers/load";
+import { clearLoads, getTopSearches, searchLoads, setLoad, clearLoad, getLoadById } from "@/redux/reducers/load";
 import { ContentLoaderTopSearches } from "@/components/content-loader";
 import { debounce } from 'lodash';
 import { getExtractCity } from "@/redux/reducers/city";
@@ -25,18 +25,51 @@ export default function MainPage() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const router = useRouter();
-  const {topSearches, loading} = useAppSelector(state => state.load);
+
+  const { topSearches, loading, loads } = useAppSelector(state => state.load);
   const {loading: globalLoad} = useAppSelector(state => state.variable);
-  
+
+  const [viewId, setViewId] = React.useState(null);
+  const [openModal, setOpenModal] = React.useState(false);
+
   const [searchText, setSearchText] = React.useState<string>('');
   const [refreshing, setRefreshing] = React.useState(false);
+  const [isRefreshingFetch, setIsRefreshingFetch] = React.useState(false);
 
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
+
+  const params = {
+    limit: 10,
+    sort: '!createdAt',
+    isArchived: false,
+    isDeleted: false,
+  }
   
   React.useEffect(()=> {
-    dispatch(getTopSearches())
-  },  []);
+    dispatch(getTopSearches());
+    dispatch(searchLoads(params));
+  }, []);
+
+  React.useEffect(() => {
+    if (!openModal) {
+      setViewId(null);
+    }
+  }, [openModal])
+
+
+  const toggleSetId = (item) => {
+    setViewId(item.id);
+    dispatch(setLoad(item))
+  }
+
+  const toggleModal = () => {
+    setOpenModal(!openModal)
+  };
+
+  const handleReloadAds = () => {
+    dispatch(searchLoads(params));
+  };
 
   const debouncedFetchExtract = React.useCallback(
     debounce(() => {
@@ -60,11 +93,16 @@ export default function MainPage() {
   
   const onRefresh = () => {
     setRefreshing(true);
+    setIsRefreshingFetch(true);
 
     // Ma'lumotlarni yangilash
     setTimeout(() => {
-      dispatch(getTopSearches())
-      setRefreshing(false); // Yangilashni tugatish
+      dispatch(getTopSearches());
+      dispatch(searchLoads(params)).finally(() => {
+        setRefreshing(false);
+        setIsRefreshingFetch(false);  // ✅ Allow EmptyComponent only after refresh ends
+      });
+      dispatch(clearLoads());
     }, 2000); // 2 soniyalik kechikish
   };
 
@@ -129,7 +167,33 @@ export default function MainPage() {
                 </View>
               </View>
 
-              <View className="">
+              <View className="mb-6">
+                {/* Header */}
+                <Text className="uppercase text-lg font-bold mb-4 px-6">
+                  {t ("latest-ads")}
+                </Text>
+
+                {
+                  !loading && !isRefreshingFetch ? (
+                    <FlashList
+                      data={loads}
+                      keyExtractor={(item, index) => `${item.id}-${index}`}
+                      ListEmptyComponent={<EmptyStateCard type="load" />}
+                      renderItem={({ item }) => <LoadListCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />}
+                      estimatedItemSize={100}
+                    />
+                  ) : (
+                    <FlashList
+                      data={[1, 2, 3, 4, 5]}
+                      keyExtractor={(item) => item.toString()}
+                      renderItem={() => <ContentLoaderTopSearches />}
+                      estimatedItemSize={50} // ✅ Adjust for smaller placeholders
+                    />
+                  )
+                }
+              </View>
+
+              <View className="pb-5">
                 {/* Header */}
                 <Text className="uppercase text-lg font-bold mb-4 px-6">
                   {t ("top-searches")}
