@@ -6,6 +6,9 @@ import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/botto
 import { RelativePathString, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Colors } from '@/utils/colors';
+import RuIcon from "@/assets/svg/ru.svg";
+import UzIcon from "@/assets/svg/uz.svg";
+import UzCyrlIcon from "@/assets/svg/uz-Cyrl.svg";
 
 interface SettingItemProps {
   icon: React.ReactNode;
@@ -79,9 +82,21 @@ const SETTINGS_CONFIG: SettingConfig[] = [
 const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
   const router = useRouter();
   const { isDarkMode, toggleTheme, themeName } = useTheme();
+  const { i18n } = useTranslation();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['50%'], []);
 
+  const languages = [
+    { code: "ru", label: "Русский", icon: RuIcon },
+    { code: "uz", label: "O'zbekcha", icon: UzIcon },
+    { code: "uz-Cyrl", label: "Ўзбекча", icon: UzCyrlIcon },
+  ];
+
+  const handleLanguageChange = (code: string) => {
+    i18n.changeLanguage(code);
+    bottomSheetRef.current?.close();
+  };
+  
   useImperativeHandle(ref, () => ({
     open: () => {
       bottomSheetRef.current?.expand();
@@ -143,6 +158,21 @@ console.log("themeName", themeName);
               } : undefined}
             />
           ))}
+
+          <View className="flex-row justify-around px-4 my-2">
+            {languages.map((item) => (
+              <TouchableOpacity 
+                key={item.code} 
+                onPress={() => handleLanguageChange(item.code)} 
+                className={`items-center p-3 rounded-lg ${
+                  item.code === i18n.language ? 'bg-gray-100 dark:bg-gray-800' : ''
+                }`}
+              >
+                <item.icon width={32} height={32} />
+                <Text className="mt-1 text-sm text-black dark:text-white">{item.label}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
       </BottomSheetView>
     </BottomSheet>
