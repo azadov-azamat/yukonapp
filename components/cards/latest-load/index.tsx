@@ -18,7 +18,7 @@ const LatestLoadCard = ({load, onPress, showElement = false}: loadCardInterfaceP
     {...(!showElement && { onPress })}
     className="flex-col items-start justify-between px-5 py-3 bg-white border-t border-slate-300">
     <View className="flex-1">
-      <Text className="text-base font-semibold text-gray-700">
+      <Text className="text-lg font-semibold text-gray-700">
       	<Text>{getCityName(load?.originCity)}</Text>
         <Text> - {getCityName(load.destinationCity)}</Text>
       </Text>
@@ -26,14 +26,14 @@ const LatestLoadCard = ({load, onPress, showElement = false}: loadCardInterfaceP
 
     <View className="flex-row items-center justify-between flex-1 w-full mt-2">
     <View className="flex-row items-center">
-        <Text className="text-xs text-gray-600">{t ('truck-type.' + load.cargoType)}</Text>
+        <Text className="text-sm text-gray-600">{t ('truck-type.' + load.cargoType)}</Text>
         <TouchableOpacity className="ml-2">
-          <Text className="text-xs font-bold text-blue-600">{t (load.isWebAd ? 'site' : 'telegram')}</Text>
+          <Text className="text-sm font-bold text-blue-600">{t (load.isWebAd ? 'site' : 'telegram')}</Text>
         </TouchableOpacity>
       </View>
 
       <View className="items-end">
-      <Text className="text-xs text-gray-600">{dateFromNow(load.publishedDate || load.createdAt || '')}</Text>
+      <Text className="text-sm text-gray-600">{dateFromNow(load.publishedDate || load.createdAt || '')}</Text>
     </View>
     </View>
   </ParentComponent>
