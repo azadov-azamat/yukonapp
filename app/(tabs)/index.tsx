@@ -97,8 +97,8 @@ export default function MainPage() {
             bounces={true}
             alwaysBounceVertical={true}
           >
-            <View className="flex-1 px-4 pt-7 bg-gray-100 rounded-2xl">
-              <View className="flex-row items-center mb-6">
+            <View className="flex-1 pt-7 bg-gray-100 rounded-2xl">
+              <View className="flex-row mx-4 items-center mb-8">
                 <View style={styles.inputWrapper}>
                   <TextInput
                     mode="outlined"
@@ -131,7 +131,7 @@ export default function MainPage() {
 
               <View className="">
                 {/* Header */}
-                <Text className="mb-4 text-lg font-bold text-center">
+                <Text className="uppercase text-lg font-bold mb-4 px-6">
                   {t ("top-searches")}
                 </Text>
 
@@ -146,7 +146,7 @@ export default function MainPage() {
                     />
                   ) : (
                     <FlashList
-                      data={[1, 2, 3, 4]}
+                      data={[1, 2, 3, 4, 5]}
                       keyExtractor={(item) => item.toString()}
                       renderItem={() => <ContentLoaderTopSearches />}
                       estimatedItemSize={50} // ✅ Adjust for smaller placeholders

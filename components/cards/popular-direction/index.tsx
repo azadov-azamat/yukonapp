@@ -10,30 +10,36 @@ const PopularDirection: React.FC<DirectionItemProps> = ({ origin, destination, t
   const { t } = useTranslation();
 
   return (
-    <Link href={`/search?arrival=${getCityName(origin)}&departure=${getCityName(destination)}`} className='flex-1 w-full p-4 mb-4 bg-white rounded-lg shadow-md'>
-        <View className="flex-row items-center justify-between flex-1 w-full mb-2">
-              <View className='flex-1'>
-                <Text className="text-lg font-bold">{getCityName(origin)}</Text>
-              </View>
-              <View>
-                <Ionicons name="arrow-forward" size={18} />
-              </View>
-              <View className='flex-row justify-end flex-1'>
-                <Text className="text-lg font-bold">{getCityName(destination)}</Text>
-              </View>
-        </View>
+    <Link href={`/search?arrival=${getCityName(origin)}&departure=${getCityName(destination)}`} className='flex-1 w-full px-6 py-4 bg-white border-t border-slate-300'>
+      <View className="flex-row items-center flex-1 w-full">
+        <View className="flex items-center justify-center w-14 h-14 bg-purple-600 rounded-2xl">
+          <View className="flex items-center justify-center w-10 h-10 bg-white rounded-full">
 
-         <View className='flex-1 w-full '>
-           {/* Details */}
-           <Text className="text-sm text-center text-primary">
-            {t ("top-searches-result", {
-                count: total_loads, 
-                todayCounter: today_loads
-              }
-            )}
-          </Text>
-         </View>
-  </Link>
+              <Ionicons name="location" size={20} color="#9333ea" />
+          </View>
+        </View>
+        <View className="flex-col items-center flex-1 w-full mb-0 ml-5">
+          <View className='flex flex-row gap-2 items-center self-start'>
+            <Text className="text-lg font-medium text-purple-700">
+              {getCityName(origin)}
+            </Text>
+            <Ionicons name="arrow-forward" size={12} />
+            <Text className="text-lg font-medium text-purple-700">
+              {getCityName(destination)}
+            </Text>
+          </View>
+          <View className='flex-1 w-full self-start pl-px'>
+            <Text className="text-sm font-medium text-slate-700">
+              {t ("top-searches-result", {
+                  count: total_loads,
+                  todayCounter: today_loads
+                }
+              )}
+            </Text>
+          </View>
+        </View>
+      </View>
+    </Link>
   );
 };
 
