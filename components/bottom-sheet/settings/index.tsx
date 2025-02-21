@@ -52,17 +52,17 @@ interface SettingConfig {
 
 const SETTINGS_CONFIG: SettingConfig[] = [
   {
-    icon: 'moon',
+    icon: 'moon-outline',
     title: 'Dark Mode',
     showToggle: true,
   },
   {
-    icon: 'cart',
+    icon: 'cart-outline',
     title: 'profile.subscriptions',
     route: '/profile/subscriptions',
   },
   {
-    icon: 'bookmark',
+    icon: 'bookmark-outline',
     title: 'profile.bookmarks',
     route: '/profile/bookmarks',
   },
@@ -128,7 +128,7 @@ console.log("themeName", themeName);
               key={setting.title}
               icon={
                 <Ionicons 
-                  name={setting.icon} 
+                  name={(isDarkMode ? setting.icon.replace('-outline', '') : setting.icon) as keyof typeof Ionicons.glyphMap} 
                   size={24} 
                   color={Colors[themeName as keyof typeof Colors].tint} 
                 />
