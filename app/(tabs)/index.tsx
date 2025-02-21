@@ -1,7 +1,6 @@
 import React from "react";
-import { CustomButton, CustomInput } from "@/components/custom";
-import { Keyboard, View, Text, FlatList, ScrollView, StyleSheet, RefreshControl, TouchableOpacity } from "react-native";
-import { EmptyStateCard, PopularDirectionCard, LoadListCard, LoadGridCard } from "@/components/cards";
+import { Keyboard, View, Text, ScrollView, StyleSheet, RefreshControl, TouchableOpacity } from "react-native";
+import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
 import { clearLoads, getTopSearches, searchLoads, setLoad, clearLoad, getLoadById } from "@/redux/reducers/load";
@@ -11,14 +10,15 @@ import { getExtractCity } from "@/redux/reducers/city";
 import { startLoading, stopLoading } from "@/redux/reducers/variable";
 import { useRouter } from "expo-router";
 import { getCityName } from "@/utils/general";
-import { Appbar, List, Card, TextInput } from "react-native-paper"; // ✅ Import Appbar from Paper
+import { TextInput } from "react-native-paper"; // ✅ Import Appbar from Paper
 import { useTheme } from "@/config/ThemeContext";
 import StickyHeader from "@/components/sticky-header"; // Import the Sticky Header
 import { FlashList } from "@shopify/flash-list";
-import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { LoadModal } from '@/components/modal'
+// import { ILoadModel } from "@/interface/redux/load.interface";
 
 const HEADER_HEIGHT = 50;
 
@@ -27,15 +27,13 @@ export default function MainPage() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const { topSearches, loading, loads } = useAppSelector(state => state.load);
-  const {loading: globalLoad} = useAppSelector(state => state.variable);
+  const { topSearches, loads, loadingTopSearches, loadingSearchLoads, loadingLoadById } = useAppSelector(state => state.load);
 
   const [viewId, setViewId] = React.useState(null);
   const [openModal, setOpenModal] = React.useState(false);
 
   const [searchText, setSearchText] = React.useState<string>('');
   const [refreshing, setRefreshing] = React.useState(false);
-  const [isRefreshingFetch, setIsRefreshingFetch] = React.useState(false);
 
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -46,7 +44,7 @@ export default function MainPage() {
     isArchived: false,
     isDeleted: false,
   }
-  
+
   React.useEffect(()=> {
     dispatch(getTopSearches());
     dispatch(searchLoads(params));
@@ -77,16 +75,12 @@ export default function MainPage() {
     setOpenModal(!openModal)
   };
 
-  const handleReloadAds = () => {
-    dispatch(searchLoads(params));
-  };
-
   const debouncedFetchExtract = React.useCallback(
     debounce(() => {
       fetchExtractCity(searchText);
     }, 300), [searchText]
   )
-  
+
   const fetchExtractCity = async (search: string) => {
     if (!search) return;
     dispatch(startLoading());
@@ -96,24 +90,19 @@ export default function MainPage() {
       dispatch(clearLoads());
       return;
     }
-    
+
     dispatch(stopLoading());
     router.push(`/(tabs)/search?arrival=${getCityName(fetchedOrigin)}&departure=${getCityName(fetchedDestination)}`)
   }
-  
+
   const onRefresh = () => {
     setRefreshing(true);
-    setIsRefreshingFetch(true);
 
-    // Ma'lumotlarni yangilash
-    setTimeout(() => {
-      dispatch(getTopSearches());
-      dispatch(searchLoads(params)).finally(() => {
-        setRefreshing(false);
-        setIsRefreshingFetch(false);  // ✅ Allow EmptyComponent only after refresh ends
-      });
-      dispatch(clearLoads());
-    }, 2000); // 2 soniyalik kechikish
+		dispatch(getTopSearches());
+		dispatch(searchLoads(params));
+		dispatch(clearLoads());
+
+    setRefreshing(false);
   };
 
   return (
@@ -178,18 +167,17 @@ export default function MainPage() {
               </View>
 
               <View className="mb-6">
-                {/* Header */}
                 <Text className="uppercase text-lg font-bold mb-4 px-6">
                   {t ("latest-ads")}
                 </Text>
 
                 {
-                  !loading && !isRefreshingFetch ? (
+                  !loadingSearchLoads ? (
                     <FlashList
                       data={loads}
                       keyExtractor={(item, index) => `${item.id}-${index}`}
                       ListEmptyComponent={<EmptyStateCard type="load" />}
-                      renderItem={({ item }) => <LoadListCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />}
+                      renderItem={({ item }) => <LatestLoadCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />}
                       estimatedItemSize={100}
                     />
                   ) : (
@@ -210,7 +198,7 @@ export default function MainPage() {
                 </Text>
 
                 {
-                  !loading ? (
+                  !loadingTopSearches ? (
                     <FlashList
                       data={topSearches}
                       keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
@@ -259,7 +247,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     overflow: 'hidden',
     elevation: 2, // Slight shadow effect
-    width: '100%',
     paddingLeft: 10,
   },
   iconButton: {

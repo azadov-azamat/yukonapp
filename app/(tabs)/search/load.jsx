@@ -178,56 +178,56 @@ const SearchLoadScreen = () => {
     };
 
     function requestParams() {
-        let query = {
-          limit: limit,
-          page: page,
-          sort: '!createdAt',
-          isArchived: false,
-          isDeleted: false,
-        };
+      let query = {
+        limit: limit,
+        page: page,
+        sort: '!createdAt',
+        isArchived: false,
+        isDeleted: false,
+      };
 
-        if (booleanFilters['isDagruz']) {
-          query.isDagruz = booleanFilters['isDagruz'];
-        }
-    
-        if (booleanFilters['hasPrepayment']) {
-          query.hasPrepayment = booleanFilters['hasPrepayment'];
-        }
-    
-        if (booleanFilters['isLikelyOwner']) {
-          query.isLikelyOwner = booleanFilters['isLikelyOwner'];
-        }
-    
-        if (booleanFilters['isWebAd']) {
-          query.isWebAd = booleanFilters['isWebAd'];
-        }
-
-        if (selectedItems.length) {
-          query.cargoTypes = selectedItems
-            .map((item) => item)
-            .join(', ');
-        }
-    
-        if (origin?.country_id) {
-          query.origin_city_id = origin.id;
-          query.origin_country_id = origin.country_id;
-        } else {
-          query.origin_country_id = origin?.id;
-        }
-    
-        if (destination && destination?.country_id) {
-          query.destination_city_id = destination.id;
-          query.destination_country_id = destination.country_id;
-        } else {
-          query.destination_country_id = destination?.id;
-        }
-    
-        if (dateRange.length) {
-          query.dateRange = dateRange;
-        }
-
-        return query;
+      if (booleanFilters['isDagruz']) {
+        query.isDagruz = booleanFilters['isDagruz'];
       }
+
+      if (booleanFilters['hasPrepayment']) {
+        query.hasPrepayment = booleanFilters['hasPrepayment'];
+      }
+
+      if (booleanFilters['isLikelyOwner']) {
+        query.isLikelyOwner = booleanFilters['isLikelyOwner'];
+      }
+
+      if (booleanFilters['isWebAd']) {
+        query.isWebAd = booleanFilters['isWebAd'];
+      }
+
+      if (selectedItems.length) {
+        query.cargoTypes = selectedItems
+          .map((item) => item)
+          .join(', ');
+      }
+
+      if (origin?.country_id) {
+        query.origin_city_id = origin.id;
+        query.origin_country_id = origin.country_id;
+      } else {
+        query.origin_country_id = origin?.id;
+      }
+
+      if (destination && destination?.country_id) {
+        query.destination_city_id = destination.id;
+        query.destination_country_id = destination.country_id;
+      } else {
+        query.destination_country_id = destination?.id;
+      }
+
+      if (dateRange.length) {
+        query.dateRange = dateRange;
+      }
+
+      return query;
+    }
 
     const fetchExtractCity = async () => {
       dispatch(startLoading());

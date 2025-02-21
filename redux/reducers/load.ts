@@ -14,10 +14,10 @@ export const getBookmarks = createAsyncThunk('load/getBookmarks', async (data, {
         });
         let deserializedData = await deserialize(response.data)
         deserializedData.map((item: ILoadModel) => deserializeLoad(item));
-        
+
 
         return {
-                loads: deserializedData, 
+                loads: deserializedData,
                 pagination: response.data?.meta.pagination,
                 stats: response.data.stats
             };
@@ -36,25 +36,15 @@ export const getTopSearches = createAsyncThunk('load/getTopSearches', async (_, 
     }
 });
 
-// Fetch Latest Ads
-export const getLatestAds = createAsyncThunk('load/getLatestAds', async (_, { rejectWithValue }) => {
-    try {
-        const response = await http.get('/loads/latest-ads');
-        return await deserialize(response.data);
-    } catch (error) {
-        return rejectWithValue(error);
-    }
-});
-
 // Fetch Loads (Search)
 export const searchLoads = createAsyncThunk('load/searchLoads', async (query: any, { rejectWithValue }) => {
     try {
         const response = await http.get('/loads/search', { params: query });
         let deserializedData = await deserialize(response.data.data)
         deserializedData.map((item: ILoadModel) => deserializeLoad(item));
-    
+
         return {
-                loads: deserializedData, 
+                loads: deserializedData,
                 pagination: response.data?.data.meta.pagination,
                 stats: response.data.stats
             };
@@ -77,7 +67,7 @@ export const getLoadById = createAsyncThunk('load/getLoadById', async (id: strin
 export const updateLoad = createAsyncThunk('load/updateLoad', async (data: Partial<ILoadModel>, { rejectWithValue }) => {
     try {
         const response = await http.patch(`/loads/${data.id}`, LoadSerializer.serialize(data));
-        let load = await deserialize(response.data)        
+        let load = await deserialize(response.data)
         return deserializeLoad(load);
     } catch (error) {
         return rejectWithValue(error);
@@ -99,10 +89,12 @@ const initialState: LoadInitialProps = {
     bookmarks: [],
     load: null,
     topSearches: [],
-    latestAds: [],
     pagination: null,
     stats: null,
     loading: false,
+    loadingTopSearches: false,
+    loadingSearchLoads: false,
+    loadingLoadById: false,
 };
 
 export const loadSlice = createSlice({
@@ -126,19 +118,21 @@ export const loadSlice = createSlice({
         // Top Searches
         builder.addCase(getTopSearches.fulfilled, (state, action) => {
             state.loading = false;
+            state.loadingTopSearches = false;
             state.topSearches = action.payload;
         });
         builder.addCase(getTopSearches.pending, (state) => {
             state.loading = true;
+            state.loadingTopSearches = true;
         });
         builder.addCase(getTopSearches.rejected, (state) => {
             state.loading = false;
+            state.loadingTopSearches = false;
+            state.topSearches = [];
         });
-    
+
         // Bookmarks
         builder.addCase(getBookmarks.fulfilled, (state, action) => {
-            console.log(action.payload?.loads);
-            
             state.bookmarks = action.payload?.loads;
             state.pagination = action.payload.pagination;
             state.stats = action.payload.stats;
@@ -154,56 +148,45 @@ export const loadSlice = createSlice({
             state.stats = null;
         });
 
-        // Latest Ads
-        builder.addCase(getLatestAds.fulfilled, (state, action) => {
-            state.loading = false;
-            state.latestAdsLoading = false;
-            state.latestAds = action.payload;
-        });
-        builder.addCase(getLatestAds.pending, (state) => {
-            if (action.meta.arg?.showLoading) {
-                state.latestAdsLoading = true;
-            }
-            state.loading = true;
-        });
-        builder.addCase(getLatestAds.rejected, (state) => {
-            state.loading = false;
-            state.latestAdsLoading = false;
-        });
-
         // Search Loads
         builder.addCase(searchLoads.fulfilled, (state, action) => {
             state.loads = [...state.loads, ...action.payload?.loads];
             state.pagination = action.payload.pagination;
             state.stats = action.payload.stats;
             state.loading = false;
+            state.loadingSearchLoads = false;
         });
         builder.addCase(searchLoads.pending, (state) => {
             state.loading = true;
+            state.loadingSearchLoads = true;
         });
         builder.addCase(searchLoads.rejected, (state) => {
             state.loads = [];
             state.pagination = null;
             state.stats = null;
             state.loading = false;
+            state.loadingSearchLoads = false;
         });
 
         // Get Load by ID
         builder.addCase(getLoadById.fulfilled, (state, action) => {
             state.loading = false;
+            state.loadingLoadById = false;
             state.load = action.payload;
         });
         builder.addCase(getLoadById.pending, (state) => {
             state.loading = true;
+            state.loadingLoadById = true;
         });
         builder.addCase(getLoadById.rejected, (state) => {
             state.loading = false;
+            state.loadingLoadById = false;
         });
 
         // Update Load
         builder.addCase(updateLoad.fulfilled, (state, action) => {
             state.loading = false;
-            // state.load = action.payload;
+            state.load = action.payload;
         });
         builder.addCase(updateLoad.pending, (state) => {
             state.loading = true;

@@ -7,10 +7,12 @@ export interface LoadInitialProps {
     loads: LoadModel[] | [];
     bookmarks: LoadModel[] | [];
     topSearches: DirectionItemProps[] | [];
-    latestAds: ILoadModel[] | [];
     pagination: any;
     stats: any;
     loading: boolean;
+    loadingTopSearches: boolean;
+    loadingSearchLoads: boolean;
+    loadingLoadById: boolean;
 }
 
 
