@@ -18,6 +18,7 @@ import { FlashList } from "@shopify/flash-list";
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import { LoadModal } from '@/components/modal'
 
 const HEADER_HEIGHT = 50;
 
@@ -56,6 +57,15 @@ export default function MainPage() {
       setViewId(null);
     }
   }, [openModal])
+
+  React.useEffect(() => {
+    if (viewId) {
+      toggleModal();
+      dispatch(getLoadById(viewId));
+    } else {
+      // dispatch(clearLoad())
+    }
+  }, [viewId])
 
 
   const toggleSetId = (item) => {
@@ -222,6 +232,7 @@ export default function MainPage() {
           </ScrollView>
         </View>
       </LinearGradient>
+      <LoadModal open={openModal} toggle={toggleModal}/>
     </View>
   );
 }
