@@ -16,9 +16,9 @@ const LatestLoadCard = ({load, onPress, showElement = false}: loadCardInterfaceP
   return (
     <ParentComponent
     {...(!showElement && { onPress })}
-    className="flex-col items-start justify-between px-5 py-3 bg-white border-t border-slate-300">
+    className="flex-col items-start justify-between px-5 py-3 border-t bg-primary-light dark:bg-primary-dark border-border-color dark:border-border-color/20">
     <View className="flex-1">
-      <Text className="text-lg font-semibold text-gray-700">
+      <Text className="text-lg font-semibold text-primary-title-color dark:text-primary-light">
       	<Text>{getCityName(load?.originCity)}</Text>
         <Text> - {getCityName(load.destinationCity)}</Text>
       </Text>

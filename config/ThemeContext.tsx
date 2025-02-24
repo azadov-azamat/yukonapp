@@ -15,7 +15,9 @@ const defaultTheme = PaperDefaultTheme || {
     background: "#ffffff",
     text: "#333333",
     dark: "#000000",
+    purple: 'rgba(126,34,206,1.00)',
     light: "#ffffff",
+    border: "#D1D5DB",
   },
 };
 
@@ -24,7 +26,9 @@ const LightTheme = {
   colors: {
     ...(defaultTheme.colors || {}),
     primary: "#623BFF",
+    purple: 'rgba(126,34,206,1.00)',
     background: "#ffffff",
+    border: "#D1D5DB",
     dark: "#000000",
     light: "#ffffff",
   },
@@ -37,8 +41,10 @@ const DarkTheme = {
     ...(MD3DarkTheme?.colors || defaultTheme.colors),
     primary: "#623BFF",
     background: "#121212",
+    purple: 'rgba(126,34,206,1.00)',
     dark: "#000000",
     light: "#ffffff",
+    border: "#D1D5DB",
   },
   customStyles: {}
 };

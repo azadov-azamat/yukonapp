@@ -115,9 +115,10 @@ export default function MainPage() {
         end={{ x: 0, y: 1 }}     // End at the bottom
       >
         <StickyHeader />
-        <View style={styles.scrollWrapper}>
+        <View className="z-10 flex-1 overflow-visible">
           <ScrollView
-            style={{ flex: 1, paddingTop: (HEADER_HEIGHT + insets.top) }}
+            className="flex-1"
+            style={{ paddingTop: (HEADER_HEIGHT + insets.top) }}
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
             // onScroll={handleScroll}
@@ -134,15 +135,15 @@ export default function MainPage() {
             bounces={true}
             alwaysBounceVertical={true}
           >
-            <View className="flex-1 bg-gray-100 pt-7 rounded-2xl">
+            <View className="flex-1 bg-card-background dark:bg-primary-dark/90 pt-7 rounded-2xl">
               <View className="flex-row items-center mx-4 mb-8">
-                <View style={styles.inputWrapper}>
+                <View className="relative justify-center w-full">
                   <TextInput
                     mode="outlined"
                     placeholder={t ('search-by-destination')}
                     value={searchText}
                     onChangeText={(text) => setSearchText(text)}
-                    style={styles.input}
+                    className="w-full overflow-auto shadow bg-primary-white dark:bg-primary-dark-sm pl-2.5"
                     returnKeyType="search" // Changes the keyboard button to "Search"
                     theme={{
                       roundness: 25,
@@ -156,7 +157,8 @@ export default function MainPage() {
                     }}
                   />
                   <TouchableOpacity
-                    style={styles.iconButton}
+                    // style={styles.iconButton}
+                    className="absolute items-center justify-center transform translate-y-[-12] rounded-full right-4 top-4 w-9"
                     onPress={() => {
                       Keyboard.dismiss();
                       debouncedFetchExtract();
@@ -167,7 +169,7 @@ export default function MainPage() {
               </View>
 
               <View className="mb-6">
-                <Text className="px-6 mb-4 text-lg font-bold uppercase">
+                <Text className="px-6 mb-4 text-lg font-bold uppercase text-primary-title-color dark:text-primary-light">
                   {t ("latest-ads")}
                 </Text>
 
@@ -193,7 +195,7 @@ export default function MainPage() {
 
               <View className="pb-5">
                 {/* Header */}
-                <Text className="px-6 mb-4 text-lg font-bold uppercase">
+                <Text className="px-6 mb-4 text-lg font-bold uppercase text-primary-title-color dark:text-primary-light">
                   {t ("top-searches")}
                 </Text>
 
