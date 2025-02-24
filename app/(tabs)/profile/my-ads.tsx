@@ -96,7 +96,7 @@ export default function MyAdsPage() {
                   keyExtractor={(item: any) => item?.id?.toString()}
                   showsVerticalScrollIndicator={false}
                   ListEmptyComponent={<EmptyStateCard type="load" />}
-                  renderItem={({ item }) => item.cargoType ? <LoadListCard onPress={() => loadPreview(item)} load={item} /> : <VehicleListCard onPress={() => loadPreview(item)} vehicle={item} showIcon={true} />}
+                  renderItem={({ item }) => item.cargoType ? <LoadListCard onPress={() => loadPreview(item)} load={item} showIcon={true} /> : <VehicleListCard onPress={() => loadPreview(item)} vehicle={item} showIcon={true} />}
                   refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               />
           )}

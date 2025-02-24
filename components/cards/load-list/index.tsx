@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/redux/hooks';
 import { loadCardInterfaceProps } from '@/interface/components';
 
-const LoadCard = ({load, onPress, showElement = false}: loadCardInterfaceProps) => {
+const LoadCard = ({load, onPress, showElement = false, showIcon = false }: loadCardInterfaceProps) => {
   const {user} = useAppSelector(state => state.auth);
   const {t} = useTranslation();
 
@@ -16,8 +16,13 @@ const LoadCard = ({load, onPress, showElement = false}: loadCardInterfaceProps) 
   return (
     <ParentComponent
     {...(!showElement && { onPress })}
-    className="flex-col items-start justify-between px-4 py-2 mb-4 bg-white rounded-lg shadow-sm">
+		className="flex-col items-start justify-between p-4 bg-white border-t border-gray-200 relative">
     {/* Left Side: Origin and Destination */}
+		{showIcon && (
+			<View className='absolute top-0 right-0 mx-2 my-2'>
+				<Ionicons name="cube" size={18} color="#2563eb" />
+			</View>
+		)}
     <View className="flex-1">
       <Text className="text-lg font-bold text-gray-800">
       	<Text className="text-lg font-bold">{getCityCountryName(load, 'origin')}</Text>

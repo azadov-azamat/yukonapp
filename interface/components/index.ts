@@ -63,6 +63,7 @@ export interface loadCardInterfaceProps {
     load: LoadModel,
     onPress?: () => void;
     showElement?: boolean;
+    showIcon?: boolean;
     close?: () => void;
     isUpdate?: boolean;
 }

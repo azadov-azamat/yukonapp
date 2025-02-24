@@ -66,7 +66,7 @@ const VehicleCard = ({vehicle, onPress, showElement = false, showIcon = false }:
   return (
     <ParentComponent
     {...(!showElement && { onPress })}
-    className="flex-col items-start justify-between p-4 mb-4 bg-white border-t border-gray-200 relative">
+    className="flex-col items-start justify-between p-4 bg-white border-t border-gray-200 relative">
     {/* Left Side: Origin and Destination */}
 		{showIcon && (
 			<View className='absolute top-0 right-0 mx-2 my-2'>
