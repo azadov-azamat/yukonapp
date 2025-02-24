@@ -9,7 +9,7 @@ import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-cont
 
 import { useTheme } from "@/config/ThemeContext"; // ✅ Import the Theme Context
 import React from "react";
-import { useSettings } from "@/hooks/context/settings";
+import { useBottomSheet } from "@/hooks/context/bottom-sheet";
 import { getSubscriptions } from "@/redux/reducers/variable";
 import { EmptyStateCard, SubscriptionCard } from "@/components/cards";
 import { useColorScheme } from "nativewind";
@@ -20,18 +20,18 @@ export default function ProfilePage() {
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => state.auth)
-  const { openSettings } = useSettings();
+  const { openSettings } = useBottomSheet();
   const { subscriptions } = useAppSelector(state => state.variable);
   const { colorScheme } = useColorScheme();
   const { theme } = useTheme();
-  
+
   const insets = useSafeAreaInsets();
-  
+
   const panY = React.useRef(new Animated.Value(0)).current;
   const isExpanded = React.useRef(false);
   const scrollViewRef = React.useRef(null);
   const scrollOffset = React.useRef(0);
-  
+
   const translateY = panY.interpolate({
     inputRange: [-220, 0],
     outputRange: ['20%', '50%'],
@@ -141,12 +141,12 @@ export default function ProfilePage() {
       <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom, paddingLeft: insets.left, paddingRight: insets.right}}>
         <View className="relative flex-1 bg-primary">
           {/* Initial Profile View */}
-          <Animated.View 
+          <Animated.View
             style={{ opacity: profileOpacity }}
             className="absolute top-0 left-0 right-0 z-10"
           >
-            <TouchableOpacity 
-              className="flex-1" 
+            <TouchableOpacity
+              className="flex-1"
               activeOpacity={0.9}
               onPress={collapseBottomSheet}
             >
@@ -170,12 +170,12 @@ export default function ProfilePage() {
           </Animated.View>
 
           {/* Compact Card View */}
-          <Animated.View 
+          <Animated.View
             style={{ opacity: cardOpacity }}
             className="absolute top-0 left-0 right-0 z-20"
           >
-            <TouchableOpacity 
-              className="flex-1" 
+            <TouchableOpacity
+              className="flex-1"
               activeOpacity={0.9}
               onPress={collapseBottomSheet}
             >
@@ -206,7 +206,7 @@ export default function ProfilePage() {
           </Animated.View>
 
           {/* Bottom Sheet */}
-          <Animated.View 
+          <Animated.View
             style={{
               position: 'absolute',
               left: 0,
@@ -219,7 +219,7 @@ export default function ProfilePage() {
             }}
           >
             {/* Trigger handle */}
-            <View 
+            <View
               {...handleTriggerGesture.panHandlers}
               className="w-full px-4 py-3"
             >
@@ -265,15 +265,15 @@ const MenuItem = ({ title, icon, onPress }: MenuItemProps) => {
   const { theme, isDarkMode } = useTheme();
 
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       onPress={onPress}
       className={`w-full p-4 mt-2 border rounded-lg border-border-color/20 bg-primary-light dark:bg-primary-dark/20`}
     >
       <View className="flex-row items-center justify-between">
-        <View className="flex-row items-center gap-3">  
-          <View className="items-center justify-center w-12 h-12 rounded-full bg-primary/10"> 
-            <Ionicons 
-            name={(isDarkMode ? icon.replace('-outline', '') : icon) as keyof typeof Ionicons.glyphMap} 
+        <View className="flex-row items-center gap-3">
+          <View className="items-center justify-center w-12 h-12 rounded-full bg-primary/10">
+            <Ionicons
+            name={(isDarkMode ? icon.replace('-outline', '') : icon) as keyof typeof Ionicons.glyphMap}
             size={24} color={theme.colors.primary} />
           </View>
           <Text className={`text-lg font-medium text-primary-title-color dark:text-primary-light`}>{t(title)}</Text>

@@ -7,7 +7,7 @@ export default class CountryModel implements ICountryModel {
     names: string = '';
     icon: string = '';
     cities: ICityModel[] = [];
-  
+
     constructor(data: Partial<ICountryModel>) {
       Object.assign(this, data);
     }

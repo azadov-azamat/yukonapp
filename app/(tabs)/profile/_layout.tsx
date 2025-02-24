@@ -1,11 +1,6 @@
 import { RelativePathString, Stack, useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Appbar } from 'react-native-paper';
-import { TouchableOpacity, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useRef } from "react";
-import SettingsBottomSheet, { SettingsBottomSheetRef } from "@/components/bottom-sheet/settings";
-import { useSettings } from '@/hooks/context/settings';
 
 const CustomHeader = ({ title, goToRoute, rightComponent }: { title: string, goToRoute: string, rightComponent?: React.ReactNode }) => {
   const router = useRouter();
@@ -22,7 +17,6 @@ const CustomHeader = ({ title, goToRoute, rightComponent }: { title: string, goT
 
 export default function ProfileLayout() {
   const { t } = useTranslation();
-  const { openSettings } = useSettings();
 
   return (
     <Stack screenOptions={{ headerShown: true }}>

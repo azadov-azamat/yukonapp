@@ -20,6 +20,12 @@ export interface CityInitialProps {
     loading: boolean;
 }
 
+export interface CountryInitialProps {
+		countries: any;
+		allCountries: any;
+		loading: boolean;
+}
+
 export interface extractCityProps {
     destination?: itemCityProps | null;
     hasDestination?: boolean;
@@ -63,7 +69,7 @@ export interface ISubscriptionModel extends defaultData{
     status: string;
     plan?: IPlanModel;
     user?: IUserModel;
-  
+
     isTrial: boolean;
     isActive: boolean;
     daysLeft: number;
@@ -98,4 +104,3 @@ export interface defaultData {
     createdAt?: string;
     updatedAt?: string;
 }
-  

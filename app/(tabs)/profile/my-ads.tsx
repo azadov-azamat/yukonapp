@@ -20,6 +20,7 @@ import { EmptyStateCard } from "@/components/cards";
 import { ContentLoaderLoadList } from "@/components/content-loader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoadListCard, VehicleListCard } from '@/components/cards'
+import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 
 export default function MyAdsPage() {
   const dispatch = useAppDispatch();
@@ -27,6 +28,8 @@ export default function MyAdsPage() {
 	const {vehicles, loading: vehicleLoad} = useAppSelector(state => state.vehicle);
   const [refreshing, setRefreshing] = React.useState(false);
   const [combinedData, setCombinedData] = React.useState<any[]>([]);
+
+	const { openEditLoad } = useBottomSheet();
 
   async function getLocalstorageData() {
     try {
@@ -76,10 +79,8 @@ export default function MyAdsPage() {
   };
 
   const loadPreview = (item: any) => {
-    // Add your preview logic here
+    openEditLoad(item.id);
   }
-
-	console.log(combinedData)
 
   return (
     <View className="items-center flex-1 pt-4 bg-white dark:bg-black">

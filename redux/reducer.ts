@@ -4,6 +4,7 @@ import city from './reducers/city'
 import variable from './reducers/variable'
 import card from './reducers/card'
 import vehicle from './reducers/vehicle'
+import country from './reducers/country'
 
 export const reducer = {
     auth,
@@ -12,4 +13,5 @@ export const reducer = {
     variable,
 		card,
 		vehicle,
+		country,
 }
