@@ -66,7 +66,7 @@ export default function MainPage() {
   }, [viewId])
 
 
-  const toggleSetId = (item) => {
+  const toggleSetId = (item: any) => {
     setViewId(item.id);
     dispatch(setLoad(item))
   }
@@ -134,8 +134,8 @@ export default function MainPage() {
             bounces={true}
             alwaysBounceVertical={true}
           >
-            <View className="flex-1 pt-7 bg-gray-100 rounded-2xl">
-              <View className="flex-row mx-4 items-center mb-8">
+            <View className="flex-1 bg-gray-100 pt-7 rounded-2xl">
+              <View className="flex-row items-center mx-4 mb-8">
                 <View style={styles.inputWrapper}>
                   <TextInput
                     mode="outlined"
@@ -167,7 +167,7 @@ export default function MainPage() {
               </View>
 
               <View className="mb-6">
-                <Text className="uppercase text-lg font-bold mb-4 px-6">
+                <Text className="px-6 mb-4 text-lg font-bold uppercase">
                   {t ("latest-ads")}
                 </Text>
 
@@ -193,7 +193,7 @@ export default function MainPage() {
 
               <View className="pb-5">
                 {/* Header */}
-                <Text className="uppercase text-lg font-bold mb-4 px-6">
+                <Text className="px-6 mb-4 text-lg font-bold uppercase">
                   {t ("top-searches")}
                 </Text>
 

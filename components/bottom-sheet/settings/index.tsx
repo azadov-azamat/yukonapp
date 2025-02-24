@@ -105,7 +105,6 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
       bottomSheetRef.current?.close();
     },
   }));
-console.log("themeName", themeName);
 
   const renderBackdrop = useCallback(
     (props: any) => (

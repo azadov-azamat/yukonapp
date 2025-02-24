@@ -7,11 +7,13 @@ import { View, TouchableOpacity, ScrollView, Animated, PanResponder, FlatList } 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { Text } from "react-native-paper";
+import { useTheme } from "@/config/ThemeContext"; // ✅ Import the Theme Context
 import React from "react";
 import { useSettings } from "@/hooks/context/settings";
 import { getSubscriptions } from "@/redux/reducers/variable";
 import { EmptyStateCard, SubscriptionCard } from "@/components/cards";
+import { useColorScheme } from "nativewind";
+import { Text } from "react-native";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -20,6 +22,7 @@ export default function ProfilePage() {
   const { user } = useAppSelector(state => state.auth)
   const { openSettings } = useSettings();
   const { subscriptions } = useAppSelector(state => state.variable);
+  const { colorScheme } = useColorScheme();
 
   const insets = useSafeAreaInsets();
   
@@ -148,19 +151,19 @@ export default function ProfilePage() {
             >
               <View className="flex-row items-center justify-between px-4 py-4">
                 <TouchableOpacity onPress={() => router.back()}>
-                  <Ionicons name="chevron-back" size={28} color="white" />
+                  <Ionicons name="chevron-back" size={28} color={"white"} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={openSettings}>
-                  <Ionicons name="settings-outline" size={24} color="white" />
+                  <Ionicons name="settings-outline" size={24} color={"white"} />
                 </TouchableOpacity>
               </View>
 
               <View className="items-center px-4 mt-4">
-                <View className="items-center justify-center w-32 h-32 overflow-hidden border-4 border-white rounded-full bg-primary">
+                <View className="items-center justify-center w-32 h-32 overflow-hidden border-4 border-white/20 rounded-full bg-[#7857FF]">
                   <Ionicons name="person" size={64} color="white" />
                 </View>
                 <Text className="mt-4 text-2xl font-bold text-white">{user?.fullName}</Text>
-                <Text className="text-lg text-gray-200">+{user?.phone}</Text>
+                <Text className="text-lg text-white/70">+{user?.phone}</Text>
               </View>
             </TouchableOpacity>
           </Animated.View>
@@ -184,14 +187,14 @@ export default function ProfilePage() {
                 </TouchableOpacity>
               </View>
 
-              <View className="mx-4 overflow-hidden border border-border-color rounded-2xl bg-primary/30 backdrop-blur-lg">
+              <View className="mx-4 overflow-hidden border border-white/10 rounded-2xl bg-white/5 backdrop-blur-lg">
                 <View className="flex-row items-center p-4">
-                  <View className="items-center justify-center w-12 h-12 overflow-hidden rounded-xl bg-primary">
+                  <View className="items-center justify-center w-12 h-12 overflow-hidden rounded-xl bg-[#7857FF]">
                     <Ionicons name="person" size={24} color="white" />
                   </View>
                   <View className="flex-1 ml-4">
                     <Text className="text-lg font-semibold text-white">{user?.fullName}</Text>
-                    <Text className="text-sm text-gray-200">+{user?.phone}</Text>
+                    <Text className="text-sm text-white/70">+{user?.phone}</Text>
                   </View>
                   <TouchableOpacity>
                     <Ionicons name="pencil" size={20} color="white" />
@@ -209,7 +212,7 @@ export default function ProfilePage() {
               right: 0,
               bottom: 0,
               top: translateY,
-              backgroundColor: 'white',
+              backgroundColor: colorScheme === 'dark' ? '#1A1A1A' : '#FFFFFF',
               borderTopLeftRadius: 32,
               borderTopRightRadius: 32,
             }}
@@ -219,7 +222,7 @@ export default function ProfilePage() {
               {...handleTriggerGesture.panHandlers}
               className="w-full px-4 py-3"
             >
-              <View className="w-12 h-1 mx-auto bg-gray-300 rounded-full" />
+              <View className="w-12 h-1 mx-auto rounded-full bg-gray-400/30" />
             </View>
 
             <FlatList
@@ -258,18 +261,28 @@ interface MenuItemProps {
 }
 const MenuItem = ({ title, icon, onPress }: MenuItemProps) => {
   const { t } = useTranslation();
+  const { colorScheme } = useColorScheme();
+  const { theme } = useTheme();
 
   return (
     <TouchableOpacity 
       onPress={onPress}
-      className="w-full p-4 mt-2 bg-white border border-gray-100 rounded-lg"
+      className={`w-full p-4 mt-2 rounded-lg border ${
+        colorScheme === 'dark' 
+          ? 'bg-[#2A2A2A] border-gray-800' 
+          : 'bg-white border-gray-100'
+      }`}
     >
       <View className="flex-row items-center justify-between">
-        <View className="flex-row items-center gap-3">
-          <Ionicons name={icon} size={24} color="#6366F1" />
-          <Text className="text-lg font-medium text-gray-800">{t(title)}</Text>
+        <View className="flex-row items-center gap-3">  
+          <View className="items-center justify-center w-12 h-12 rounded-full bg-primary/10"> 
+            <Ionicons name={icon} size={24} color={theme.colors.primary} />
+          </View>
+          <Text className={`text-lg font-medium ${
+            colorScheme === 'dark' ? 'text-gray-200' : 'text-gray-800'
+          }`}>{t(title)}</Text>
         </View>
-        <Ionicons name="chevron-forward" size={24} color="#6366F1" />
+        <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
       </View>
     </TouchableOpacity>
   );
