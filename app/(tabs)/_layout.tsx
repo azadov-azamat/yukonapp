@@ -80,6 +80,7 @@ export default function TabLayout() {
         tabBarStyle: {
           height: 60,
           display: isTabHidden ? 'none' : 'flex', // Hide tabs for profile children
+          backgroundColor: theme.colors.background,
         },
       }}
     >
