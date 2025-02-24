@@ -3,15 +3,30 @@ import { FlatList, RefreshControl, View } from "react-native";
 import ViewSelector from "@/components/view-selector";
 import { viewSelectorTabs } from "@/interface/components";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { clearLoad, clearLoads, getLoadById, searchLoads, setLoad } from '@/redux/reducers/load'
-import { EmptyStateCard, SubscriptionCard } from "@/components/cards";
-import { ContentSubscriptionLoader } from "@/components/content-loader";
+import {
+	clearLoads,
+	getLoadById,
+	searchLoads,
+	setLoad,
+} from '@/redux/reducers/load';
+import {
+clearVehicles,
+	getVehicleCountries,
+	getVehicleCountryCities,
+	searchVehicles,
+	setVehicle,
+} from '@/redux/reducers/vehicle';
+import { EmptyStateCard } from "@/components/cards";
+import { ContentLoaderLoadList } from "@/components/content-loader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LoadListCard } from '@/components/cards'
 
 export default function MyAdsPage() {
   const dispatch = useAppDispatch();
-  const { subscriptions, loading } = useAppSelector(state => state.variable)
+	const {loads, loading: cargoLoad} = useAppSelector(state => state.load);
+	const {vehicles, loading: vehicleLoad} = useAppSelector(state => state.vehicle);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [combinedData, setCombinedData] = React.useState<any[]>([]);
 
   async function getLocalstorageData() {
     try {
@@ -31,35 +46,55 @@ export default function MyAdsPage() {
     isDeleted: false,
   }
 
-  React.useEffect(async ()=> {
-    const owner_id = await getLocalstorageData();
-    dispatch(searchLoads({ ...params, owner_id }));
+  React.useEffect(() => {
+    const fetchData = async () => {
+      dispatch(clearLoads());
+      const owner_id = await getLocalstorageData();
+      const loadsResponse = await dispatch(searchLoads({ ...params, owner_id })) as { payload: { loads: any[] } };
+      const vehiclesResponse = await dispatch(searchVehicles({ ...params, owner_id })) as { payload: { vehicles: any[] } };
+
+      // Combine and sort loads and vehicles
+      const combined = [
+        ...loadsResponse.payload.loads,
+        ...(vehiclesResponse.payload.vehicles || []), // Ensure vehicles is iterable
+      ];
+      const sortedCombined = combined
+        .filter(item => item.createdAt) // Filter out items without createdAt
+        .sort((a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime());
+      setCombinedData(sortedCombined);
+    };
+    fetchData();
   }, []);
 
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
+      dispatch(clearLoads());
       dispatch(searchLoads(params));
       setRefreshing(false);
     }, 2000);
   };
 
+  const loadPreview = (item: any) => {
+    // Add your preview logic here
+  }
+
   return (
     <View className="items-center flex-1 px-4 pt-4 bg-white dark:bg-black">
       <View className="flex-1 w-full">
-          {loading ? (
+          {cargoLoad || vehicleLoad ? (
               <FlatList
                   data={[1, 2, 3, 4]}
                   keyExtractor={(item) => item.toString()}
-                  renderItem={() => <ContentSubscriptionLoader />}
+                  renderItem={() => <ContentLoaderLoadList />}
               />
           ) : (
               <FlatList
-                  data={subscriptions}
-                  keyExtractor={(item) => item?.id?.toString()}
+                  data={combinedData}
+                  keyExtractor={(item: any) => item?.id?.toString()}
                   showsVerticalScrollIndicator={false}
                   ListEmptyComponent={<EmptyStateCard type="load" />}
-                  renderItem={({ item }) => <SubscriptionCard subscription={item} />}
+                  renderItem={({ item }) => <LoadListCard onPress={() => loadPreview(item)} load={item} />}
                   refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               />
           )}
