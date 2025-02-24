@@ -71,6 +71,18 @@ export default function ProfileLayout() {
           ),
         }}
       />
+    {/* my-ads subroute */}
+      <Stack.Screen
+        name="my-ads"
+        options={{
+          header: () => (
+            <CustomHeader
+              title={t ("pages.my-ads")}
+              goToRoute={"/profile" as RelativePathString} // Navigate back to Profile
+            />
+          ),
+        }}
+      />
     </Stack>
   );
 }

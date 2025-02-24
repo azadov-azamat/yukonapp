@@ -70,6 +70,11 @@ const SETTINGS_CONFIG: SettingConfig[] = [
     route: '/profile/bookmarks',
   },
   {
+    icon: 'bookmark-outline',
+    title: 'profile.my-ads',
+    route: '/profile/my-ads',
+  },
+  {
     icon: 'shield-outline',
     title: 'Privacy',
   },
