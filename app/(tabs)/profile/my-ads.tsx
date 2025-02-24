@@ -79,8 +79,10 @@ export default function MyAdsPage() {
     // Add your preview logic here
   }
 
+	console.log(combinedData)
+
   return (
-    <View className="items-center flex-1 px-4 pt-4 bg-white dark:bg-black">
+    <View className="items-center flex-1 pt-4 bg-white dark:bg-black">
       <View className="flex-1 w-full">
           {cargoLoad || vehicleLoad ? (
               <FlatList
@@ -94,7 +96,7 @@ export default function MyAdsPage() {
                   keyExtractor={(item: any) => item?.id?.toString()}
                   showsVerticalScrollIndicator={false}
                   ListEmptyComponent={<EmptyStateCard type="load" />}
-                  renderItem={({ item }) => item.cargoType ? <LoadListCard onPress={() => loadPreview(item)} load={item} /> : <VehicleListCard onPress={() => loadPreview(item)} vehicle={item} />}
+                  renderItem={({ item }) => item.cargoType ? <LoadListCard onPress={() => loadPreview(item)} load={item} /> : <VehicleListCard onPress={() => loadPreview(item)} vehicle={item} showIcon={true} />}
                   refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               />
           )}

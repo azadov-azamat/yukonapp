@@ -71,6 +71,7 @@ export interface vehicleCardInterfaceProps {
     vehicle: VehicleModel,
     onPress?: () => void;
     showElement?: boolean;
+    showIcon?: boolean;
     close?: () => void;
     isUpdate?: boolean;
 }

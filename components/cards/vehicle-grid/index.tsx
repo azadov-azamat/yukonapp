@@ -19,6 +19,7 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
   const { phoneLoading } = useAppSelector(state => state.variable);
   const { vehicleCities } = useAppSelector(state => state.city);
   const { theme } = useTheme();
+
   React.useEffect(() => {
     if (isUpdate) {
       vehicle.openMessageCounter++;
@@ -27,8 +28,8 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
   }, [isUpdate]);
 
   // Memoize destinationCityIds to prevent unnecessary recalculations
-  const destinationCityIds = React.useMemo(() => 
-    vehicle.destinationCityIds?.length ? vehicle.destinationCityIds.join(',') : '', 
+  const destinationCityIds = React.useMemo(() =>
+    vehicle.destinationCityIds?.length ? vehicle.destinationCityIds.join(',') : '',
     [vehicle.destinationCityIds]
   );
 
@@ -50,7 +51,7 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
       if (shouldFetchCities && isMounted) {
         try {
           await dispatch(getCityByIds({
-            ids: destinationCityIds, 
+            ids: destinationCityIds,
             vehicleId: String(vehicle.id)
           }));
         } catch (error) {
@@ -67,7 +68,7 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
   }, [shouldFetchCities, destinationCityIds, vehicle.id]);
 
   // Remove the console.log that might trigger re-renders
-  const cities = React.useMemo(() => 
+  const cities = React.useMemo(() =>
     vehicleCities[vehicle.id || 1],
     [vehicle.id, vehicleCities]
   );
@@ -79,18 +80,18 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
       return t('post.weight', { weight });
     }
   }
-  
+
   React.useEffect(() => {}, [vehicle.telegram, vehicle.phone, vehicle.loading]);
-  
+
   if (!user) {
     return null;
   }
-  
-  const ParentComponent = showElement ? View : TouchableOpacity; 
-  
+
+  const ParentComponent = showElement ? View : TouchableOpacity;
+
   return (
     <ParentComponent
-      {...(!showElement && { onPress })} 
+      {...(!showElement && { onPress })}
       className={`mb-4 bg-white ${showElement ? 'overflow-visible' : 'p-4 shadow-md rounded-xl'}`}>
       {/* Top Row */}
       {!showElement && <View className="flex-row items-center justify-between mb-4">
@@ -156,35 +157,35 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
             </TouchableOpacity>}
 
             {vehicle.phone && <View><CustomPhoneCall phoneNumber={vehicle.phone} loading={phoneLoading} /></View>}
-            
+
             {vehicle.telegram && <View><CustomOpenLink url={vehicle.telegram} /> </View>}
-            
+
             {(vehicle.telegram || vehicle.phone) && vehicle.url ? <View><CustomOpenLink url={vehicle.url} text='message-link' /></View> : ''}
 
             {vehicle.weight && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="scale" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="scale" size={18} color={theme.colors.primary} />
               </View>
               <Text className="text-base">{handleDetermineTon(vehicle.weight)}</Text>
             </View>}
 
             {vehicle.isDagruz && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="cube" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="cube" size={18} color={theme.colors.primary} />
               </View>
               <Text className="text-base">{t ('dagruz')}</Text>
             </View>}
-   
+
             {vehicle.isLikelyDispatcher && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="person" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="person" size={18} color={theme.colors.primary} />
               </View>
               <Text className="text-base">{t ('is-likely-dispatcher')}</Text>
             </View>}
-            
+
             <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="time" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="time" size={18} color={theme.colors.primary} />
               </View>
               <Text className="text-base">{dateFromNow(vehicle?.publishedDate || vehicle?.createdAt || '')}</Text>
             </View>
@@ -193,11 +194,11 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
           {/* Separator */}
           <View className="my-2 border-t border-gray-300"></View>
 
-          
-          <CustomShowMoreText 
+
+          <CustomShowMoreText
             text={vehicle.phone ? vehicle.description : removePhoneNumbers(vehicle.description).text}
           />
-          
+
         </>
       }
       {/* Bottom Row */}
