@@ -14,6 +14,8 @@ const defaultTheme = PaperDefaultTheme || {
     primary: "#623BFF",
     background: "#ffffff",
     text: "#333333",
+    dark: "#000000",
+    light: "#ffffff",
   },
 };
 
@@ -23,6 +25,8 @@ const LightTheme = {
     ...(defaultTheme.colors || {}),
     primary: "#623BFF",
     background: "#ffffff",
+    dark: "#000000",
+    light: "#ffffff",
   },
   customStyles: {}
 };
@@ -33,6 +37,8 @@ const DarkTheme = {
     ...(MD3DarkTheme?.colors || defaultTheme.colors),
     primary: "#623BFF",
     background: "#121212",
+    dark: "#000000",
+    light: "#ffffff",
   },
   customStyles: {}
 };

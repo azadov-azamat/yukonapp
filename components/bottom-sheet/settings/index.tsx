@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { RelativePathString, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Colors } from '@/utils/colors';
+// import { Colors } from '@/utils/colors';
 import RuIcon from "@/assets/svg/ru.svg";
 import UzIcon from "@/assets/svg/uz.svg";
 import UzCyrlIcon from "@/assets/svg/uz-Cyrl.svg";
@@ -86,8 +86,8 @@ const SETTINGS_CONFIG: SettingConfig[] = [
 
 const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
   const router = useRouter();
-  const { isDarkMode, toggleTheme, themeName } = useTheme();
-  const { i18n } = useTranslation();
+  const { isDarkMode, toggleTheme, themeName, theme } = useTheme();
+  const { i18n, t } = useTranslation();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['50%'], []);
 
@@ -130,7 +130,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
       enablePanDownToClose
       backdropComponent={renderBackdrop}
       backgroundStyle={{
-        backgroundColor: isDarkMode ? '#1F2937' : 'white',
+        backgroundColor: isDarkMode ? theme.colors.dark : theme.colors.light,
       }}
       handleIndicatorStyle={{
         backgroundColor: isDarkMode ? '#9CA3AF' : '#6B7280',
@@ -139,7 +139,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
       <BottomSheetView className="flex-1 dark">
         <View className="pt-4">
           <Text className="px-4 pb-2 text-3xl font-bold text-black dark:text-white">
-            Settings
+            {t('profile.settings')}
           </Text>
           
           {SETTINGS_CONFIG.map((setting) => (
@@ -149,7 +149,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
                 <Ionicons 
                   name={(isDarkMode ? setting.icon.replace('-outline', '') : setting.icon) as keyof typeof Ionicons.glyphMap} 
                   size={24} 
-                  color={Colors[themeName as keyof typeof Colors].tint} 
+                  color={theme.colors.primary} 
                 />
               }
               title={setting.title}

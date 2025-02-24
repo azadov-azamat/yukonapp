@@ -4,17 +4,19 @@ import { Ionicons } from '@expo/vector-icons';
 import { dateFromNow, formatPrice, getCityName, removePhoneNumbers } from '@/utils/general';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { Colors } from '@/utils/colors';
+// import { Colors } from '@/utils/colors';
 import { CustomOpenLink, CustomPhoneCall, CustomShowMoreText } from '@/components/custom';
 import dayjs from "dayjs";
 import { loadCardInterfaceProps } from '@/interface/components';
 import { ButtonBookmark } from '@/components/buttons';
+import { useTheme } from '@/config/ThemeContext';
 
 const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}: loadCardInterfaceProps) => {
   const dispatch = useAppDispatch();
   const {t} = useTranslation();
   const { user } = useAppSelector(state => state.auth);
   const { phoneLoading } = useAppSelector(state => state.variable);
+  const {theme} = useTheme();
   
   React.useEffect(() => {
     if (isUpdate) {
@@ -127,7 +129,8 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
           <View className="space-y-2">
             {!load.phone && <TouchableOpacity disabled={phoneLoading} onPress={() => load.phoneFunction(user, dispatch, close)} className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                {phoneLoading ? <ActivityIndicator size={18} color={Colors.light.tint} /> : <Ionicons name="call" size={18} color={Colors.light.tint} /> }
+                {phoneLoading ? <ActivityIndicator size={18} color={theme.colors.primary} /> : 
+                <Ionicons name="call" size={18} color={theme.colors.primary} /> }
               </View>
               <Text className="text-base">
                 {t ('show-phone-number')}
@@ -142,21 +145,21 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
             
             {load.goods && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="cube" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="cube" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{load.goods}</Text>
             </View>}
 
             {load.weight && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="scale" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="scale" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{handleDetermineTon(load.weight)}</Text>
             </View>}
 
             {(load.price || load.hasPrepayment || load.prepaymentAmount) && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="cash" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="cash" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base font-semibold text-blue-500">{showElement ? 
                 formatPriceAndPrepayment(
@@ -171,42 +174,42 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
 
             {load.isDagruz && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="cube" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="cube" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{t ('dagruz')}</Text>
             </View>}
             
             {load.paymentType && (load.paymentType !== 'not_specified') && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="card" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="card" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{formatPaymentType(load.paymentType)}</Text>
             </View>}
             
             {load.loadReadyDate && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="calendar" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="calendar" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{t ('loads.load-ready-date')} - {formatLoadReadyDate(load.loadReadyDate)}</Text>
             </View>}
             
             {load.isLikelyOwner && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="person" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="person" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{t ('is-likely-owner')}</Text>
             </View>}
             
             { load.customsClearanceLocation && (load.customsClearanceLocation !== null) && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="person" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="person" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{t ('customs-clearance', {customClearance: load.customsClearanceLocation})}</Text>
             </View>}
             
             <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="time" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="time" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{dateFromNow(load?.publishedDate || load?.createdAt || '')}</Text>
             </View>

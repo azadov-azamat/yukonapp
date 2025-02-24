@@ -1,11 +1,14 @@
 import { TabBarIcon } from '@/components/navigation/tab-bar-icon';
+import { useTheme } from '@/config/ThemeContext';
 import { ModalItemProps } from '@/interface/components';
-import { Colors } from '@/utils/colors';
+// import { Colors } from '@/utils/colors';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Modal, View, TouchableOpacity, Text, ScrollView } from 'react-native';
 
 const DynamicModal: React.FC<ModalItemProps> = ({ open, toggle, children }) => {
+  const { theme } = useTheme();
+  
   return (
     <Modal
       animationType="fade" // Ochilish va yopilish animatsiyasi
@@ -17,7 +20,7 @@ const DynamicModal: React.FC<ModalItemProps> = ({ open, toggle, children }) => {
         <View className="w-[90%] max-h-[50vh] overflow-hidden p-6 bg-white rounded-lg">
         <TouchableOpacity onPress={() => toggle()} className="absolute z-10 top-2 right-2">
             <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="close" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="close" size={18} color={theme.colors.primary} /> 
             </View>
         </TouchableOpacity>
           <ScrollView showsHorizontalScrollIndicator={false}>

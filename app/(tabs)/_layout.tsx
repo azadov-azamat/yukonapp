@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Tabs, useRouter, usePathname } from 'expo-router';
 import { TabBarIcon } from '@/components/navigation/tab-bar-icon';
-import { Colors } from '@/utils/colors';
+// import { Colors } from '@/utils/colors';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getUserMe } from '@/redux/reducers/auth';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@/config/ThemeContext';
 
 export default function TabLayout() {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function TabLayout() {
   const { auth, user } = useAppSelector(state => state.auth);
   const pathname = usePathname();
   const isTabHidden = pathname.startsWith("/profile/");
+  const { theme } = useTheme();
 
   const [isNavigationReady, setIsNavigationReady] = useState(false);
 
@@ -66,8 +68,8 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors['light'].tint,
-        tabBarInactiveTintColor: Colors['light'].tint,
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.primary,
         headerStyle: {
           elevation: 0, // Remove shadow for Android
           shadowOpacity: 0, // Remove shadow for iOS

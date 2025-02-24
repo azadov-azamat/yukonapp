@@ -7,7 +7,8 @@ import VehicleModel from '@/models/vehicle';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 import { Ionicons } from '@expo/vector-icons';
-import { Colors } from '@/utils/colors';
+// import { Colors } from '@/utils/colors';
+import { useTheme } from '@/config/ThemeContext';
 
 const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledView = styled(View);
@@ -20,7 +21,8 @@ const BookmarkButtonComponent = ({model, paramName}: {model: LoadModel | Vehicle
         const ids = user?.[paramName] || [];
         return ids.includes(String(model.id));
     });
-
+    const { theme } = useTheme();
+    
   const toggleBookmark = async () => {
     const id = model.id;
     
@@ -66,7 +68,8 @@ const BookmarkButtonComponent = ({model, paramName}: {model: LoadModel | Vehicle
           className={`items-center justify-center w-7 h-7 bg-gray-200 rounded-full`}
           onPress={toggleBookmark}
         >
-            <Ionicons name={isBookmarked ? "bookmark" : "bookmark-outline"} size={16} color={Colors.light.tint} />
+            <Ionicons name={isBookmarked ? "bookmark" : "bookmark-outline"} size={16} 
+            color={theme.colors.primary} />
         </StyledTouchableOpacity>
       )}
     </StyledView>

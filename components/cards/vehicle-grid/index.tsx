@@ -4,12 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { dateFromNow, formatPrice, getCityName, removePhoneNumbers } from '@/utils/general';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { Colors } from '@/utils/colors';
+// import { Colors } from '@/utils/colors';
 import { CustomOpenLink, CustomPhoneCall, CustomShowMoreText } from '@/components/custom';
 import { vehicleCardInterfaceProps } from '@/interface/components';
 import { ButtonBookmark } from '@/components/buttons';
 import { getCityByIds } from '@/redux/reducers/city';
 import CityModel from '@/models/city';
+import { useTheme } from '@/config/ThemeContext';
 
 const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = false}: vehicleCardInterfaceProps) => {
   const dispatch = useAppDispatch();
@@ -17,7 +18,7 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
   const { user } = useAppSelector(state => state.auth);
   const { phoneLoading } = useAppSelector(state => state.variable);
   const { vehicleCities } = useAppSelector(state => state.city);
-    
+  const { theme } = useTheme();
   React.useEffect(() => {
     if (isUpdate) {
       vehicle.openMessageCounter++;
@@ -147,7 +148,7 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
           <View className="space-y-2">
             {!vehicle.phone && <TouchableOpacity disabled={phoneLoading} onPress={() => vehicle.phoneFunction(user, dispatch, close)} className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                {phoneLoading ? <ActivityIndicator size={18} color={Colors.light.tint} /> : <Ionicons name="call" size={18} color={Colors.light.tint} /> }
+                {phoneLoading ? <ActivityIndicator size={18} color={theme.colors.primary} /> : <Ionicons name="call" size={18} color={theme.colors.primary} /> }
               </View>
               <Text className="text-base">
                 {t ('show-phone-number')}
@@ -162,28 +163,28 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
 
             {vehicle.weight && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="scale" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="scale" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{handleDetermineTon(vehicle.weight)}</Text>
             </View>}
 
             {vehicle.isDagruz && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="cube" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="cube" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{t ('dagruz')}</Text>
             </View>}
    
             {vehicle.isLikelyDispatcher && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="person" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="person" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{t ('is-likely-dispatcher')}</Text>
             </View>}
             
             <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="time" size={18} color={Colors.light.tint} /> 
+                <Ionicons name="time" size={18} color={theme.colors.primary} /> 
               </View>
               <Text className="text-base">{dateFromNow(vehicle?.publishedDate || vehicle?.createdAt || '')}</Text>
             </View>
@@ -203,7 +204,7 @@ const VehicleCard = ({vehicle, onPress, showElement = false, close, isUpdate  = 
       {!showElement && <View className="flex-row items-center justify-between pt-3 border-t border-gray-200">
         {/* Created At */}
         <View className="flex-row items-center space-x-2">
-          <Ionicons name="calendar" size={16} color="#9ca3af" />
+          <Ionicons name="calendar" size={16} color={theme.colors.primary} />
           <Text className="text-sm text-gray-500">{dateFromNow(vehicle.publishedDate || vehicle.createdAt || '')}</Text>
         </View>
 

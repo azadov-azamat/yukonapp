@@ -23,7 +23,8 @@ export default function ProfilePage() {
   const { openSettings } = useSettings();
   const { subscriptions } = useAppSelector(state => state.variable);
   const { colorScheme } = useColorScheme();
-
+  const { theme } = useTheme();
+  
   const insets = useSafeAreaInsets();
   
   const panY = React.useRef(new Animated.Value(0)).current;
@@ -212,7 +213,7 @@ export default function ProfilePage() {
               right: 0,
               bottom: 0,
               top: translateY,
-              backgroundColor: colorScheme === 'dark' ? '#1A1A1A' : '#FFFFFF',
+              backgroundColor: colorScheme === 'dark' ? theme.colors.dark : theme.colors.light,
               borderTopLeftRadius: 32,
               borderTopRightRadius: 32,
             }}
@@ -236,7 +237,7 @@ export default function ProfilePage() {
                 <EmptyStateCard type="subscription-active" />
                 <MenuItem
                   title="profile.subscriptions"
-                  icon="cart"
+                  icon="cart-outline"
                   onPress={() => router.replace('/profile/subscriptions')}
                 />
               </View>
@@ -261,26 +262,21 @@ interface MenuItemProps {
 }
 const MenuItem = ({ title, icon, onPress }: MenuItemProps) => {
   const { t } = useTranslation();
-  const { colorScheme } = useColorScheme();
-  const { theme } = useTheme();
+  const { theme, isDarkMode } = useTheme();
 
   return (
     <TouchableOpacity 
       onPress={onPress}
-      className={`w-full p-4 mt-2 rounded-lg border ${
-        colorScheme === 'dark' 
-          ? 'bg-[#2A2A2A] border-gray-800' 
-          : 'bg-white border-gray-100'
-      }`}
+      className={`w-full p-4 mt-2 border rounded-lg border-border-color/20 bg-primary-light dark:bg-primary-dark/20`}
     >
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-3">  
           <View className="items-center justify-center w-12 h-12 rounded-full bg-primary/10"> 
-            <Ionicons name={icon} size={24} color={theme.colors.primary} />
+            <Ionicons 
+            name={(isDarkMode ? icon.replace('-outline', '') : icon) as keyof typeof Ionicons.glyphMap} 
+            size={24} color={theme.colors.primary} />
           </View>
-          <Text className={`text-lg font-medium ${
-            colorScheme === 'dark' ? 'text-gray-200' : 'text-gray-800'
-          }`}>{t(title)}</Text>
+          <Text className={`text-lg font-medium text-primary-title-color dark:text-primary-light`}>{t(title)}</Text>
         </View>
         <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
       </View>

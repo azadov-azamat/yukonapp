@@ -16,6 +16,10 @@ module.exports = {
         'border-color': '#ced4da',
         'primary-red': '#eb5757',
         'secondary': "#6B7280", 
+        'primary-dark': '#000000',
+        'primary-light': '#ffffff',
+        'primary-title-color':'#000000',
+        'primary-descr-color': '#ced4da'
       }
     },
   },
