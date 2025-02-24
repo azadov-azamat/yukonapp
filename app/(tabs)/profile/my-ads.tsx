@@ -19,7 +19,7 @@ clearVehicles,
 import { EmptyStateCard } from "@/components/cards";
 import { ContentLoaderLoadList } from "@/components/content-loader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { LoadListCard } from '@/components/cards'
+import { LoadListCard, VehicleListCard } from '@/components/cards'
 
 export default function MyAdsPage() {
   const dispatch = useAppDispatch();
@@ -94,7 +94,7 @@ export default function MyAdsPage() {
                   keyExtractor={(item: any) => item?.id?.toString()}
                   showsVerticalScrollIndicator={false}
                   ListEmptyComponent={<EmptyStateCard type="load" />}
-                  renderItem={({ item }) => <LoadListCard onPress={() => loadPreview(item)} load={item} />}
+                  renderItem={({ item }) => item.cargoType ? <LoadListCard onPress={() => loadPreview(item)} load={item} /> : <VehicleListCard onPress={() => loadPreview(item)} vehicle={item} />}
                   refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               />
           )}

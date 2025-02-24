@@ -16,7 +16,7 @@ dayjs.extend(localizedFormat);
 export const dateFromNow = (value: string | Date): string => {
   let dayjsLocale = 'uz'; // Default locale
   const currentLanguage = i18n.language;
-  
+
   switch (currentLanguage) {
     case 'ru':
       dayjsLocale = 'ru';
@@ -57,6 +57,24 @@ export function getCityName(city: any): string {
     return currentLanguage === 'uz' ? uzKey || fallbackText : ruKey || fallbackText;
 }
 
+export function getCityCountryName(model: any, propName: string): string {
+	const currentLanguage = i18n.language;
+
+	const cityKey = model[`${propName}City`];
+	const uzKey = cityKey?.name_uz || cityKey?.nameUz;
+	const ruKey = cityKey?.name_ru || cityKey?.nameRu;
+
+
+	const countryKey = model[`${propName}Country`];
+	const countryUz = countryKey?.name_uz || countryKey?.nameUz;
+	const countryRu = countryKey?.name_ru || countryKey?.nameRu;
+
+	const fallbackText = i18n.t('truck-type.not_specified');
+
+	// Return the city name if it exists, otherwise return the country name
+	return cityKey ? currentLanguage === 'uz' ? uzKey : ruKey : countryUz ? (currentLanguage === 'uz') ? countryUz : countryRu : fallbackText;
+}
+
 export function getName(object: any, key: string): string {
     const currentLanguage = i18n.language;
 
@@ -79,11 +97,11 @@ export const formatPrice = (x: number, hideSign?: boolean): string => {
         }
         return '$' + result;
       }
-  
+
       if (x <= 50) {
         return result + '%';
       }
-  
+
       return result;
 };
 
@@ -102,7 +120,7 @@ export async function authenticate(data: AuthDataProps, id?: string) {
 export function removePhoneNumbers(text: string) {
     const phoneNumberPattern =
       /(?!\d{2}[.-])[+]?(\b\d{1,3}[ .-]?)?([(]?\d{2,3}[)]?)((?:[ .-]?\d){4,7})(?![ .-]?\d)/g;
-  
+
     const removedPhones: string[] = [];
     const newText = text.replace(phoneNumberPattern, (match) => {
       if (match.trim().endsWith('0000')) {
@@ -111,26 +129,26 @@ export function removePhoneNumbers(text: string) {
       removedPhones.push(formatPhone(match.trim()));
       return ''; // Telefon raqamni olib tashlang
     });
-  
+
     return {
       text: newText.trim(), // Tozalangan matnni qaytarish
       removedPhones, // Olib tashlangan telefon raqamlarining ro'yxati
     };
 }
-  
+
 export function formatPhone(str: string, prefix = '+998 ') {
     let phone = str;
-  
+
     if (phone?.startsWith('+998')) {
       phone = str.slice(4);
     }
-  
+
     let cleaned = ('' + phone).replace(/\D/g, '');
     let match = cleaned.match(/^(\d{2})(\d{3})(\d{2})(\d{2})$/);
     if (match) {
       return `${prefix}${match.slice(1).join(' ')}`;
     }
-    
+
     return phone;
 }
-  
+

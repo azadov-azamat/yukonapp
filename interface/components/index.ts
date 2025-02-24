@@ -96,3 +96,11 @@ export interface InputSelectorProps<T> {
   rowItem: (item: T) => React.ReactElement | null;
   [key: string]: any; // This allows passing other props like style, etc.
 }
+
+
+export interface AdCardInterfaceProps {
+	record: LoadModel | VehicleModel,
+	onPress?: () => void;
+	showElement?: boolean;
+	isUpdate?: boolean;
+}
