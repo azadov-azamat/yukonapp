@@ -17,7 +17,7 @@ import { LoadModal, SubscriptionModal } from '@/components/modal'
 import { updateUserSubscriptionModal } from '@/redux/reducers/auth'
 import { TextInput } from "react-native-paper";
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '@react-navigation/native';
+import { useTheme } from "@/config/ThemeContext";
 
 const SearchLoadScreen = () => {
     const route = useRoute();
@@ -304,7 +304,7 @@ const SearchLoadScreen = () => {
     }
     
     return (
-      <View className="flex-1 bg-gray-100">
+      <View className="flex-1">
         
         {origin ? 
           <LoadRouteSelector
@@ -335,7 +335,7 @@ const SearchLoadScreen = () => {
             isIcon
             iconSize={18}
             onPress={toggleView}
-            buttonStyle="bg-primary px-2 py-1"
+            buttonStyle="bg-primary-light dark:bg-primary-dark px-2 py-1"
           />
         </View>}
         <View className='my-1'/>
@@ -390,16 +390,16 @@ const SearchLoadScreen = () => {
 
 function SearchInput({searchText, setSearchText, debouncedFetchExtract}) {
   const {t} = useTranslation();
-  const theme = useTheme();
+  const {theme} = useTheme();
 
   return (
-    <View style={styles.inputWrapper}>
+    <View className='w-full relative justify-center'>
           <TextInput
             mode="outlined"
             placeholder={t ('search-by-destination')}
             value={searchText}
             onChangeText={(text) => setSearchText(text)}
-            style={styles.input}
+            className="w-full overflow-auto bg-primary-white dark:bg-primary-dark-sm pl-2.5"
             returnKeyType="search" // Changes the keyboard button to "Search"
             theme={{
               roundness: 25,
@@ -413,7 +413,7 @@ function SearchInput({searchText, setSearchText, debouncedFetchExtract}) {
             }}
           />
           <TouchableOpacity
-            style={styles.iconButton}
+            className="absolute items-center justify-center transform translate-y-[-12] rounded-full right-4 top-4 w-9"
             onPress={() => {
               Keyboard.dismiss();
               debouncedFetchExtract();

@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { itemCityProps } from '@/interface/redux/variable.interface';
 import { getCityName } from '@/utils/general';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@/config/ThemeContext';
 
 interface LoadRouteSelectorProps {
   origin: itemCityProps | null;
@@ -19,12 +20,13 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
   onSwapCities,
 }) => {
   const {t} = useTranslation();
+  const {theme} = useTheme();
   return (
-    <View className="relative flex-row items-center justify-between p-4 mt-2 overflow-visible bg-white shodow-lg rounded-xl">
+    <View className="relative flex-row items-center justify-between p-4 mt-2 overflow-visible bg-primary-light dark:bg-primary-dark shadow-lg rounded-xl dark:border border-border-color/20">
       {/* Origin */}
       <View className="items-start flex-1">
         <Text className="text-gray-500">{t ('table.origin-city')}</Text>
-        <Text className="text-lg font-bold">{getCityName(origin)}</Text>
+        <Text className="text-lg font-bold text-primary-dark dark:text-primary-light">{getCityName(origin)}</Text>
       </View>
 
       {/* Path Line */}
@@ -34,15 +36,15 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
       <TouchableOpacity
         onPress={onSwapCities}
         disabled={!destination}
-        className="z-10 items-center justify-center w-10 h-10 mx-4 bg-white border border-blue-400 rounded-full"
+        className="z-10 items-center justify-center w-10 h-10 mx-4 bg-primary-light dark:bg-primary-dark border border-border-color/20 rounded-full"
       >
-        <Ionicons name="swap-horizontal" size={24} color="#2563eb" />
+        <Ionicons name="swap-horizontal" size={24} color={theme.colors.primary} />
       </TouchableOpacity>
 
       {/* Destination */}
       <View className="items-end flex-1">
         <Text className="text-gray-500">{t ('table.destination-city')}</Text>
-        <Text className="text-lg font-bold">
+        <Text className="text-lg font-bold text-primary-dark dark:text-primary-light">
           {getCityName(destination)}
         </Text>
       </View>

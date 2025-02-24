@@ -14,7 +14,7 @@ const ViewSelector: React.FC<ViewSelectorProps> = ({ tabs, selectedTab, onTabSel
           key={tab.value}
           onPress={() => onTabSelect(tab.value)}
           className={`flex-1 flex-row justify-center items-center px-4 py-2 rounded-full ${
-            selectedTab === tab.value ? 'bg-primary' : 'bg-gray-500'
+            selectedTab === tab.value ? 'bg-primary' : 'bg-primary-descr-color'
           }`}
         >
           {tab.icon && (
