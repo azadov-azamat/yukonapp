@@ -17,12 +17,14 @@ import { LoadModal, SubscriptionModal } from '@/components/modal'
 import { updateUserSubscriptionModal } from '@/redux/reducers/auth'
 import { TextInput } from "react-native-paper";
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '@react-navigation/native';
 
 const SearchLoadScreen = () => {
     const route = useRoute();
     const dispatch = useAppDispatch();
     const {t} = useTranslation();
     const navigation = useNavigation();
+    const theme = useTheme();
     const {loads, pagination, stats, loading: cargoLoad} = useAppSelector(state => state.load);
     const {user} = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
@@ -300,45 +302,23 @@ const SearchLoadScreen = () => {
         toggleModal();
       }
     }
-
+    
     return (
       <View className="flex-1 bg-gray-100">
-        {origin ? (
+        
+        {origin ? 
           <LoadRouteSelector
             origin={origin}
             destination={destination}
             onClear={handleClear}
             onSwapCities={handleSwapCities}
-          />
-        ) : (<View style={styles.inputWrapper}>
-              <TextInput
-                mode="outlined"
-                placeholder={t ('search-by-destination')}
-                value={searchText}
-                onChangeText={(text) => setSearchText(text)}
-                style={styles.input}
-                returnKeyType="search" // Changes the keyboard button to "Search"
-                theme={{
-                  roundness: 25,
-                  colors: {
-                    outline: '#623bff', // Outline color
-                  },
-                }}
-                onSubmitEditing={() => { // Triggered when Enter is pressed
-                  Keyboard.dismiss();
-                  debouncedFetchExtract();
-                }}
+          /> : <SearchInput 
+                searchText={searchText} 
+                setSearchText={setSearchText} 
+                debouncedFetchExtract={debouncedFetchExtract} 
               />
-              <TouchableOpacity
-                style={styles.iconButton}
-                onPress={() => {
-                  Keyboard.dismiss();
-                  debouncedFetchExtract();
-                }}>
-                <Ionicons name="search" size={24} color="#623bff" />
-              </TouchableOpacity>
-            </View>
-        )}
+        }
+
         <View className='my-1'/>
         {pagination && <View className="flex-row items-center justify-between p-4 mt-2 bg-white rounded-md shadow-sm">
           <View>
@@ -405,6 +385,43 @@ const SearchLoadScreen = () => {
         <SubscriptionModal open={!!user?.isSubscriptionModal || false} toggle={toggleSubscriptionModal}/>
       </View>
     )
+}
+
+
+function SearchInput({searchText, setSearchText, debouncedFetchExtract}) {
+  const {t} = useTranslation();
+  const theme = useTheme();
+
+  return (
+    <View style={styles.inputWrapper}>
+          <TextInput
+            mode="outlined"
+            placeholder={t ('search-by-destination')}
+            value={searchText}
+            onChangeText={(text) => setSearchText(text)}
+            style={styles.input}
+            returnKeyType="search" // Changes the keyboard button to "Search"
+            theme={{
+              roundness: 25,
+              colors: {
+                outline: '#623bff', // Outline color
+              },
+            }}
+            onSubmitEditing={() => { // Triggered when Enter is pressed
+              Keyboard.dismiss();
+              debouncedFetchExtract();
+            }}
+          />
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => {
+              Keyboard.dismiss();
+              debouncedFetchExtract();
+            }}>
+            <Ionicons name="search" size={24} color={theme.colors.primary} />
+          </TouchableOpacity>
+        </View>
+  )
 }
 
 // Styles
