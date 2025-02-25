@@ -6,9 +6,11 @@ import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/botto
 import { RelativePathString, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { CustomBadgeSelector, CustomButton, CustomInput, CustomInputSelector } from "@/components/custom";
-import { vehicleCountriesProps } from '@/interface/redux/variable.interface';
+import { ICountryModel } from '@/interface/redux/variable.interface';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getName } from '@/utils/general';
+import { fetchCountries } from "@/redux/reducers/country";
+import { capitalize } from 'lodash';
 
 export interface EditLoadBottomSheetRef {
   open: () => void;
@@ -31,8 +33,19 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
 	const dispatch = useAppDispatch();
   const { allCountries, countries, loading } = useAppSelector((state) => state.country);
 
-	const [orirginCountry, setOriginCountry] = React.useState<vehicleCountriesProps | null>(null); // Initialize with "" to avoid null
-	const [selectedCity, setSelectedCity] = React.useState<vehicleCountriesProps | null>(null);
+	const [orirginCountry, setOriginCountry] = React.useState<ICountryModel | null>(null); // Initialize with "" to avoid null
+	const [selectedCity, setSelectedCity] = React.useState<ICountryModel | null>(null);
+  const [selectedType, setType] = React.useState('load');
+
+  React.useEffect(()=> {
+    dispatch(fetchCountries());
+  }, []);
+
+
+  const adTypes = [
+    { value: 'load', label: t('bookmarks.load'), icon: 'cube'},
+    { value: 'vehicle', label: t('bookmarks.vehicle'), icon: 'car'},
+  ];
 
 	const handleCountryChange = (item: any) => setOriginCountry(item);
   const handleCityChange = (item: any) => setSelectedCity(item);
@@ -76,30 +89,60 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
       }}
     >
       <BottomSheetView className="flex-1 dark">
-        <View className="pt-4">
-          <Text className="px-4 pb-2 text-3xl font-bold text-black dark:text-white">
+        <View className="p-4">
+          <Text className="pb-2 text-3xl font-bold text-black dark:text-white">
 						{recordId === 0 ? t('pages.create-add') : t('pages.just-edit')}
           </Text>
 
 					<View className="pt-4">
-						<View className="pt-4">
-						<CustomInputSelector
-							value={orirginCountry}
-							onChange={handleCountryChange}
-							placeholder='loads.origin-country'
-							// error={error}
-							loading={loading}
-							items={allCountries}
-							labelField={'name_' + currentLanguage}
-							valueField="id"
-							search={false}
-							onClear={onClearOriginCountry}
-							rightData={(item) => <View className='flex-row items-center justify-center px-1 rounded-md bg-primary'>
-								<Ionicons name='car' size={18} color={'white'} className=''/>
-								<Text className='ml-1 text-xs text-white'>{item.vehicle_count}</Text>
-							</View>}
-							rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
-						/>
+            <View className="pt-4">
+              <Text className="pb-2 text-lg font-semibold text-gray-700 dark:text-white">
+                Ad type
+              </Text>
+              <View className="flex-row items-center w-full mb-4 space-x-4">
+                {adTypes.map((type) => (
+                  <TouchableOpacity
+                    key={type.value}
+                    onPress={() => setType(type.value)}
+                    className={`flex-1 flex-row  justify-center items-center px-4 py-3 rounded-xl border ${
+                      selectedType === type.value ? 'bg-slate-200 border-indigo-500' : 'bg-slate-100 border-transparent'
+                    }`}
+                  >
+                    {type.icon && (
+                      <Ionicons
+                        name={type.icon}
+                        size={24}
+                        color={selectedType === type.value ? '#6366f1' : '#94a3b8'}
+                        style={{ marginRight: 8 }}
+                      />
+                    )}
+                    <Text
+                      className={`text-base font-medium capitalize ${
+                        selectedType === type.value ? 'text-indigo-500' : 'text-slate-400'
+                      }`}
+                    >
+                      {type.label}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+						<View className="h-screen pt-4">
+  						<CustomInputSelector
+  							value={orirginCountry}
+  							onChange={handleCountryChange}
+                onSearch={(query, items) => items.filter(item => item.names.includes(query.toLowerCase()))} // ✅ Custom search
+  							placeholder='loads.origin-country'
+  							// error={error}
+  							loading={loading}
+  							items={allCountries}
+  							labelField={`name${capitalize(currentLanguage)}`}
+  							valueField="id"
+  							search={true}
+  							onClear={onClearOriginCountry}
+  							rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+  						/>
 						</View>
 					</View>
 

@@ -10,6 +10,7 @@ const Input: React.FC<InputSelectorProps<any>> = ({
   label,
   value,
   onChange,
+  onSearch,
   placeholder,
   error,
   type,
@@ -22,17 +23,26 @@ const Input: React.FC<InputSelectorProps<any>> = ({
   rightData,
   rowItem,
   disabled,
+  search,
   ...rest
 }) => {
   const {t} = useTranslation();
+  const [searchQuery, setSearchQuery] = useState('');
+
+	const filteredData = items
+		? search
+			? onSearch
+				? onSearch(searchQuery, items)
+				: items
+			: items
+		: [];
 
 	const renderItem = (item: any, labelField: string) => {
-    
     return (
       <View style={styles.item}>
         {rowItem(item)}
         {rightData && rightData(item)}
-    </View>
+    	</View>
     )
   };
 
@@ -41,21 +51,43 @@ const Input: React.FC<InputSelectorProps<any>> = ({
 			style={styles.dropdown}
 			placeholderStyle={styles.placeholderStyle}
 			selectedTextStyle={styles.selectedTextStyle}
-			inputSearchStyle={styles.inputSearchStyle}
 			iconStyle={styles.iconStyle}
-			data={items}
+			data={filteredData}
 			maxHeight={300}      
       disable={disabled}
 			labelField={value && value[labelField] ? labelField : t ('payment-type.not_specified')}
+			labelField={labelField}
 			valueField={valueField}
 			placeholder={t (placeholder)}
-			// searchPlaceholder="Search..."
-			// value={value}
+			searchPlaceholder="Search..."
+			value={value}
 			onChange={(item) => onChange(item)}
 			containerStyle={styles.dropdownStyle}
 			renderItem={(item) => renderItem(item, labelField)}
+			search
+			renderInputSearch={() =>
+        search ? (
+          <View style={styles.inputSearchWrapperStyle}>
+            <TextInput
+              style={styles.inputSearchStyle}
+              placeholder="Search..."
+              onChangeText={(text) => {
+                setSearchQuery(text);
+                onSearch && onSearch(text, items);
+              }}
+            />
+          </View>
+        ) : null
+      }
 			{...rest}
 		/>
+
+    // onFocus={() => setIsFocus(true)}
+    // onBlur={() => setIsFocus(false)}
+    // onChange={item => {
+    //   setValue(item.value);
+    //   setIsFocus(false);
+    // }}
 	);
 };
 
@@ -73,14 +105,6 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		backgroundColor: 'white',
 		borderRadius: 12,
-		// shadowColor: '#000',
-		// shadowOffset: {
-		// 	width: 0,
-		// 	height: 1,
-		// },
-		// shadowOpacity: 0.2,
-		// shadowRadius: 1.41,
-		// elevation: 2,
 	},
 	icon: {
 		marginRight: 5,
@@ -105,9 +129,24 @@ const styles = StyleSheet.create({
 		width: 20,
 		height: 20,
 	},
+	test: {
+		alignItems: 'center',
+		flex: 1,
+		flexDirection: 'row',
+	},
 	inputSearchStyle: {
+		borderRadius: 10,
+		borderWidth: 1,
+		borderColor: '#ced4da',
+		outlineWidth: 0, // ✅ Removes the focus outline
 		height: 40,
-		fontSize: 16,
+		fontSize: 14,
+		paddingLeft: 10,
+    paddingRight: 10,
+	},
+	inputSearchWrapperStyle: {
+    margin: 6,
+    padding: 4,
 	},
 	dropdownStyle: {
     borderRadius: 12,

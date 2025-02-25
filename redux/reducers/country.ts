@@ -22,7 +22,7 @@ export const getCountryByIds = createAsyncThunk('country/getCountryByIds', async
 
 export const fetchCountries = createAsyncThunk('countries/fetchCountries', async (_, { rejectWithValue }) => {
     try {
-      const response = await http.get('/');
+      const response = await http.get('countries/');
       let deserializedData = await deserialize(response.data)
 			deserializedData.map((item: ICountryModel) => deserializeCountry(item));
 			return deserializedData;
