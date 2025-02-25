@@ -19,7 +19,7 @@ const LoadVehicleViewBottomSheet = forwardRef<LoadVehicleViewBottomSheetRef, Loa
   const { isDarkMode, theme } = useTheme();
   const { t } = useTranslation();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['80%'], []);
+  const snapPoints = useMemo(() => ['80%', '50%'], []);
   const {load} = useAppSelector(state => state.load);
   
   useImperativeHandle(ref, () => ({

@@ -88,7 +88,7 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
         {/* Cargo Type and Weight */}
         <View className="flex-row items-center space-x-2">
           <Text className="font-bold underline text-primary-dark dark:text-border-color/40">{t ('truck-type.' + load.cargoType)}</Text>
-          <Ionicons name="car" size={16} color={theme.colors.border} />
+          <Ionicons name="car" size={16} color={theme.colors.icon} />
           <View className="px-3 py-1 rounded-full bg-primary">
             <Text className="text-sm text-white">{handleDetermineTon(load.weight)}</Text>
           </View>
@@ -219,17 +219,18 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
           <View className="my-2 border-t border-gray-300"></View>
 
           
-          <View className='flex-1'>
-            <Text className='text-sm text-primary-dark dark:text-border-color'>{load.description}</Text>
+          <View className=''>
+            <Text className='text-sm text-primary-dark dark:text-border-color'>{load.phone ? load.description : removePhoneNumbers(load.description).text}</Text>
           </View>
         </>
       }
+      
       {/* Bottom Row */}
       {!showElement && <View className="flex-row items-center justify-between pt-3 border-t border-gray-200">
         {/* Created At */}
         <View className="flex-row items-center space-x-2">
-          <Ionicons name="calendar" size={16} color="#9ca3af" />
-          <Text className="text-sm text-border-color">{dateFromNow(load.publishedDate || load.createdAt || '')}</Text>
+          <Ionicons name="calendar" size={16} color={theme.colors.icon} />
+          <Text className="text-sm text-primary-dark dark:text-border-color">{dateFromNow(load.publishedDate || load.createdAt || '')}</Text>
         </View>
 
         {/* Price */}

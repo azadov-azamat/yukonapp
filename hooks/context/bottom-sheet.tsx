@@ -36,7 +36,7 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
       {children}
       <SettingsBottomSheet ref={settingsSheetRef} />
       <EditLoadBottomSheet ref={EditLoadSheetRef} recordId={recordId} />
-      <LoadVehicleViewBottomSheet ref={LoadVehicleViewSheetRef} />
+      <LoadVehicleViewBottomSheet ref={LoadVehicleViewSheetRef} recordId={recordId} />
     </AppContext.Provider>
   );
 }

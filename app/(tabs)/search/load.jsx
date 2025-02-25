@@ -57,8 +57,8 @@ const SearchLoadScreen = () => {
     const [openModal, setOpenModal] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
     
-    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard changes={true} onPress={() => toggleSetId(item)} load={item} close={toggleModal} /> : 
-                                                                <LoadGridCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />);
+    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard changes={true} onPress={() => toggleSetId(item)} load={item} /> : 
+                                                                <LoadGridCard onPress={() => toggleSetId(item)} load={item} />);
     const RenderContentLoadItem = React.memo(() => isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
   
     const toggleView = () => {
@@ -383,7 +383,7 @@ const SearchLoadScreen = () => {
               refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           />
         )}
-        <LoadModal open={openModal} toggle={toggleModal}/>
+        {/* <LoadModal open={openModal} toggle={toggleModal}/> */}
         <SubscriptionModal open={!!user?.isSubscriptionModal || false} toggle={toggleSubscriptionModal}/>
       </View>
     )
