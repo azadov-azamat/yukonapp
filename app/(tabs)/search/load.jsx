@@ -55,7 +55,7 @@ const SearchLoadScreen = () => {
     const [openModal, setOpenModal] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
     
-    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} /> : 
+    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard changes={true} onPress={() => toggleSetId(item)} load={item} close={toggleModal} /> : 
                                                                 <LoadGridCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />);
     const RenderContentLoadItem = React.memo(() => isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
   
@@ -399,7 +399,7 @@ function SearchInput({searchText, setSearchText, debouncedFetchExtract}) {
             placeholder={t ('search-by-destination')}
             value={searchText}
             onChangeText={(text) => setSearchText(text)}
-            className="w-full overflow-auto bg-primary-white dark:bg-primary-dark-sm pl-2.5"
+            className="w-full overflow-auto bg-primary-white dark:bg-primary-dark/30 pl-2.5"
             returnKeyType="search" // Changes the keyboard button to "Search"
             theme={{
               roundness: 25,
@@ -423,31 +423,5 @@ function SearchInput({searchText, setSearchText, debouncedFetchExtract}) {
         </View>
   )
 }
-
-// Styles
-const styles = StyleSheet.create({
-  inputWrapper: {
-    position: 'relative',
-    width: '100%',
-    justifyContent: 'center',
-  },
-  input: {
-    width: '100%',
-    backgroundColor: '#fff',
-    overflow: 'hidden',
-    elevation: 2, // Slight shadow effect
-    paddingLeft: 10,
-  },
-  iconButton: {
-    position: 'absolute',
-    right: 15,
-    top: '50%',
-    transform: [{ translateY: -12 }],
-    borderRadius: 20,
-    width: 35,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 export default SearchLoadScreen

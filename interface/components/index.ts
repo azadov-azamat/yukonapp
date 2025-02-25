@@ -66,6 +66,7 @@ export interface loadCardInterfaceProps {
     showIcon?: boolean;
     close?: () => void;
     isUpdate?: boolean;
+    changes?: boolean;
 }
 
 export interface vehicleCardInterfaceProps {
