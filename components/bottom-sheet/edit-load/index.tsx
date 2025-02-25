@@ -24,7 +24,7 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
   const { isDarkMode, toggleTheme, themeName, theme } = useTheme();
   const { i18n, t } = useTranslation();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['100%'], []);
+  const snapPoints = useMemo(() => ['87%'], []);
 
 	const currentLanguage = i18n.language;
 
@@ -78,7 +78,7 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
       <BottomSheetView className="flex-1 dark">
         <View className="pt-4">
           <Text className="px-4 pb-2 text-3xl font-bold text-black dark:text-white">
-						Edit Load - {recordId !== null ? `ID: ${recordId}` : 'No ID Selected'}
+						{recordId === 0 ? t('pages.create-add') : t('pages.just-edit')}
           </Text>
 
 					<View className="pt-4">

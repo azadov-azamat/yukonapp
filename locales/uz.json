@@ -417,7 +417,9 @@
     "bookmarks": "Saralangan e'lonlarim",
     "edit": "E'lon qo'shish | Taxrirlash",
     "subscriptions": "Obunalar",
-    "payment" : "To'lov"
+    "payment": "To'lov",
+    "just-edit": "E'lon taxrirlash",
+    "create-add": "E'lon qo'shish"
   },
   "date-range": {
     "title": "Sana",
@@ -427,3 +429,4 @@
   },
   "subscription_date": "Obuna muddati"
 }
+

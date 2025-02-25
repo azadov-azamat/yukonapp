@@ -416,7 +416,9 @@
     "bookmarks": "Сараланган эълонларим",
     "edit": "Эълон қўшиш | Тахрирлаш",
     "subscriptions": "Обуналар",
-    "payment": "Тўлов"
+    "payment": "Тўлов",
+		"just-edit": "Эълон тахрирлаш",
+    "create-add": "Эълон қўшиш"
   },
   "date-range": {
     "title": "Сана",
