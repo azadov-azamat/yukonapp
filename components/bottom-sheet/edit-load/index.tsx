@@ -24,7 +24,7 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
   const { isDarkMode, toggleTheme, themeName, theme } = useTheme();
   const { i18n, t } = useTranslation();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['50%'], []);
+  const snapPoints = useMemo(() => ['100%'], []);
 
 	const currentLanguage = i18n.language;
 

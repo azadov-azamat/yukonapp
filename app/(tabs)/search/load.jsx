@@ -292,7 +292,7 @@ const SearchLoadScreen = () => {
       if (isLast) {
         dispatch(clearLoads())
       } else {
-        setPage(previus => previus + 1); 
+        setPage(previous => previous + 1);
       }
     }
 

@@ -87,7 +87,7 @@ const BookmarksLoadScreen = () => {
         setPage(1)
         dispatch(clearLoads())
       } else {
-        setPage(previus => previus + 1);
+        setPage(previous => previous + 1);
       }
     }
 

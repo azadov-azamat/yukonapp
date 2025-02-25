@@ -232,7 +232,7 @@ const SearchVehicleScreen = () => {
       setPage(1)
       dispatch(clearVehicles())
     } else {
-      setPage(previus => previus + 1); 
+      setPage(previous => previus + 1);
     }
   }
   
