@@ -320,9 +320,9 @@ const SearchLoadScreen = () => {
         }
 
         <View className='my-1'/>
-        {pagination && <View className="flex-row items-center justify-between p-4 mt-2 bg-white rounded-md shadow-sm">
+        {pagination && <View className="flex-row items-center justify-between p-4 mt-2 bg-primary-light dark:bg-primary-dark rounded-md shadow-sm dark:border border-border-color/20">
           <View>
-            <Text className="text-sm font-bold text-gray-800">
+            <Text className="text-sm font-bold text-primary-dark dark:text-primary-light">
               {t ('query-result-message-without-cargo', {
                 count: pagination.totalCount,
                 todayCounter: stats?.loads_today
@@ -335,7 +335,7 @@ const SearchLoadScreen = () => {
             isIcon
             iconSize={18}
             onPress={toggleView}
-            buttonStyle="bg-primary-light dark:bg-primary-dark px-2 py-1"
+            buttonStyle="bg-primary px-2 py-1"
           />
         </View>}
         <View className='my-1'/>

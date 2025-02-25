@@ -245,7 +245,7 @@ const SearchVehicleScreen = () => {
   }
   
   return (
-    <View className="flex-1 bg-gray-100">
+    <View className="flex-1">
       <View style={styles.container}>
           <CustomInputSelector
             value={selectedCountry}

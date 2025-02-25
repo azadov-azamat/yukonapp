@@ -1,15 +1,32 @@
 import React from "react";
-import { View } from "react-native";
+import { View, ImageBackground, StatusBar } from "react-native";
 import ViewSelector from "@/components/view-selector";
 import { viewSelectorTabs } from "@/interface/components";
 import SearchLoadScreen from "./load.jsx";
 import SearchVehicleScreen from "./vehicle";
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useFocusEffect } from '@react-navigation/native';
+import { useTheme } from "@/config/ThemeContext";
 
 export default function SearchPage() {
   const [selectedTab, setSelectedTab] = React.useState('load');
   const insets = useSafeAreaInsets();
+  const { isDarkMode } = useTheme();
   
+  useFocusEffect(
+    React.useCallback(() => {
+      StatusBar.setBackgroundColor(isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(226,232,240,0.8)');
+      
+      return () => {
+        StatusBar.setBackgroundColor('transparent');
+      };
+    }, [isDarkMode])
+  );
+  
+  React.useEffect(() => {
+    StatusBar.setBackgroundColor(isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(226,232,240,0.8)');
+  }, [isDarkMode]);
+
   const tabs: viewSelectorTabs[] = [
     { label: 'bookmarks.load', value: 'load', icon: 'cube' },
     { label: 'bookmarks.vehicle', value: 'vehicle', icon: 'car' },
@@ -18,19 +35,26 @@ export default function SearchPage() {
   
   return (
     <SafeAreaProvider>
-      <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom, paddingLeft: insets.left, paddingRight: insets.right}}>
-        <View className="items-center flex-1 px-4 pt-4 bg-primary-light dark:bg-primary-dark">
-          <ViewSelector
-            tabs={tabs}
-            selectedTab={selectedTab}
-            onTabSelect={(value: string) => setSelectedTab(value)}
-          />
-           <View className="flex-1 w-full">
-            {selectedTab === 'load' && <SearchLoadScreen />}
-            {selectedTab === 'vehicle' && <SearchVehicleScreen />}
+      <StatusBar translucent={true} />
+      <ImageBackground 
+        source={require('@/assets/images/background.png')}
+        style={{ flex: 1, position: 'absolute', width: '100%', height: '100%' }}
+        resizeMode="cover"
+      >
+        <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom, paddingLeft: insets.left, paddingRight: insets.right}}>
+          <View className="items-center flex-1 px-4 pt-4 bg-slate-200/80 dark:bg-primary-dark/70">
+            <ViewSelector
+              tabs={tabs}
+              selectedTab={selectedTab}
+              onTabSelect={(value: string) => setSelectedTab(value)}
+            />
+            <View className="flex-1 w-full">
+              {selectedTab === 'load' && <SearchLoadScreen />}
+              {selectedTab === 'vehicle' && <SearchVehicleScreen />}
+            </View>
           </View>
         </View>
-      </View>
+      </ImageBackground>
     </SafeAreaProvider>
   );
 }

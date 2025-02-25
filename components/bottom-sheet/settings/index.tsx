@@ -111,6 +111,14 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
     },
   }));
 
+  const handleThemeToggle = () => {
+    toggleTheme();
+    // Reload the app after theme change
+    setTimeout(() => {
+      router.replace('/');
+    }, 100);
+  };
+
   const renderBackdrop = useCallback(
     (props: any) => (
       <BottomSheetBackdrop
@@ -155,7 +163,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
               title={setting.title}
               showToggle={setting.showToggle}
               isToggled={setting.showToggle ? isDarkMode : undefined}
-              onToggle={setting.showToggle ? toggleTheme : undefined}
+              onToggle={setting.showToggle ? handleThemeToggle : undefined}
               onPress={setting.route ? () => {
                 bottomSheetRef.current?.close();
                 router.replace(setting.route! as RelativePathString);

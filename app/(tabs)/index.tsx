@@ -1,5 +1,5 @@
 import React from "react";
-import { Keyboard, View, Text, ScrollView, StyleSheet, RefreshControl, TouchableOpacity } from "react-native";
+import { Keyboard, View, Text, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, StatusBar } from "react-native";
 import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
@@ -107,6 +107,10 @@ export default function MainPage() {
 
   return (
     <View style={{ flex: 1 }}>
+      <StatusBar
+        translucent={true}
+        backgroundColor="transparent"
+      />
       <LinearGradient
         colors={['#623bff', '#CCADFF', '#FFFFFF']}
         locations={[0, 0.5, 1]}  // 50% gradient, 50% white
