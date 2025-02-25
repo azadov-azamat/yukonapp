@@ -1,10 +1,10 @@
 import React from "react";
 import ContentLoader, { Rect } from "react-content-loader/native";
 import { View } from "react-native";
-import { useTheme } from "@/config/ThemeContext";
+import { useTheme } from "@/config/ThemeContext"; // Import useTheme
 
 const CardLoader = () => {
-  const { theme } = useTheme();
+  const { theme } = useTheme(); // Get theme from context
 
   return (
     <View className="p-3 mb-4 bg-white rounded-lg shadow-md">
@@ -13,8 +13,8 @@ const CardLoader = () => {
         speed={1.5}
         width="100%"
         height={130}
-        backgroundColor={theme.colors.background}
-        foregroundColor={theme.colors.border}
+        backgroundColor={theme.colors.background} // Use theme background color
+        foregroundColor={theme.colors.border} // Use theme foreground color
       >
         {/* Tags */}
         <Rect x="10" y="10" rx="5" ry="5" width="20" height="20" />

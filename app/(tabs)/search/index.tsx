@@ -17,7 +17,6 @@ export default function SearchPage() {
 
   React.useEffect(() => {
     StatusBar.setBackgroundColor(backgroundColor);
-    // StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content');
 
     return () => {
       StatusBar.setBackgroundColor('transparent');

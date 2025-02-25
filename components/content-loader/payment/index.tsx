@@ -1,16 +1,19 @@
 import React from 'react';
 import ContentLoader, { Rect } from 'react-content-loader/native';
 import { View } from 'react-native';
+import { useTheme } from "@/config/ThemeContext";
 
 const PaymentContentLoader = () => {
+  const { theme } = useTheme();
+
   return (
     <View className="justify-center flex-1 p-5 bg-white">
       <ContentLoader 
         speed={2}
         width="100%"
         height={300}
-        backgroundColor="#f3f3f3"
-        foregroundColor="#ecebeb"
+        backgroundColor={theme.colors.background}
+        foregroundColor={theme.colors.border}
       >
         {/* Title */}
         <Rect x="20" y="20" rx="4" ry="4" width="200" height="20" />
