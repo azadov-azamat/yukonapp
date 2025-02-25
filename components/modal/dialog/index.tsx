@@ -17,7 +17,7 @@ const DynamicModal: React.FC<ModalItemProps> = ({ open, toggle, children }) => {
       onRequestClose={() => toggle()} // Back button bosilganda modalni yopish
     >
       <View className="items-center justify-center flex-1 bg-black/50">
-        <View className="w-[90%] max-h-[50vh] overflow-hidden p-6 bg-white rounded-lg">
+        <View className="w-[90%] max-h-[50vh] overflow-hidden p-6 bg-primary-light dark:bg-primary-dark rounded-lg">
         <TouchableOpacity onPress={() => toggle()} className="absolute z-10 top-2 right-2">
             <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
                 <Ionicons name="close" size={18} color={theme.colors.primary} /> 

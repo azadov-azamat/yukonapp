@@ -1,3 +1,4 @@
+import { useTheme } from "@/config/ThemeContext";
 import { Colors } from "@/utils/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState, useRef, useEffect } from "react";
@@ -6,6 +7,7 @@ import { Text, View, TouchableOpacity, LayoutChangeEvent, ScrollView } from "rea
 const MAX_HEIGHT = 100;
 
 const ShowMoreText = ({ text }: { text: string }) => {
+  const { theme } = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTruncated, setIsTruncated] = useState(false);
   const [maxHeight, setMaxHeight] = useState<number | null>(null);
@@ -51,7 +53,7 @@ const ShowMoreText = ({ text }: { text: string }) => {
       >
         <Text
             ref={textRef}
-            className={`text-sm text-gray-800`}
+            className={`text-sm text-border-color`}
             numberOfLines={!isExpanded ? MAX_LINES : undefined}
             onLayout={!isExpanded ? onLayoutText : undefined}
         >

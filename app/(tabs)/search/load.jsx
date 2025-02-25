@@ -18,6 +18,7 @@ import { updateUserSubscriptionModal } from '@/redux/reducers/auth'
 import { TextInput } from "react-native-paper";
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from "@/config/ThemeContext";
+import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 
 const SearchLoadScreen = () => {
     const route = useRoute();
@@ -28,6 +29,7 @@ const SearchLoadScreen = () => {
     const {loads, pagination, stats, loading: cargoLoad} = useAppSelector(state => state.load);
     const {user} = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
+    const { openLoadVehicleView } = useBottomSheet();
     
     const [dateRange, setDateRange] = React.useState([]);
     const truckTypes = OPTIONS['truck-types'].filter(item => item.value !== 'not_specified');
@@ -68,7 +70,7 @@ const SearchLoadScreen = () => {
     };
     
     const toggleSetId = (item) => {
-      setViewId(item.id);
+      openLoadVehicleView(item.id);
       dispatch(setLoad(item))
     }
     
@@ -320,7 +322,7 @@ const SearchLoadScreen = () => {
         }
 
         <View className='my-1'/>
-        {pagination && <View className="flex-row items-center justify-between p-4 mt-2 bg-primary-light dark:bg-primary-dark rounded-md shadow-sm dark:border border-border-color/20">
+        {pagination && <View className="flex-row items-center justify-between p-4 mt-2 rounded-md shadow-sm bg-primary-light dark:bg-primary-dark dark:border border-border-color/20">
           <View>
             <Text className="text-sm font-bold text-primary-dark dark:text-primary-light">
               {t ('query-result-message-without-cargo', {
@@ -393,7 +395,7 @@ function SearchInput({searchText, setSearchText, debouncedFetchExtract}) {
   const {theme} = useTheme();
 
   return (
-    <View className='w-full relative justify-center'>
+    <View className='relative justify-center w-full'>
           <TextInput
             mode="outlined"
             placeholder={t ('search-by-destination')}

@@ -28,7 +28,7 @@ const LightTheme = {
     primary: "#623BFF",
     purple: 'rgba(126,34,206,1.00)',
     background: "#ffffff",
-    border: "#D1D5DB",
+    border: "#000000",
     dark: "#000000",
     light: "#ffffff",
   },

@@ -65,7 +65,7 @@ const BookmarkButtonComponent = ({model, paramName}: {model: LoadModel | Vehicle
     <StyledView className="flex items-center ml-1">
       {user && (
         <StyledTouchableOpacity
-          className={`items-center justify-center w-7 h-7 bg-gray-200 rounded-full`}
+          className={`items-center justify-center w-7 h-7 bg-gray-200 dark:bg-primary-light/20 rounded-full shadow-md hover:bg-gray-300 dark:hover:bg-primary-light/30 transition duration-200 transform active:scale-95`}
           onPress={toggleBookmark}
         >
             <Ionicons name={isBookmarked ? "bookmark" : "bookmark-outline"} size={16} 
