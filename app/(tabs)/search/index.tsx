@@ -13,28 +13,28 @@ export default function SearchPage() {
   const insets = useSafeAreaInsets();
   const { isDarkMode } = useTheme();
   
+  const backgroundColor = isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(226,232,240,0.8)';
+
   React.useEffect(() => {
-    if (isDarkMode) {
-      StatusBar.setBackgroundColor('rgba(0,0,0,0.7)');
-      console.log('dark use effect');
-    } else {
-      StatusBar.setBackgroundColor('rgba(226,232,240,0.8)');
-      console.log('light use effect');
-    }
+    StatusBar.setBackgroundColor(backgroundColor);
+    // StatusBar.setBarStyle(isDarkMode ? 'light-content' : 'dark-content');
+
     return () => {
       StatusBar.setBackgroundColor('transparent');
+      StatusBar.setTranslucent(true);
     };
   }, [isDarkMode]);
 
   useFocusEffect(
     React.useCallback(() => {
-      const backgroundColor = isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(226,232,240,0.8)';
       StatusBar.setBackgroundColor(backgroundColor);
+      StatusBar.setTranslucent(true);
 
       return () => {
         StatusBar.setBackgroundColor('transparent');
+        StatusBar.setTranslucent(true);
       };
-    }, [])
+    }, [isDarkMode])
   );
   
   const tabs: viewSelectorTabs[] = [
@@ -45,7 +45,6 @@ export default function SearchPage() {
   
   return (
     <SafeAreaProvider>
-      <StatusBar translucent={true} />
       <ImageBackground 
         source={require('@/assets/images/background.png')}
         style={{ flex: 1, position: 'absolute', width: '100%', height: '100%' }}

@@ -16,7 +16,7 @@ function FlatItem(
             className={`px-4 py-2 rounded-full border ${
               isSelected(item.value)
                 ? 'bg-primary !border-primary'
-                : 'bg-primary/30 !border-primary'
+                : 'bg-transparent dark:bg-primary/30 !border-primary'
             }`}
           >
             <View className="flex-row items-center">

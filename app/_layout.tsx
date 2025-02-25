@@ -84,9 +84,9 @@ function App() {
               {isAuthenticated ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="auth" />}
             </Stack>
             <StatusBar
-              translucent={true}
+              translucent 
               barStyle={isDarkMode ? "light-content" : "dark-content"}
-              // backgroundColor={'transparent'}
+              backgroundColor={'transparent'}
             />
             <Toast />
           </View>
