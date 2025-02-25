@@ -1,15 +1,23 @@
 import React from "react";
-import { FlatList, RefreshControl, View } from "react-native";
+import { FlatList, RefreshControl, ScrollView, View, Text, TouchableOpacity } from "react-native";
 import ViewSelector from "@/components/view-selector";
 import { viewSelectorTabs } from "@/interface/components";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { getSubscriptions } from "@/redux/reducers/variable";
-import { EmptyStateCard, SubscriptionCard } from "@/components/cards";
+import { getPlans, getSubscriptions } from "@/redux/reducers/variable";
+import { EmptyStateCard, PlanCard, SubscriptionCard } from "@/components/cards";
 import { ContentSubscriptionLoader } from "@/components/content-loader";
+import { useTranslation } from "react-i18next";
+import { getName } from "@/utils/general";
+import { CustomButton, CustomOpenLink } from "@/components/custom";
+import { useRouter } from "expo-router";
+import { formatPrice } from "@/utils/general";
+
 
 export default function SubscriptionsPage() {
     const dispatch = useAppDispatch();
-    const { subscriptions, loading } = useAppSelector(state => state.variable)
+    const { t } = useTranslation(); 
+    const router = useRouter();
+    const { subscriptions, loading, plans } = useAppSelector(state => state.variable)
     const [refreshing, setRefreshing] = React.useState(false);
     
     const [status, setStatus] = React.useState('active'); 
@@ -23,6 +31,10 @@ export default function SubscriptionsPage() {
         dispatch(getSubscriptions({status}))
     }, [status])
   
+    React.useEffect(() => {
+        dispatch(getPlans());
+    }, []);
+    
     React.useEffect(()=> {
         return () => {
             dispatch({
@@ -43,6 +55,8 @@ export default function SubscriptionsPage() {
           }, 2000); // 2 soniyalik kechikish
       };
       
+    const handleSubscribe = (id: number) => router.push(`/profile/payment/${id}`)
+    
     return (
         <View className="items-center flex-1 px-4 pt-4 bg-white dark:bg-black">
             <ViewSelector
@@ -50,7 +64,7 @@ export default function SubscriptionsPage() {
                 selectedTab={status}
                 onTabSelect={(value: string) => setStatus(value)}
             />
-            <View className="flex-1 w-full">
+            <View className="w-full ">
                 {loading ? (
                     <FlatList
                         data={[1, 2, 3, 4]}
@@ -67,6 +81,16 @@ export default function SubscriptionsPage() {
                         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                     />
                 )}
+            </View>
+            <FlatList
+                data={plans}
+                className="my-3"
+                keyExtractor={(plan) => plan.id.toString()}
+                ItemSeparatorComponent={() => <View className="h-4" />}
+                renderItem={({ item: plan }) => <PlanCard {...plan}/>}
+            />
+            <View className="items-center w-full mb-2">
+                <CustomOpenLink url='https://t.me/marina_laty' hasIcon={false} text={t ('ask-to-support')}/>
             </View>
         </View>
     );

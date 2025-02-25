@@ -31,18 +31,18 @@ const Subscriptions: React.FC<SubscriptionProps> = ({subscription}) => {
         return (
             <View className="w-full max-w-md p-6 mb-4 border rounded-lg border-border-color">
                 <View className="flex-row items-center justify-between mb-6">
-                    <Text className="text-xl font-bold text-gray-700">{getName(subscription.plan, 'name')}</Text>
+                    <Text className="text-xl font-bold text-gray-700 dark:text-border-color">{getName(subscription.plan, 'name')}</Text>
                     <View className="px-3 py-1 bg-red-100 rounded-full">
                         <Text className="text-sm font-medium text-red-600">{t('expired')}</Text>
                     </View>
                 </View>
                 
-                <View className="p-4 bg-white border rounded-lg border-border-color">
+                <View className="p-4 bg-white border rounded-lg dark:bg-transparent border-border-color">
                     <View className="flex-row items-center gap-3">
                         <Ionicons name="time-outline" size={24} color="#EF4444" />
                         <View>
-                            <Text className="mb-1 text-sm text-gray-500">{t('subscription_date')}</Text>
-                            <Text className="text-gray-700">
+                            <Text className="mb-1 text-sm text-gray-500 dark:text-border-color">{t('subscription_date')}</Text>
+                            <Text className="text-gray-700 dark:text-border-color">
                                 {subscription.startDate ? formatDate(new Date(subscription.startDate)) : ''} - {subscription.endDate ? formatDate(new Date(subscription.endDate)) : ''}
                             </Text>
                         </View>

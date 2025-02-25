@@ -163,7 +163,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
               title={setting.title}
               showToggle={setting.showToggle}
               isToggled={setting.showToggle ? isDarkMode : undefined}
-              onToggle={setting.showToggle ? handleThemeToggle : undefined}
+              onToggle={setting.showToggle ? toggleTheme : undefined}
               onPress={setting.route ? () => {
                 bottomSheetRef.current?.close();
                 router.replace(setting.route! as RelativePathString);
