@@ -8,6 +8,7 @@ import { useTheme } from "@/config/ThemeContext";
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Button, Icon, MD3Colors } from 'react-native-paper';
 import { CustomIconButton } from "@/components/custom";
+import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 
 interface StickyHeaderProps {
   title?: string;
@@ -15,11 +16,11 @@ interface StickyHeaderProps {
 
 const HEADER_HEIGHT = 50;
 
-const StickyHeader: React.FC<StickyHeaderProps> = ({
-  style,
-}) => {
+const StickyHeader: React.FC<StickyHeaderProps> = () => {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
+
+	const { openEditLoad } = useBottomSheet();
 
   return (
     <View style={[styles.header, { backgroundColor: 'transparent', marginTop: insets.top }]}>
@@ -30,10 +31,16 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({
         />
       </View>
 
-      <View style={styles.leftIcons}>
+      <View style={styles.rightIcons}>
+				<CustomIconButton
+          icon="plus-circle-outline"
+          onPress={() => openEditLoad(0)}
+					style={{marginRight: 0}}
+        />
         <CustomIconButton
           icon="bell"
           onPress={() => console.log("Icon clicked")}
+					style={{marginLeft: 0}}
         />
       </View>
     </View>
@@ -49,7 +56,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 10, // ✅ Ensure header is above content
+    zIndex: 20, // ✅ Ensure header is above content
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -65,8 +72,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   rightIcons: {
-    flexDirection: "column",
-    gap: 10,
+    flexDirection: "row",
+    gap: 2,
   },
 });
 

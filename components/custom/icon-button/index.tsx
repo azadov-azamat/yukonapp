@@ -1,18 +1,19 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 import { IconButton } from 'react-native-paper';
 
 interface IconButtonProps {
   icon: string;
   onPress: () => void;
+  style?: ViewStyle;
 }
 
-const CustomIconButton: React.FC<IconButtonProps> = ({ icon, onPress }) => {
+const CustomIconButton: React.FC<IconButtonProps> = ({ icon, onPress, style }) => {
   return (
     <IconButton
       icon={icon}
       onPress={onPress}
-      style={styles.iconButton}
+      style={[{...styles.iconButton}, style]}
       iconColor="white" // ✅ White icon color
       size={24}
       mode="contained-tonal" // ✅ Background appears only on press
