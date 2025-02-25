@@ -107,10 +107,6 @@ export default function MainPage() {
 
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar
-        translucent={true}
-        backgroundColor="transparent"
-      />
       <LinearGradient
         colors={['#623bff', '#CCADFF', '#FFFFFF']}
         locations={[0, 0.5, 1]}  // 50% gradient, 50% white

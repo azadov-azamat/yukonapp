@@ -15,14 +15,14 @@ function FlatItem(
             onPress={() => onChange(item.value)} // Callbackni chaqirish
             className={`px-4 py-2 rounded-full border ${
               isSelected(item.value)
-                ? 'bg-primary border-primary'
-                : 'bg-transparent border-primary'
+                ? 'bg-primary !border-primary'
+                : 'bg-primary/30 !border-primary'
             }`}
           >
             <View className="flex-row items-center">
               <Text
                 className={`font-bold ${
-                  isSelected(item.value) ? 'text-white' : 'text-primary'
+                  isSelected(item.value) ? 'text-primary-light' : 'text-primary dark:text-primary-light'
                 }`}
               >
                 {translate (item.label)}

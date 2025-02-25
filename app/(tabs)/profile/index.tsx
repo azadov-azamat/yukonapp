@@ -3,7 +3,7 @@ import { logout } from "@/redux/reducers/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { View, TouchableOpacity, ScrollView, Animated, PanResponder, FlatList } from "react-native";
+import { View, TouchableOpacity, ScrollView, Animated, PanResponder, FlatList, StatusBar } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 

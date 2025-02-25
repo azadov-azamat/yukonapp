@@ -4,7 +4,7 @@ import ViewSelector from "@/components/view-selector";
 import { viewSelectorTabs } from "@/interface/components";
 import SearchLoadScreen from "./load.jsx";
 import SearchVehicleScreen from "./vehicle";
-import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from "@/config/ThemeContext";
 
@@ -13,20 +13,30 @@ export default function SearchPage() {
   const insets = useSafeAreaInsets();
   const { isDarkMode } = useTheme();
   
+  React.useEffect(() => {
+    if (isDarkMode) {
+      StatusBar.setBackgroundColor('rgba(0,0,0,0.7)');
+      console.log('dark use effect');
+    } else {
+      StatusBar.setBackgroundColor('rgba(226,232,240,0.8)');
+      console.log('light use effect');
+    }
+    return () => {
+      StatusBar.setBackgroundColor('transparent');
+    };
+  }, [isDarkMode]);
+
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setBackgroundColor(isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(226,232,240,0.8)');
-      
+      const backgroundColor = isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(226,232,240,0.8)';
+      StatusBar.setBackgroundColor(backgroundColor);
+
       return () => {
         StatusBar.setBackgroundColor('transparent');
       };
-    }, [isDarkMode])
+    }, [])
   );
   
-  React.useEffect(() => {
-    StatusBar.setBackgroundColor(isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(226,232,240,0.8)');
-  }, [isDarkMode]);
-
   const tabs: viewSelectorTabs[] = [
     { label: 'bookmarks.load', value: 'load', icon: 'cube' },
     { label: 'bookmarks.vehicle', value: 'vehicle', icon: 'car' },
