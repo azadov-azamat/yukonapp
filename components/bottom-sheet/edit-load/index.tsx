@@ -121,10 +121,12 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
 	function onClearOriginCountry() {
     setOriginCountry(null);
 		setOriginCity(null);
+		setDestinationCountry(null);
+		setDestinationCity(null);
   }
 
 	function onClearDestinationCountry() {
-    setDestinationCountry(null);
+		setDestinationCountry(null);
   }
 
   function onClearOriginCity() {
