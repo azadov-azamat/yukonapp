@@ -48,6 +48,7 @@ export interface ICityModel extends defaultData {
     nameEn: string;
     countryId: string;
     country?: ICountryModel;
+		[key: string]: any;
 }
 
 export interface IPlanModel extends defaultData {

@@ -4,7 +4,6 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { InputSelectorProps } from '@/interface/components';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
-import { getName } from '@/utils/general';
 
 const Input: React.FC<InputSelectorProps<any>> = ({
   label,
@@ -74,6 +73,7 @@ const Input: React.FC<InputSelectorProps<any>> = ({
 						<View style={styles.inputSearchWrapperStyle}>
 							<TextInput
 								style={styles.inputSearchStyle}
+								value={searchQuery}
 								placeholder="Search..."
 								onChangeText={(text) => {
 									setSearchQuery(text);
@@ -87,7 +87,13 @@ const Input: React.FC<InputSelectorProps<any>> = ({
 			/>
 			{/* Clear Button */}
       {onClear && value && (
-        <TouchableOpacity style={styles.clearButton} onPress={() => onClear(null)}>
+        <TouchableOpacity
+					style={styles.clearButton}
+					onPress={() => {
+						onClear(null);
+						setSearchQuery('');
+					}}
+				>
           <Ionicons name="close-circle" size={20} color="red" />
         </TouchableOpacity>
       )}
@@ -95,6 +101,7 @@ const Input: React.FC<InputSelectorProps<any>> = ({
 			{/* Black Overlay when disabled */}
 			{disabled && <View style={styles.disabledOverlay} />}
 		</View>
+
     // onFocus={() => setIsFocus(true)}
     // onBlur={() => setIsFocus(false)}
     // onChange={item => {
