@@ -87,7 +87,7 @@ export interface HeaderProps {
 export interface InputSelectorProps<T> {
   label?: string;
   value: any;
-  onChange: (value: string) => void;
+  onChange: (value: T | null) => void;
   clearValue?: () => void;
   placeholder: string;
   error?: string;

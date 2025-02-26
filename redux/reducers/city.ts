@@ -3,7 +3,7 @@ import { http } from '@/config/api';
 import { CityInitialProps, extractCityProps, ICityModel } from '@/interface/redux/variable.interface';
 import { startLoading, stopLoading } from './variable';
 import { deserialize } from '@/utils/general';
-import { deserializeCity, deserializeLoad } from '@/utils/deserializer';
+import { deserializeCity } from '@/utils/deserializer';
 
 // Define the action to fetch city data from the API based on search text.
 export const getExtractCity = createAsyncThunk('city/extractCity', async (data: any, { rejectWithValue }) => {
@@ -20,14 +20,13 @@ export const getExtractCity = createAsyncThunk('city/extractCity', async (data: 
 
 // Define the action to fetch city data from the API based on search text.
 export const locationSearch = createAsyncThunk('city/locationSearch', async (text: string, { rejectWithValue }) => {
-    try {
-      const response = await http.get(`cities/location-search/${text}`);
-      return response.data.data
-    } catch (error) {
-      return rejectWithValue(error);  // Return the error if request fails
-    }
+  try {
+    const response = await http.get(`cities/location-search/${text}`);
+    return response.data.data
+  } catch (error) {
+    return rejectWithValue(error);  // Return the error if request fails
   }
-);
+});
 
 export const getCityByIds = createAsyncThunk('city/getCityByIds', async ({ids}: {ids: string, vehicleId: string}, { rejectWithValue }) => {
   try {
@@ -42,8 +41,19 @@ export const getCityByIds = createAsyncThunk('city/getCityByIds', async ({ids}: 
   } catch (error) {
     return rejectWithValue(error);  // Return the error if request fails
   }
-}
-);
+});
+
+export const getCities = createAsyncThunk('city/getCities', async (query: any, { rejectWithValue }) => {
+  try {
+    const response = await http.get('cities', { params: query });
+    let deserializedData = await deserialize(response.data)
+    deserializedData = deserializedData.map((item: ICityModel) => deserializeCity(item));
+
+    return deserializedData;
+  } catch (error) {
+    return rejectWithValue(error);
+  }
+});
 
 // Initial state of the city reducer
 const initialState: CityInitialProps = {
@@ -84,13 +94,25 @@ const citySlice = createSlice({
     builder.addCase(getCityByIds.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(getCityByIds.fulfilled, (state, action) => {      
+    builder.addCase(getCityByIds.fulfilled, (state, action) => {
       state.vehicleCities[action.meta?.arg?.vehicleId as any] = action.payload;
       state.loading = false;
     });
     builder.addCase(getCityByIds.rejected, (state, action) => {
       state.loading = false;
       state.vehicleCities = [];
+    });
+
+		builder.addCase(getCities.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getCities.fulfilled, (state, action) => {
+			state.cities = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(getCities.rejected, (state, action) => {
+      state.loading = false;
+      state.cities = [];
     });
   },
 });

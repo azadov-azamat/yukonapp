@@ -5,11 +5,12 @@ import { Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { RelativePathString, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { CustomBadgeSelector, CustomButton, CustomInput, CustomInputSelector } from "@/components/custom";
+import { CustomBadgeSelector, CustomButton, CustomInput, CustomInputSelector, MultiSelectDropdown } from "@/components/custom";
 import { ICountryModel } from '@/interface/redux/variable.interface';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { getName } from '@/utils/general';
 import { fetchCountries } from "@/redux/reducers/country";
+import { getCities } from "@/redux/reducers/city";
 import { capitalize } from 'lodash';
 
 export interface EditLoadBottomSheetRef {
@@ -31,10 +32,15 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
 	const currentLanguage = i18n.language;
 
 	const dispatch = useAppDispatch();
-  const { allCountries, countries, loading } = useAppSelector((state) => state.country);
+  const { allCountries, countries, loading: countryLoading } = useAppSelector((state) => state.country);
+  const { cities, loading: cityLoading } = useAppSelector((state) => state.city);
 
-	const [orirginCountry, setOriginCountry] = React.useState<ICountryModel | null>(null); // Initialize with "" to avoid null
-	const [selectedCity, setSelectedCity] = React.useState<ICountryModel | null>(null);
+	const [originCountry, setOriginCountry] = React.useState<ICountryModel | null>(null); // Initialize with "" to avoid null
+	const [destinationCountry, setDestinationCountry] = React.useState<ICountryModel | null>(null); // Initialize with "" to avoid null
+	const [originCity, setOriginCity] = React.useState<ICountryModel | null>(null);
+	const [destinationCity, setDestinationCity] = React.useState<ICountryModel | null>(null);
+	const [destinationCities, setDestinationCities] = React.useState<ICountryModel[]>([]);
+
   const [selectedType, setType] = React.useState('load');
 
   React.useEffect(()=> {
@@ -43,12 +49,23 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
 
 
   const adTypes = [
-    { value: 'load', label: t('bookmarks.load'), icon: 'cube'},
-    { value: 'vehicle', label: t('bookmarks.vehicle'), icon: 'car'},
+    { value: 'load', label: t('bookmarks.load'), icon: 'cube-outline' as const},
+    { value: 'vehicle', label: t('bookmarks.vehicle'), icon: 'car-outline' as const},
   ];
 
-	const handleCountryChange = (item: any) => setOriginCountry(item);
-  const handleCityChange = (item: any) => setSelectedCity(item);
+	const handleCountryChange = async (item: any) => {
+    setOriginCountry(item);
+    await dispatch(getCities({countryId: item.id}));
+  }
+
+	const handleDestinationCountryChange = async (item: any) => {
+    setDestinationCountry(item);
+    const response = await dispatch(getCities({countryId: item.id}));
+    setDestinationCities(response.payload); // Access the payload property
+  }
+
+  const handleCityChange = (item: any) => setOriginCity(item);
+  const handleDestinationCityChange = (item: any) => setDestinationCity(item);
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -71,7 +88,20 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
   );
 
 	function onClearOriginCountry() {
-    setOriginCountry(null)
+    setOriginCountry(null);
+		setOriginCity(null);
+  }
+
+	function onClearDestinationCountry() {
+    setDestinationCountry(null);
+  }
+
+  function onClearOriginCity() {
+    setOriginCity(null);
+  }
+
+	function onClearDestinationCity() {
+    setDestinationCity(null);
   }
 
   return (
@@ -128,14 +158,16 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
               </View>
             </View>
 
-						<View className="h-screen pt-4">
+            <Text className="mt-2 text-lg font-semibold text-gray-700 dark:text-white">
+              {t ("where-from")}
+            </Text>
+						<View className="pt-4">
   						<CustomInputSelector
-  							value={orirginCountry}
+  							value={originCountry}
   							onChange={handleCountryChange}
-                onSearch={(query, items) => items.filter(item => item.names.includes(query.toLowerCase()))} // ✅ Custom search
-  							placeholder='loads.origin-country'
-  							// error={error}
-  							loading={loading}
+                onSearch={(query: string, items: any[]) => items.filter(item => item.names.includes(query.toLowerCase()))}
+  							placeholder='select-country'
+  							loading={countryLoading}
   							items={allCountries}
   							labelField={`name${capitalize(currentLanguage)}`}
   							valueField="id"
@@ -144,6 +176,58 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
   							rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
   						/>
 						</View>
+            <View className="pt-4">
+              <CustomInputSelector
+                value={originCity}
+                onChange={handleCityChange}
+                onSearch={(query: string, items: any[]) => items.filter(item => item.names.includes(query.toLowerCase()))}
+                placeholder='select-city'
+                loading={cityLoading}
+                disabled={!originCountry}
+                items={cities}
+                labelField={`name${capitalize(currentLanguage)}`}
+                valueField="id"
+                search={true}
+                onClear={onClearOriginCity}
+                rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+              />
+            </View>
+
+						<Text className="mt-4 text-lg font-semibold text-gray-700 dark:text-white">
+              {t ("where-to")}
+            </Text>
+						<View className="pt-4">
+  						<CustomInputSelector
+  							value={destinationCountry}
+  							onChange={handleDestinationCountryChange}
+                onSearch={(query: string, items: any[]) => items.filter(item => item.names.includes(query.toLowerCase()))}
+  							placeholder='select-country'
+  							loading={countryLoading}
+								disabled={!originCountry}
+  							items={allCountries}
+  							labelField={`name${capitalize(currentLanguage)}`}
+  							valueField="id"
+  							search={true}
+  							onClear={onClearDestinationCountry}
+  							rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+  						/>
+						</View>
+            <View className="pt-4">
+							<CustomInputSelector
+  							value={destinationCity}
+  							onChange={handleDestinationCityChange}
+                onSearch={(query: string, items: any[]) => items.filter(item => item.names.includes(query.toLowerCase()))}
+  							placeholder='select-city'
+  							loading={cityLoading}
+								disabled={!destinationCountry}
+  							items={destinationCities}
+  							labelField={`name${capitalize(currentLanguage)}`}
+  							valueField="id"
+  							search={true}
+  							onClear={onClearDestinationCity}
+  							rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+  						/>
+            </View>
 					</View>
 
         </View>

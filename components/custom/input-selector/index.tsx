@@ -9,8 +9,9 @@ import { getName } from '@/utils/general';
 const Input: React.FC<InputSelectorProps<any>> = ({
   label,
   value,
-  onChange,
   onSearch,
+  onChange,
+  onClear,
   placeholder,
   error,
   type,
@@ -47,41 +48,53 @@ const Input: React.FC<InputSelectorProps<any>> = ({
   };
 
 	return (
-		<Dropdown
-			style={styles.dropdown}
-			placeholderStyle={styles.placeholderStyle}
-			selectedTextStyle={styles.selectedTextStyle}
-			iconStyle={styles.iconStyle}
-			data={filteredData}
-			maxHeight={300}      
-      disable={disabled}
-			labelField={value && value[labelField] ? labelField : t ('payment-type.not_specified')}
-			labelField={labelField}
-			valueField={valueField}
-			placeholder={t (placeholder)}
-			searchPlaceholder="Search..."
-			value={value}
-			onChange={(item) => onChange(item)}
-			containerStyle={styles.dropdownStyle}
-			renderItem={(item) => renderItem(item, labelField)}
-			search
-			renderInputSearch={() =>
-        search ? (
-          <View style={styles.inputSearchWrapperStyle}>
-            <TextInput
-              style={styles.inputSearchStyle}
-              placeholder="Search..."
-              onChangeText={(text) => {
-                setSearchQuery(text);
-                onSearch && onSearch(text, items);
-              }}
-            />
-          </View>
-        ) : null
-      }
-			{...rest}
-		/>
+		<View style={[styles.dropdownWrapper, disabled && styles.disabledWrapper]}>
+			<Dropdown
+				style={styles.dropdown}
+				placeholderStyle={styles.placeholderStyle}
+				selectedTextStyle={styles.selectedTextStyle}
+				iconStyle={[
+					styles.iconStyle,
+					onClear && value ? { display: 'none' } : {} // Changed 'hidden' to 'none'
+				]}
+				data={filteredData}
+				maxHeight={300}
+				disable={disabled}
+				labelField={value && value[labelField] ? labelField : t ('payment-type.not_specified')}
+				valueField={valueField}
+				placeholder={t (placeholder)}
+				searchPlaceholder="Search..."
+				value={value}
+				onChange={(item) => onChange(item)}
+				containerStyle={styles.dropdownStyle}
+				renderItem={(item) => renderItem(item, labelField)}
+				search
+				renderInputSearch={() =>
+					search ? (
+						<View style={styles.inputSearchWrapperStyle}>
+							<TextInput
+								style={styles.inputSearchStyle}
+								placeholder="Search..."
+								onChangeText={(text) => {
+									setSearchQuery(text);
+									onSearch && onSearch(text, items);
+								}}
+							/>
+						</View>
+					) : null
+				}
+				{...rest}
+			/>
+			{/* Clear Button */}
+      {onClear && value && (
+        <TouchableOpacity style={styles.clearButton} onPress={() => onClear(null)}>
+          <Ionicons name="close-circle" size={20} color="red" />
+        </TouchableOpacity>
+      )}
 
+			{/* Black Overlay when disabled */}
+			{disabled && <View style={styles.disabledOverlay} />}
+		</View>
     // onFocus={() => setIsFocus(true)}
     // onBlur={() => setIsFocus(false)}
     // onChange={item => {
@@ -94,6 +107,22 @@ const Input: React.FC<InputSelectorProps<any>> = ({
 export default Input;
 
 const styles = StyleSheet.create({
+	dropdownWrapper: {
+    position: 'relative',
+		width: '100%',
+  },
+	disabledOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)', // Black overlay with opacity
+    borderRadius: 12,
+  },
+	disabledWrapper: {
+    opacity: 0.6, // Apply opacity to indicate it's disabled
+  },
 	dropdown: {
 		// margin: 16,
 		paddingTop: 12,
@@ -110,11 +139,24 @@ const styles = StyleSheet.create({
 		marginRight: 5,
 	},
 	item: {
-		padding: 17,
+		paddingTop: 14,
+		paddingBottom: 14,
+		paddingLeft: 4,
+		paddingRight: 4,
+		marginLeft: 12,
+		marginRight: 12,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'center',
+		// borderTopWidth: 1,
+		// borderColor: '#e4e6e8'
 	},
+	clearButton: {
+    position: 'absolute',
+    right: 16,
+    top: '50%',
+    transform: [{ translateY: -10 }],
+  },
 	textItem: {
 		flex: 1,
 		fontSize: 16,
@@ -138,7 +180,7 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		borderWidth: 1,
 		borderColor: '#ced4da',
-		outlineWidth: 0, // ✅ Removes the focus outline
+		// outlineWidth: 0, // ✅ Removes the focus outline
 		height: 40,
 		fontSize: 14,
 		paddingLeft: 10,
