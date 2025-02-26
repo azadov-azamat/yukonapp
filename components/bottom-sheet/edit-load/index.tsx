@@ -45,6 +45,8 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
 	const [originCity, setOriginCity] = React.useState<ICountryModel | null>(null);
 	const [destinationCity, setDestinationCity] = React.useState<ICountryModel | null>(null);
 
+	const [text, setText] = React.useState('');
+
   const [selectedType, setType] = React.useState('load');
 
   React.useEffect(()=> {
@@ -263,6 +265,33 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
             </View>
 					</View>
 
+					<CustomInput
+						label={t ('loads.goods')}
+						value={text}
+						onChangeText={setText}
+						divClass='mt-4'
+					/>
+
+					<CustomInput
+						label={t ('loads.phone')}
+						value={text}
+						onChangeText={setText}
+						divClass='mt-4'
+					/>
+
+					<CustomInput
+						label={t ('loads.truck-type')}
+						value={text}
+						onChangeText={setText}
+						divClass='mt-4'
+					/>
+
+					<CustomInput
+						label={t ('loads.weight')}
+						value={text}
+						onChangeText={setText}
+						divClass='mt-4'
+					/>
         </View>
       </BottomSheetView>
     </BottomSheet>

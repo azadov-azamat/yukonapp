@@ -50,7 +50,7 @@ const Input: React.FC<InputProps> = ({
   return (
     <View style={[styles.container]} className={`relative = ${divClass}`}>
       {/* Label */}
-      {label && <Text className="mb-1 text-lg font-semibold">{label}</Text>}
+      {label && <Text className="mb-1 text-lg font-semibold text-gray-700">{label}</Text>}
 
       <View className={`flex-row items-center px-3 text-lg bg-white border rounded-md ${
             error ? 'border-primary-red' : 'border-border-color'
@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: Platform.OS === 'ios' ? 21.5 : Platform.OS === 'web' ? 48 : undefined,
     textAlignVertical: Platform.OS === 'ios' ? 'center' : 'auto',
+		outlineWidth: 0, // it works
   },
   container: {
     zIndex: undefined,
