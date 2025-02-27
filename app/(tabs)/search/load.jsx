@@ -29,7 +29,7 @@ const SearchLoadScreen = () => {
     const {loads, pagination, stats, loading: cargoLoad} = useAppSelector(state => state.load);
     const {user} = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
-    const { openLoadVehicleView } = useBottomSheet();
+    const { openLoadView } = useBottomSheet();
     
     const [dateRange, setDateRange] = React.useState([]);
     const truckTypes = OPTIONS['truck-types'].filter(item => item.value !== 'not_specified');
@@ -70,7 +70,7 @@ const SearchLoadScreen = () => {
     };
     
     const toggleSetId = (item) => {
-      openLoadVehicleView(item.id);
+      openLoadView(item.id);
       dispatch(setLoad(item))
     }
     

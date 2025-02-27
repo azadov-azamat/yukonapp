@@ -48,7 +48,6 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
   }
   
   function formatLoadReadyDate(loadReadyDate: string | Date): string {
-    const { t } = useTranslation(); // i18n translate hook
     const date = dayjs(loadReadyDate);
     const today = dayjs();
     const tomorrow = dayjs().add(1, 'day');
@@ -112,7 +111,15 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
         </View>
 
         {/* Path Line */}
-        {/* <View className="h-[2px] bg-gradient-to-r from-blue-400 to-transparent flex-1 mx-4" /> */}
+        <View className='relative items-center flex-auto max-w-40'>
+              <View className="absolute left-0 right-0 h-1 top-3.5 bg-[repeating-linear-gradient(90deg,#6b46c1,#6b46c1_5px,transparent_5px,transparent_10px)]"></View>
+              <View className='relative z-10 items-center justify-center inline-block w-8 h-8 p-1 border rounded-full bg-primary-light dark:bg-primary/50 border-border-color'>
+                <Ionicons name='chevron-forward' size={20} color={theme.colors.icon}/>
+              </View>
+              {load.distanceInKm && <View className='absolute justify-center items-center left-0 right-0 -translate-x-1/2 -translate-y-1/2 bottom-[-20px]'>
+                <Text className='text-primary-dark/50 dark:text-primary-light/50'>{load.distanceInKm} km</Text>
+              </View>}
+        </View>
 
         {/* Destination */}
         <View className="items-end flex-1">

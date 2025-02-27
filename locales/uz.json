@@ -25,6 +25,7 @@
   "password": "Parol",
   "accepted": "Qabul qilindi",
   "cargo-out-date": "Yukni eskirgan deb belgilash",
+  "cargo-out-dated": "Yuk eskirgan deb belgilandi",
   "vehicle-already-taken": "Transport allaqachon olingan",
   "is-cargo-out-date": "Yukni haqiqatdan ham eskirgan deb belgilaysizmi?",
   "is-vehicle-already-taken": "Transport haqiqatdan ham olingan deb belgilaysizmi?",

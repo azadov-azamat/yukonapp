@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useRef, useState } from 'react';
 import SettingsBottomSheet, { SettingsBottomSheetRef } from "@/components/bottom-sheet/settings";
 import EditLoadBottomSheet, { EditLoadBottomSheetRef } from "@/components/bottom-sheet/edit-load";
-import LoadVehicleViewBottomSheet, { LoadVehicleViewBottomSheetRef } from '@/components/bottom-sheet/load-vehicle-view';
+import LoadViewBottomSheet, { LoadViewBottomSheetRef } from '@/components/bottom-sheet/load-view';
 
 type AppContextType = {
   openSettings: () => void;
   openEditLoad: (id: number) => void;
-  openLoadVehicleView: (id: number) => void;
+  openLoadView: (id: number) => void;
 };
 
 // Create the context
@@ -25,18 +25,18 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
   };
 
   // Load Vehicle View Bottom Sheet
-  const LoadVehicleViewSheetRef = useRef<LoadVehicleViewBottomSheetRef>(null);
-  const openLoadVehicleView = (id: number) => {
-    LoadVehicleViewSheetRef.current?.open();
+  const LoadViewSheetRef = useRef<LoadViewBottomSheetRef>(null);
+  const openLoadView = (id: number) => {
+    LoadViewSheetRef.current?.open();
     setRecordId(id);
   }
 
   return (
-    <AppContext.Provider value={{ openSettings, openEditLoad, openLoadVehicleView }}>
+    <AppContext.Provider value={{ openSettings, openEditLoad, openLoadView }}>
       {children}
       <SettingsBottomSheet ref={settingsSheetRef} />
       <EditLoadBottomSheet ref={EditLoadSheetRef} recordId={recordId} />
-      <LoadVehicleViewBottomSheet ref={LoadVehicleViewSheetRef} recordId={recordId} />
+      <LoadViewBottomSheet ref={LoadViewSheetRef} recordId={recordId} />
     </AppContext.Provider>
   );
 }
