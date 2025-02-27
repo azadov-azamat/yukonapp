@@ -15,4 +15,17 @@ export const paymentValidationSchema = Yup.object().shape({
     .required('errors.enter-required'),
 });
 
-  
+export const loadValidationSchema = Yup.object().shape({
+	goods: Yup.string().required("errors.enter-required"),
+	phone: Yup.string().required("errors.enter-required"),
+	truckType: Yup.string().required("errors.enter-required"),
+	weight: Yup.number().positive().required("errors.enter-required"),
+});
+
+
+export const vehicleValidationSchema = Yup.object().shape({
+	goods: Yup.string().required("errors.enter-required"),
+	phone: Yup.string().required("errors.enter-required"),
+	truckType: Yup.string().required("errors.enter-required"),
+	weight: Yup.number().positive().required("errors.enter-required"),
+});
