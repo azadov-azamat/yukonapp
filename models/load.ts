@@ -94,12 +94,12 @@ export default class LoadModel implements ILoadModel {
 
         if (!this.phone) {
             Toast.show({
-                type: 'warning',
+                type: 'error',
                 text1: 'phone-not-found',
             });
         }
         this.loading = false;
-        this.save(dispatch);
+        // this.save(dispatch);
       },
       close
     });

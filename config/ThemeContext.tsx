@@ -19,6 +19,7 @@ const defaultTheme = PaperDefaultTheme || {
     light: "#ffffff",
     border: "#D1D5DB",
     icon: 'rgb(156, 163, 175)',
+    red: 'rgb(239, 68, 68)',
   },
 };
 
@@ -33,6 +34,7 @@ const LightTheme = {
     icon: 'rgb(156, 163, 175)',
     dark: "#000000",
     light: "#ffffff",
+    red: 'rgb(239, 68, 68)',
   },
   customStyles: {}
 };
@@ -48,6 +50,7 @@ const DarkTheme = {
     light: "#ffffff",
     border: "#D1D5DB",
     icon: 'rgb(156, 163, 175)',
+    red: 'rgb(239, 68, 68)',
   },
   customStyles: {}
 };

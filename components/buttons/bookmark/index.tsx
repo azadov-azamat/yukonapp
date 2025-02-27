@@ -7,13 +7,12 @@ import VehicleModel from '@/models/vehicle';
 import { useTranslation } from 'react-i18next';
 import Toast from 'react-native-toast-message';
 import { Ionicons } from '@expo/vector-icons';
-// import { Colors } from '@/utils/colors';
 import { useTheme } from '@/config/ThemeContext';
 
 const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledView = styled(View);
 
-const BookmarkButtonComponent = ({model, paramName, className }: {model: LoadModel | VehicleModel, paramName: 'bookmarkedLoadIds' | 'bookmarkedVehicleIds', className?: string}) => {
+const BookmarkButtonComponent = ({model, paramName, style = '', size = 16 }: {model: LoadModel | VehicleModel, paramName: 'bookmarkedLoadIds' | 'bookmarkedVehicleIds', style?: string, size?: number}) => {
     const {t} = useTranslation();
     const dispatch = useAppDispatch();
     const {user} = useAppSelector(state => state.auth)
@@ -65,10 +64,10 @@ const BookmarkButtonComponent = ({model, paramName, className }: {model: LoadMod
     <StyledView className="flex items-center ml-1">
       {user && (
         <StyledTouchableOpacity
-          className={`items-center justify-center w-7 h-7 ${className} bg-gray-200 dark:bg-primary-light/20 rounded-full dark:hover:bg-primary-light/30 text-`}
+          className={`items-center justify-center w-7 h-7 bg-gray-200 dark:bg-primary-light/20 rounded-full dark:hover:bg-primary-light/30 ${style}`}
           onPress={toggleBookmark}
         >
-            <Ionicons name={isBookmarked ? "bookmark" : "bookmark-outline"} size={16} 
+            <Ionicons name={isBookmarked ? "bookmark" : "bookmark-outline"} size={size}  
             color={theme.colors.primary} />
         </StyledTouchableOpacity>
       )}
