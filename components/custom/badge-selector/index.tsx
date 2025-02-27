@@ -39,10 +39,17 @@ const BadgeSelector: React.FC<BadgeSelectorProps> = ({ items, selectedItems, onC
   const {t} = useTranslation();
   const isSelected = (value: string) => selectedItems.includes(value); // Badge tanlanganligini tekshirish
 
+  // Sort items so that selected items come first
+  const sortedItems = [...items].sort((a, b) => {
+    const aSelected = isSelected(a.value);
+    const bSelected = isSelected(b.value);
+    return aSelected === bSelected ? 0 : aSelected ? -1 : 1;
+  });
+
   return (
     <View className={`flex w-full ${className}`}>
       <FlatList
-        data={items} // Badge elementlari
+        data={sortedItems} // Badge elementlari
         horizontal // Gorizontal scrollni yoqish
         showsHorizontalScrollIndicator={false} // Scroll indikatorini yashirish
         contentContainerStyle={{
