@@ -13,7 +13,7 @@ import '@/utils/i18n';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
-import { Provider as PaperProvider, ActivityIndicator, MD2Colors } from "react-native-paper";
+import { Provider as PaperProvider, ActivityIndicator } from "react-native-paper";
 import { ThemeProvider, useTheme } from "@/config/ThemeContext"; // ✅ Import the Theme Context
 import { BottomSheetProvider } from "@/hooks/context/bottom-sheet";
 

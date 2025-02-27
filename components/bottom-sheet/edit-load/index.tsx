@@ -15,6 +15,7 @@ import { capitalize } from 'lodash';
 import { ILoadModel } from "@/interface/redux/load.interface";
 import { loadValidationSchema } from '@/validations/form';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 export interface EditLoadBottomSheetRef {
   open: () => void;
@@ -32,12 +33,24 @@ const HEADER_HEIGHT = 80; // Adjust based on actual header height
 const FOOTER_HEIGHT = 60; // Adjust if there's a submit button at the bottom
 const SCROLLABLE_HEIGHT = BOTTOM_SHEET_HEIGHT - HEADER_HEIGHT - FOOTER_HEIGHT;
 
+// Define Yup validation schema
+const validationSchema = Yup.object().shape({
+  goods: Yup.string().required('Goods are required'),
+  phone: Yup.string().required('Phone is required'),
+  truckType: Yup.string().required('Truck type is required'),
+  weight: Yup.number().required('Weight is required').positive('Weight must be positive'),
+  originCountry: Yup.object().nullable().required('Origin country is required'),
+  destinationCountry: Yup.object().nullable().required('Destination country is required'),
+  originCity: Yup.object().nullable().required('Origin city is required'),
+  destinationCity: Yup.object().nullable().required('Destination city is required'),
+});
+
 const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomSheetProps>(({ recordId }, ref) => {
   const { isDarkMode, toggleTheme, themeName, theme } = useTheme();
   const { i18n, t } = useTranslation();
 	const dispatch = useAppDispatch();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['87%'], []);
+  const snapPoints = useMemo(() => ['90%'], []);
 	const currentLanguage = i18n.language;
 
   const { allCountries, countries, loading: countryLoading } = useAppSelector((state) => state.country);
@@ -134,10 +147,10 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
 
   useImperativeHandle(ref, () => ({
     open: () => bottomSheetRef.current?.expand(),
-		close: () => {
-			bottomSheetRef.current?.close();
-			resetFormValues(formikRef.current?.resetForm);
-		},
+    close: () => {
+      bottomSheetRef.current?.close();
+      resetFormValues();
+    },
   }));
 
   const renderBackdrop = useCallback(
@@ -188,7 +201,7 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
 		setFieldValue('destinationCity', null);
 	}
 
-	const resetFormValues = (resetForm: () => void) => {
+	const resetFormValues = () => {
 		setInitialValues({
 			goods: '',
 			phone: '',
@@ -200,8 +213,34 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
 			destinationCity: null,
 		});
 		setType('load'); // Reset ad type selection
-		resetForm(); // Reset Formik form values
+		formikRef.current?.resetForm(); // Reset Formik form values
 	};
+
+  const renderCustomInputSelector = (label: string, value: any, onChange: any, onClear: any, items: any[], loading: boolean, disabled: boolean) => (
+    <CustomInputSelector
+      value={value}
+      onChange={onChange}
+      onSearch={(query: string, items: any[]) => items.filter(item => item.names.includes(query.toLowerCase()))}
+      placeholder={`select-${label}`}
+      loading={loading}
+      disabled={disabled}
+      items={items}
+      labelField={`name${capitalize(currentLanguage)}`}
+      valueField="id"
+      search={true}
+      onClear={onClear}
+      rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+    />
+  );
+
+  const renderCustomInput = (label: string, value: string, onChangeText: (text: string) => void) => (
+    <CustomInput
+      label={t(`loads.${label}`)}
+      value={value}
+      onChangeText={onChangeText}
+      divClass='mt-4'
+    />
+  );
 
   return (
     <BottomSheet
@@ -209,7 +248,7 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
       ref={bottomSheetRef}
       index={-1}
       snapPoints={snapPoints}
-      enablePanDownToClose
+      enablePanDownToClose={false}
       backdropComponent={renderBackdrop}
       backgroundStyle={{
         backgroundColor: isDarkMode ? theme.colors.dark : theme.colors.light,
@@ -218,229 +257,141 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
         backgroundColor: isDarkMode ? '#9CA3AF' : '#6B7280',
       }}
     >
-      <BottomSheetView className="flex-1 dark">
-				{/* <KeyboardAvoidingView
-					behavior={Platform.OS === "ios" ? "padding" : "height"}
-					style={{ flex: 1 }}
-				> */}
-					<View style={{ padding: 16 }}>
-						<Text className="pb-2 text-3xl font-bold text-black dark:text-white">
-							{recordId === 0 ? t('pages.create-add') : t('pages.just-edit')}
-						</Text>
-						<View style={{ height: SCROLLABLE_HEIGHT }}>
-							<ScrollView
-								contentContainerStyle={{ flexGrow: 1 }}
-								keyboardShouldPersistTaps="handled"
-								showsVerticalScrollIndicator={false}
-								showsHorizontalScrollIndicator={false}
-							>
-								<Formik
-									innerRef={formikRef}
-									initialValues={initialValues}
-									validationSchema={loadValidationSchema}
-									enableReinitialize
-										onSubmit={async (values, { resetForm }) => {
-										const loadData: ILoadModel = {
-											id: recordId === 0 ? null : recordId,
-											url: '',
-											originCityName: values.originCity || '',
-											destinationCityName: values.destinationCity || '',
-											price: 0,
-											distance: 0,
-											distanceSeconds: 0,
-											phone: values.phone,
-											telegram: '',
-											goods: values.goods,
-											cargoType: values.truckType,
-											cargoType2: 'not_specified',
-											paymentType: 'not_specified',
-											description: '',
-											loadReadyDate: '',
-											loadingSide: '',
-											customsClearanceLocation: '',
-											weight: parseFloat(values.weight) || 0,
-											isDagruz: false,
-											hasPrepayment: false,
-											isLikelyOwner: false,
-											isArchived: false,
-											isDeleted: false,
-											openMessageCounter: 0,
-											phoneViewCounter: 0,
-											prepaymentAmount: 0,
-											expirationButtonCounter: 0,
-											publishedDate: null,
-											loading: false,
-											isWebAd: true,
-											originCity: values.originCity || undefined,
-											originCountry: values.originCountry || undefined,
-											destinationCity: values.destinationCity || undefined,
-											destinationCountry: values.destinationCountry || undefined,
-											createdAt: new Date().toISOString(),
-											updatedAt: new Date().toISOString(),
-										};
+      <BottomSheetView style={{ flex: 1, backgroundColor: isDarkMode ? theme.colors.dark : theme.colors.light }}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={{ flex: 1 }}
+        >
+          <View style={{ padding: 16, flex: 1 }}>
+            <Text style={{ paddingBottom: 8, fontSize: 24, fontWeight: 'bold', color: isDarkMode ? 'white' : 'black' }}>
+              {recordId === 0 ? t('pages.create-add') : t('pages.just-edit')}
+            </Text>
+            <ScrollView
+              contentContainerStyle={{ flexGrow: 1 }}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+            >
+              <Formik
+                innerRef={formikRef}
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                enableReinitialize
+                 onSubmit={async (values, { resetForm }) => {
+                 const loadData: ILoadModel = {
+                   id: recordId === 0 ? null : recordId,
+                   url: '',
+                   originCityName: values.originCity || '',
+                   destinationCityName: values.destinationCity || '',
+                   price: 0,
+                   distance: 0,
+                   distanceSeconds: 0,
+                   phone: values.phone,
+                   telegram: '',
+                   goods: values.goods,
+                   cargoType: values.truckType,
+                   cargoType2: 'not_specified',
+                   paymentType: 'not_specified',
+                   description: '',
+                   loadReadyDate: '',
+                   loadingSide: '',
+                   customsClearanceLocation: '',
+                   weight: parseFloat(values.weight) || 0,
+                   isDagruz: false,
+                   hasPrepayment: false,
+                   isLikelyOwner: false,
+                   isArchived: false,
+                   isDeleted: false,
+                   openMessageCounter: 0,
+                   phoneViewCounter: 0,
+                   prepaymentAmount: 0,
+                   expirationButtonCounter: 0,
+                   publishedDate: null,
+                   loading: false,
+                   isWebAd: true,
+                   originCity: values.originCity || undefined,
+                   originCountry: values.originCountry || undefined,
+                   destinationCity: values.destinationCity || undefined,
+                   destinationCountry: values.destinationCountry || undefined,
+                   createdAt: new Date().toISOString(),
+                   updatedAt: new Date().toISOString(),
+                 };
 
-										if (recordId === 0) {
-											await dispatch(createLoad(loadData));
-										} else {
-											await dispatch(updateLoad({ id: recordId, ...loadData }));
-										}
+                 if (recordId === 0) {
+                   await dispatch(createLoad(loadData));
+                 } else {
+                   await dispatch(updateLoad({ id: recordId, ...loadData }));
+                 }
 
-										bottomSheetRef.current?.close();
-    								resetFormValues(resetForm);
-									}}
-								>
-									{({ handleChange, handleSubmit, setFieldValue, values, errors }) => (
-										<View className="flex-1">
-											<View className="pt-4">
-												<View className="pt-4 ">
-													<Text className="pb-2 text-lg font-semibold text-gray-700 dark:text-white">
-														Ad type
-													</Text>
-													<View className="flex-row items-center w-full mb-4 space-x-4">
-														{adTypes.map((type) => (
-															<TouchableOpacity
-																key={type.value}
-																onPress={() => setType(type.value)}
-																className={`flex-1 flex-row  justify-center items-center px-4 py-3 rounded-xl border ${
-																	selectedType === type.value ? 'bg-indigo-500 border-indigo-500' : 'bg-slate-100 border-transparent'
-																}`}
-															>
-																{type.icon && (
-																	<Ionicons
-																		name={type.icon}
-																		size={24}
-																		color={selectedType === type.value ? '#fff' : '#94a3b8'}
-																		style={{ marginRight: 8 }}
-																	/>
-																)}
-																<Text
-																	className={`text-base font-medium capitalize ${
-																		selectedType === type.value ? 'text-white' : 'text-slate-400'
-																	}`}
-																>
-																	{type.label}
-																</Text>
-															</TouchableOpacity>
-														))}
-													</View>
-												</View>
+                 bottomSheetRef.current?.close();
+   							 resetFormValues();
+               }}
+              >
+                {({ handleChange, handleSubmit, setFieldValue, values, errors }) => (
+                  <View style={{ flex: 1 }}>
+                    <View className="pt-4">
+                      <Text className="pb-2 text-lg font-semibold text-gray-700 dark:text-white">
+                        Ad type
+                      </Text>
+                      <View className="flex-row items-center w-full mb-4 space-x-4">
+                        {adTypes.map((type) => (
+                          <TouchableOpacity
+                            key={type.value}
+                            onPress={() => setType(type.value)}
+                            className={`flex-1 flex-row  justify-center items-center px-4 py-3 rounded-xl border ${
+                              selectedType === type.value ? 'bg-indigo-500 border-indigo-500' : 'bg-slate-100 border-transparent'
+                            }`}
+                          >
+                            {type.icon && (
+                              <Ionicons
+                                name={type.icon}
+                                size={24}
+                                color={selectedType === type.value ? '#fff' : '#94a3b8'}
+                                style={{ marginRight: 8 }}
+                              />
+                            )}
+                            <Text
+                              className={`text-base font-medium capitalize ${
+                                selectedType === type.value ? 'text-white' : 'text-slate-400'
+                              }`}
+                            >
+                              {type.label}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
 
-												<Text className="mt-2 text-lg font-semibold text-gray-700 dark:text-white">
-													{t ("where-from")}
-												</Text>
-												<View className="pt-4">
-													<CustomInputSelector
-														value={values.originCountry}
-														onChange={(item) => handleCountryChange(
-															item,
-															setFieldValue,
-															setOriginCities,
-															setOriginLoading
-														)}
-														onSearch={(query: string, items: any[]) => items.filter(item => item.names.includes(query.toLowerCase()))}
-														placeholder='select-country'
-														loading={countryLoading}
-														items={allCountries}
-														labelField={`name${capitalize(currentLanguage)}`}
-														valueField="id"
-														search={true}
-														onClear={() => onClearOriginCountry(setFieldValue)}
-														rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
-													/>
-												</View>
-												<View className="pt-4">
-													<CustomInputSelector
-														value={values.originCity}
-														onChange={(item) => handleCityChange(item, setFieldValue)}
-														onSearch={(query: string, items: any[]) => items.filter(item => item.names.includes(query.toLowerCase()))}
-														placeholder='select-city'
-														loading={originLoading}
-														disabled={!values.originCountry}
-														items={sortedOriginCities}
-														labelField={`name${capitalize(currentLanguage)}`}
-														valueField="id"
-														search={true}
-														onClear={() => onClearOriginCity(setFieldValue)}
-														rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
-													/>
-												</View>
+                      <Text className="mt-2 text-lg font-semibold text-gray-700 dark:text-white">
+                        {t ("where-from")}
+                      </Text>
+                      <View className="pt-4">
+                        {renderCustomInputSelector('country', values.originCountry, (item: ICountryModel) => handleCountryChange(item, setFieldValue, setOriginCities, setOriginLoading), () => onClearOriginCountry(setFieldValue), allCountries, countryLoading, false)}
+                      </View>
+                      <View className="pt-4">
+                        {renderCustomInputSelector('city', values.originCity, (item: ICityModel) => handleCityChange(item, setFieldValue), () => onClearOriginCity(setFieldValue), sortedOriginCities, originLoading, !values.originCountry)}
+                      </View>
 
-												<Text className="mt-4 text-lg font-semibold text-gray-700 dark:text-white">
-													{t ("where-to")}
-												</Text>
-												<View className="pt-4">
-													<CustomInputSelector
-														value={values.destinationCountry}
-														onChange={(item) => handleDestinationCountryChange(
-															item,
-															setFieldValue,
-															setDestinationCities,
-															setDestinationLoading
-														)}
-														onSearch={(query: string, items: any[]) => items.filter(item => item.names.includes(query.toLowerCase()))}
-														placeholder='select-country'
-														loading={countryLoading}
-														disabled={!values.originCountry}
-														items={allCountries}
-														labelField={`name${capitalize(currentLanguage)}`}
-														valueField="id"
-														search={true}
-														onClear={() => onClearDestinationCountry(setFieldValue)}
-														rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
-													/>
-												</View>
-												<View className="pt-4">
-													<CustomInputSelector
-														value={values.destinationCity}
-														onChange={(item) => handleDestinationCityChange(item, setFieldValue)}
-														onSearch={(query: string, items: any[]) => items.filter(item => item.names.includes(query.toLowerCase()))}
-														placeholder='select-city'
-														loading={destinationLoading}
-														disabled={!values.destinationCountry}
-														items={sortedDestinationCities}
-														labelField={`name${capitalize(currentLanguage)}`}
-														valueField="id"
-														search={true}
-														onClear={() => onClearDestinationCity(setFieldValue)}
-														rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
-													/>
-												</View>
-											</View>
+                      <Text className="mt-4 text-lg font-semibold text-gray-700 dark:text-white">
+                        {t ("where-to")}
+                      </Text>
+                      <View className="pt-4">
+                        {renderCustomInputSelector('country', values.destinationCountry, (item: ICountryModel) => handleDestinationCountryChange(item, setFieldValue, setDestinationCities, setDestinationLoading), () => onClearDestinationCountry(setFieldValue), allCountries, countryLoading, !values.originCountry)}
+                      </View>
+                      <View className="pt-4">
+                        {renderCustomInputSelector('city', values.destinationCity, (item: ICityModel) => handleDestinationCityChange(item, setFieldValue), () => onClearDestinationCity(setFieldValue), sortedDestinationCities, destinationLoading, !values.destinationCountry)}
+                      </View>
+                    </View>
 
-											<CustomInput
-												label={t ('loads.goods')}
-												value={text}
-												onChangeText={setText}
-												divClass='mt-4'
-											/>
-
-											<CustomInput
-												label={t ('loads.phone')}
-												value={text}
-												onChangeText={setText}
-												divClass='mt-4'
-											/>
-
-											<CustomInput
-												label={t ('loads.truck-type')}
-												value={text}
-												onChangeText={setText}
-												divClass='mt-4'
-											/>
-
-											<CustomInput
-												label={t ('loads.weight')}
-												value={text}
-												onChangeText={setText}
-												divClass='mt-4'
-											/>
-										</View>
-									)}
-								</Formik>
-							</ScrollView>
-						</View>
-					</View>
-				{/* </KeyboardAvoidingView> */}
+                    {renderCustomInput('goods', values.goods, handleChange('goods'))}
+                    {renderCustomInput('phone', values.phone, handleChange('phone'))}
+                    {renderCustomInput('truck-type', values.truckType, handleChange('truckType'))}
+                    {renderCustomInput('weight', values.weight, handleChange('weight'))}
+                  </View>
+                )}
+              </Formik>
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
       </BottomSheetView>
     </BottomSheet>
   );
