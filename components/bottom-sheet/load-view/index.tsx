@@ -5,21 +5,23 @@ import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/botto
 import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '@/redux/hooks';
 import { LoadGridCard } from '@/components/cards';
+import Ionicons from '@expo/vector-icons/build/Ionicons';
+import { ButtonBookmark } from '@/components/buttons';
 
-interface LoadVehicleViewItemProps {
+interface LoadViewItemProps {
   recordId: number | null;
 }
 
-export interface LoadVehicleViewBottomSheetRef {
+export interface LoadViewBottomSheetRef {
   open: () => void;
   close: () => void;
 }
 
-const LoadVehicleViewBottomSheet = forwardRef<LoadVehicleViewBottomSheetRef, LoadVehicleViewItemProps>(({ recordId }, ref) => {
+const LoadViewBottomSheet = forwardRef<LoadViewBottomSheetRef, LoadViewItemProps>(({ recordId }, ref) => {
   const { isDarkMode, theme } = useTheme();
   const { t } = useTranslation();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['80%', '50%'], []);
+  const snapPoints = useMemo(() => ['100%'], []);
   const {load} = useAppSelector(state => state.load);
   
   useImperativeHandle(ref, () => ({
@@ -58,6 +60,13 @@ const LoadVehicleViewBottomSheet = forwardRef<LoadVehicleViewBottomSheetRef, Loa
     >
       <BottomSheetView className="flex-1">
         {load && <View className="px-2">
+          <View className="relative flex-row items-center justify-center">
+            <Text className="text-lg font-bold">{t('load')}</Text>
+            <View className="absolute right-0">
+              <ButtonBookmark model={load} paramName='bookmarkedLoadIds' className='!bg-transparent'/>
+            </View>
+          </View>
+          
           <LoadGridCard load={load} showElement isUpdate/>
           </View>}
       </BottomSheetView>
@@ -65,4 +74,4 @@ const LoadVehicleViewBottomSheet = forwardRef<LoadVehicleViewBottomSheetRef, Loa
   );
 });
 
-export default LoadVehicleViewBottomSheet;
+export default LoadViewBottomSheet;
