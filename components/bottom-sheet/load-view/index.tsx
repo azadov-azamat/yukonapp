@@ -370,13 +370,27 @@ const LoadFooter: React.FC<{load: LoadModel, t: TFunction}> = ({ load, t }) => {
       {load.phone && (
         <View className='w-full px-4 py-2.5 rounded-3xl overflow-auto items-center bg-primary'>
           <TouchableOpacity onPress={toggleDropdown}>
-            <Text className="text-base font-medium dark:text-primary-dark text-primary-light">{t ('show-phone-number')}</Text>
+            <Text className="text-base font-medium dark:text-primary-dark text-primary-light">
+              {t('show-phone-number')}
+            </Text>
           </TouchableOpacity>
           {dropdownVisible && (
             <View className='absolute right-0 p-2 px-4 mt-2 space-y-2 bg-white border rounded-lg shadow-xl bottom-12 border-border-color'>
-                      {load.phone && <View><CustomPhoneCall phoneNumber={load.phone} loading={phoneLoading} /></View>}  
-                      {load.telegram && <View><CustomOpenLink url={load.telegram} /> </View>}
-                      {(load.telegram || load.phone) && load.url ? <View><CustomOpenLink url={load.url} text='message-link' /></View> : ''}
+                      {load.phone && (
+                        <View>
+                          <CustomPhoneCall phoneNumber={load.phone} loading={phoneLoading} />
+                        </View>
+                      )}  
+                      {load.telegram && (
+                        <View>
+                          <CustomOpenLink url={load.telegram} />
+                        </View>
+                      )}
+                      {(load.telegram || load.phone) && load.url && (
+                        <View>
+                          <CustomOpenLink url={load.url} text='message-link' />
+                        </View>
+                      )}
             </View>
           )}
         </View>
