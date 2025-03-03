@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "@/redux/store";
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { StyleSheet, View, Platform, StatusBar } from "react-native";
+import { View, StatusBar, Platform } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
@@ -79,12 +79,12 @@ function App() {
       <GestureHandlerRootView style={{ flex: 1, zIndex: 1000000 }}>
         <BottomSheetModalProvider>
           <BottomSheetProvider>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? 10 : 0, backgroundColor: 'white' }}>
             <Stack screenOptions={{ headerShown: false }}>
               {isAuthenticated ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="auth" />}
             </Stack>
             <StatusBar
-              translucent 
+              translucent
               barStyle={isDarkMode ? "light-content" : "dark-content"}
               backgroundColor={'transparent'}
             />

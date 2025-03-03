@@ -1,49 +1,70 @@
 import React, { useRef, ReactNode } from "react";
 import {
   View,
-  Text,
   StyleSheet,
+	Animated,
+	TouchableOpacity,
 } from "react-native";
 import { useTheme } from "@/config/ThemeContext";
-import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { Button, Icon, MD3Colors } from 'react-native-paper';
-import { CustomIconButton } from "@/components/custom";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+// import { CustomIconButton } from "@/components/custom";
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import CustomIconButton from "../custom/icon-button";
 
 interface StickyHeaderProps {
   title?: string;
+  scrollY: Animated.Value;
 }
 
 const HEADER_HEIGHT = 50;
+const SCROLL_THRESHOLD = 30;
 
-const StickyHeader: React.FC<StickyHeaderProps> = () => {
+const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
 
 	const { openEditLoad } = useBottomSheet();
 
+	const backgroundColor = scrollY.interpolate({
+    inputRange: [0, SCROLL_THRESHOLD],
+    outputRange: ["transparent", "#ffffff"], // Transparent → White
+    extrapolate: "clamp",
+  });
+
+  // Icon color transition
+  const iconColor = scrollY.interpolate({
+    inputRange: [0, SCROLL_THRESHOLD],
+    outputRange: ["#ffffff", "#623bff"], // White → Black
+    extrapolate: "clamp",
+  });
+
   return (
-    <View style={[styles.header, { backgroundColor: 'transparent', marginTop: insets.top }]}>
+    <Animated.View
+      style={[styles.header, { backgroundColor, marginTop: insets.top }]}
+      className="px-4"
+    >
       <View style={styles.leftIcons}>
-        <CustomIconButton
-          icon="menu"
-          onPress={() => console.log("Icon clicked")}
-        />
+				<TouchableOpacity onPress={() => console.log("Icon clicked")} style={[styles.iconButton]}>
+					<Animated.Text style={{ color: iconColor }}>
+						<MaterialCommunityIcons name="menu" size={24} />
+					</Animated.Text>
+				</TouchableOpacity>
       </View>
 
       <View style={styles.rightIcons}>
-				<CustomIconButton
-          icon="plus-circle-outline"
-          onPress={() => openEditLoad(0)}
-					style={{marginRight: 0}}
-        />
-        <CustomIconButton
-          icon="bell"
-          onPress={() => console.log("Icon clicked")}
-					style={{marginLeft: 0}}
-        />
+				<TouchableOpacity onPress={() => openEditLoad(0)} style={[styles.iconButton, {marginRight: 14}]}>
+					<Animated.Text style={{ color: iconColor }}>
+						<MaterialCommunityIcons name="plus-circle-outline" size={24} />
+					</Animated.Text>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={() => console.log("Icon clicked")} style={[styles.iconButton]}>
+					<Animated.Text style={{ color: iconColor }}>
+						<MaterialCommunityIcons name="bell" size={24} />
+					</Animated.Text>
+				</TouchableOpacity>
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
@@ -74,6 +95,15 @@ const styles = StyleSheet.create({
   rightIcons: {
     flexDirection: "row",
     gap: 2,
+  },
+	iconButton: {
+    borderRadius: 50, // Circular shape
+    backgroundColor: 'transparent', // No background by default
+    elevation: 0, // ✅ No shadow for Android
+    shadowColor: 'transparent', // ✅ No shadow for iOS
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
   },
 });
 

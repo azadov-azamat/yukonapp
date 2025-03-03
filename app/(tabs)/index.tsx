@@ -1,5 +1,5 @@
 import React from "react";
-import { Keyboard, View, Text, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, StatusBar } from "react-native";
+import { Keyboard, View, Text, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, Animated } from "react-native";
 import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
@@ -21,11 +21,13 @@ import { LoadModal } from '@/components/modal'
 // import { ILoadModel } from "@/interface/redux/load.interface";
 
 const HEADER_HEIGHT = 50;
+const SCROLL_THRESHOLD = 30;
 
 export default function MainPage() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const router = useRouter();
+
 
   const { topSearches, loads, loadingTopSearches, loadingSearchLoads, loadingLoadById } = useAppSelector(state => state.load);
 
@@ -34,6 +36,8 @@ export default function MainPage() {
 
   const [searchText, setSearchText] = React.useState<string>('');
   const [refreshing, setRefreshing] = React.useState(false);
+
+	const scrollY = React.useRef(new Animated.Value(0)).current;
 
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -114,14 +118,13 @@ export default function MainPage() {
         start={{ x: 0, y: 0 }}   // Start from the top
         end={{ x: 0, y: 1 }}     // End at the bottom
       >
-        <StickyHeader />
+        <StickyHeader scrollY={scrollY} />
         <View className="z-10 flex-1 overflow-visible">
-          <ScrollView
+          <Animated.ScrollView
             className="flex-1"
             style={{ paddingTop: (HEADER_HEIGHT + insets.top) }}
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
-            // onScroll={handleScroll}
             scrollEventThrottle={16}
             refreshControl={
               <RefreshControl
@@ -134,8 +137,12 @@ export default function MainPage() {
             }
             bounces={true}
             alwaysBounceVertical={true}
+						onScroll={Animated.event(
+							[{ nativeEvent: { contentOffset: { y: scrollY } } }],
+							{ useNativeDriver: false }
+						)}
           >
-            <View className="flex-1 bg-card-background dark:bg-primary-dark/90 pt-7 rounded-2xl">
+            <View className="flex-1 bg-card-background dark:bg-primary-dark/90 pt-7 mt-5 rounded-2xl">
               <View className="flex-row items-center mx-4 mb-8">
                 <View className="relative justify-center w-full">
                   <TextInput
@@ -219,7 +226,7 @@ export default function MainPage() {
                 }
               </View>
             </View>
-          </ScrollView>
+          </Animated.ScrollView>
         </View>
       </LinearGradient>
       <LoadModal open={openModal} toggle={toggleModal}/>
