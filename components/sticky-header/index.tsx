@@ -11,6 +11,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CustomIconButton from "../custom/icon-button";
+import { router } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 
 interface StickyHeaderProps {
   title?: string;
@@ -23,6 +25,7 @@ const SCROLL_THRESHOLD = 30;
 const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
+	const navigation = useNavigation();
 
 	const { openEditLoad } = useBottomSheet();
 
@@ -58,7 +61,7 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
 						<MaterialCommunityIcons name="plus-circle-outline" size={24} />
 					</Animated.Text>
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => console.log("Icon clicked")} style={[styles.iconButton]}>
+				<TouchableOpacity onPress={() => navigation.navigate("notifications" as never)} style={[styles.iconButton]}>
 					<Animated.Text style={{ color: iconColor }}>
 						<MaterialCommunityIcons name="bell" size={24} />
 					</Animated.Text>

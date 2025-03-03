@@ -420,7 +420,8 @@
     "subscriptions": "Obunalar",
     "payment": "To'lov",
     "just-edit": "E'lon taxrirlash",
-    "create-add": "E'lon qo'shish"
+    "create-add": "E'lon qo'shish",
+    "notifications": "Xabarnomalar"
   },
   "date-range": {
     "title": "Sana",

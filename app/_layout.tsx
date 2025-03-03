@@ -23,13 +23,11 @@ NativeWindStyleSheet.setOutput({
 
 function App() {
   const dispatch = useAppDispatch();
-  const router = useRouter();
   const { auth } = useAppSelector((state) => state.auth);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const { theme, isDarkMode } = useTheme();
-  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -79,17 +77,21 @@ function App() {
       <GestureHandlerRootView style={{ flex: 1, zIndex: 1000000 }}>
         <BottomSheetModalProvider>
           <BottomSheetProvider>
-          <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? 10 : 0, backgroundColor: 'white' }}>
-            <Stack screenOptions={{ headerShown: false }}>
-              {isAuthenticated ? <Stack.Screen name="(tabs)" /> : <Stack.Screen name="auth" />}
-            </Stack>
-            <StatusBar
-              translucent
-              barStyle={isDarkMode ? "light-content" : "dark-content"}
-              backgroundColor={'transparent'}
-            />
-            <Toast />
-          </View>
+						<View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? 10 : 0, backgroundColor: 'white' }}>
+							<Stack screenOptions={{ headerShown: false }}>
+								{isAuthenticated ? (
+									<Stack.Screen name="(tabs)" />
+								) : (
+									<Stack.Screen name="auth" />
+								)}
+							</Stack>
+							<StatusBar
+								translucent
+								barStyle={isDarkMode ? "light-content" : "dark-content"}
+								backgroundColor={'transparent'}
+							/>
+							<Toast />
+						</View>
           </BottomSheetProvider>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>

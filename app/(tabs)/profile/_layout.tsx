@@ -1,23 +1,6 @@
-import { Ionicons } from "@expo/vector-icons";
-import { RelativePathString, Stack, useRouter } from "expo-router";
+import { RelativePathString, Stack } from "expo-router";
 import { useTranslation } from "react-i18next";
-import { Appbar } from 'react-native-paper';
-import { useTheme } from "@/config/ThemeContext";
-
-const CustomHeader = ({ title, goToRoute, rightComponent }: { title: string, goToRoute: string, rightComponent?: React.ReactNode }) => {
-  const router = useRouter();
-  const { isDarkMode } = useTheme();
-  
-  return (
-    <Appbar.Header className="flex-row justify-between px-3 bg-primary-light dark:bg-primary-dark">
-      <Ionicons name="chevron-back" size={28} color={isDarkMode ? "white" : "black"} onPress={() => router.replace(goToRoute as RelativePathString)} />
-      {/* <Appbar.BackAction onPress={() => router.replace(goToRoute as RelativePathString)} /> */}
-      <Appbar.Content title={title} onPress={() => router.replace(goToRoute as RelativePathString)} />
-      {/*<Appbar.Action icon="dots-vertical" onPress={() => router.replace(goToRoute)} />*/}
-      {rightComponent}
-    </Appbar.Header>
-  )
-}
+import CustomHeader from "@/components/custom/header";
 
 export default function ProfileLayout() {
   const { t } = useTranslation();

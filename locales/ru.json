@@ -419,7 +419,8 @@
     "subscriptions": "Подписки",
     "payment": "Оплата",
     "just-edit": "Редактировать",
-    "create-add": "Добавить объявление"
+    "create-add": "Добавить объявление",
+    "notifications": "Уведомления"
   },
   "date-range": {
     "title": "Дата",

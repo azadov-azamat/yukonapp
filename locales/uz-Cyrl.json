@@ -418,7 +418,8 @@
     "subscriptions": "Обуналар",
     "payment": "Тўлов",
 		"just-edit": "Эълон тахрирлаш",
-    "create-add": "Эълон қўшиш"
+    "create-add": "Эълон қўшиш",
+    "notifications": "Хабарномалар"
   },
   "date-range": {
     "title": "Сана",
