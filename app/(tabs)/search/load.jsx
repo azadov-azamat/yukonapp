@@ -295,13 +295,25 @@ const SearchLoadScreen = () => {
 			setPage(previous => previous + 1);
 		}
 
-		const handleMomentumScrollEnd = (event) => {
-			const layoutHeight = event.nativeEvent.layoutMeasurement.height;
-			const contentHeight = event.nativeEvent.contentSize.height;
-			const scrollPosition = event.nativeEvent.contentOffset.y;
+		const [isPastBottom, setIsPastBottom] = React.useState(false);
 
-			if (scrollPosition + layoutHeight >= contentHeight - 20) { // Adjust threshold as needed
+		const loadMoreData = () => {
+			if (cargoLoad) return;
+
+			setTimeout(() => {
 				handleViewMore();
+			}, 1000);
+		};
+
+		const handleScroll = (event) => {
+			const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+			const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height + 50; // 50px past bottom
+
+			if (isAtBottom && !isPastBottom) {
+				setIsPastBottom(true);
+				loadMoreData();
+			} else if (!isAtBottom) {
+				setIsPastBottom(false);
 			}
 		};
 
@@ -314,7 +326,6 @@ const SearchLoadScreen = () => {
 
     return (
       <View className="flex-1">
-
         {origin ?
           <LoadRouteSelector
             origin={origin}
@@ -329,61 +340,68 @@ const SearchLoadScreen = () => {
         }
 
         <View className='my-1'/>
-        {pagination && <View className="flex-row items-center justify-between p-4 mt-2 rounded-md shadow-sm bg-primary-light dark:bg-primary-dark dark:border border-border-color/20">
-          <View>
-            <Text className="text-sm font-bold text-primary-dark dark:text-primary-light">
-              {t ('query-result-message-without-cargo', {
-                count: pagination.totalCount,
-                todayCounter: stats?.loads_today
-                }
-              )}
-            </Text>
-          </View>
-          <CustomButton
-            icon={isGridView ? 'list' : 'grid'} // Icon for toggle
-            isIcon
-            iconSize={18}
-            onPress={toggleView}
-            buttonStyle="bg-primary px-2 py-1"
-          />
-        </View>}
+        {
+					pagination && <View className="flex-row items-center justify-between p-4 mt-2 rounded-md shadow-sm bg-primary-light dark:bg-primary-dark dark:border border-border-color/20">
+						<View>
+							<Text className="text-sm font-bold text-primary-dark dark:text-primary-light">
+								{t ('query-result-message-without-cargo', {
+									count: pagination.totalCount,
+									todayCounter: stats?.loads_today
+									}
+								)}
+							</Text>
+						</View>
+						<CustomButton
+							icon={isGridView ? 'list' : 'grid'} // Icon for toggle
+							isIcon
+							iconSize={18}
+							onPress={toggleView}
+							buttonStyle="bg-primary px-2 py-1"
+						/>
+					</View>
+				}
+
         <View className='my-1'/>
-        {loading ? (
-          <FlatList
-          data={[1, 2, 3, 4, 6, 7]} // Foydalanilmaydigan placeholder massiv
-          keyExtractor={(item) => item.toString()}
-          renderItem={() => <RenderContentLoadItem />}
-        />
-        ) : (
-          <FlatList
-						data={loads}
-						keyExtractor={(item) => item?.id?.toString()}
-						showsVerticalScrollIndicator={false}
-						onMomentumScrollEnd={handleMomentumScrollEnd}
-						ListHeaderComponent={
-							<View>
-							   <CustomBadgeSelector
-							  items={booleanFiltersData}
-							  selectedItems={selectedFitlers}
-							  onChange={onChange}
-							/>
-							  <CustomBadgeSelector
-							  items={truckTypes}
-							  selectedItems={selectedItems}
-							  onChange={handleBadgeChange}
-							/>
-							</View>
-						}
-						ListFooterComponent={cargoLoad ? (
-							<View style={{ padding: 10, alignItems: 'center' }} className={`mb-3 ${(!loads.length || loads.length < limit) && 'hidden'}`}>
-								<ActivityIndicator size={20} color="#623bff" />
-							</View>
-						) : null}
-						ListEmptyComponent={<EmptyStateCard type="load"/>}
-						renderItem={({ item }) => <RenderLoadItem item={item} />}
-						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-					/>
-        )}
+				{
+					loading ? (
+					<FlatList
+					data={[1, 2, 3, 4, 6, 7]} // Foydalanilmaydigan placeholder massiv
+					keyExtractor={(item) => item.toString()}
+					renderItem={() => <RenderContentLoadItem />}
+				/>
+					) : (
+						<FlatList
+							data={loads}
+							keyExtractor={(item) => item?.id?.toString()}
+							showsVerticalScrollIndicator={false}
+							onScroll={handleScroll}
+							// onMomentumScrollEnd={handleMomentumScrollEnd}
+							// onScrollEndDrag={handleScrollEndDrag}
+							ListHeaderComponent={
+								<View>
+									<CustomBadgeSelector
+									items={booleanFiltersData}
+									selectedItems={selectedFitlers}
+									onChange={onChange}
+								/>
+									<CustomBadgeSelector
+									items={truckTypes}
+									selectedItems={selectedItems}
+									onChange={handleBadgeChange}
+								/>
+								</View>
+							}
+							ListFooterComponent={cargoLoad ? (
+								<View style={{ padding: 10, alignItems: 'center' }} className={`mb-3 ${(!loads.length || loads.length < limit) && 'hidden'}`}>
+									<ActivityIndicator size={20} color="#623bff" />
+								</View>
+							) : null}
+							ListEmptyComponent={<EmptyStateCard type="load"/>}
+							renderItem={({ item }) => <RenderLoadItem item={item} />}
+							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+						/>
+					)
+				}
         {/* <LoadModal open={openModal} toggle={toggleModal}/> */}
         <SubscriptionModal open={!!user?.isSubscriptionModal || false} toggle={toggleSubscriptionModal}/>
       </View>
@@ -397,33 +415,33 @@ function SearchInput({searchText, setSearchText, debouncedFetchExtract}) {
 
   return (
     <View className='relative justify-center w-full'>
-          <TextInput
-            mode="outlined"
-            placeholder={t ('search-by-destination')}
-            value={searchText}
-            onChangeText={(text) => setSearchText(text)}
-            className="w-full overflow-auto bg-primary-white dark:bg-primary-dark/30 pl-2.5"
-            returnKeyType="search" // Changes the keyboard button to "Search"
-            theme={{
-              roundness: 25,
-              colors: {
-                outline: '#623bff', // Outline color
-              },
-            }}
-            onSubmitEditing={() => { // Triggered when Enter is pressed
-              Keyboard.dismiss();
-              debouncedFetchExtract();
-            }}
-          />
-          <TouchableOpacity
-            className="absolute items-center justify-center transform translate-y-[-12] rounded-full right-4 top-4 w-9"
-            onPress={() => {
-              Keyboard.dismiss();
-              debouncedFetchExtract();
-            }}>
-            <Ionicons name="search" size={24} color={theme.colors.primary} />
-          </TouchableOpacity>
-        </View>
+			<TextInput
+				mode="outlined"
+				placeholder={t ('search-by-destination')}
+				value={searchText}
+				onChangeText={(text) => setSearchText(text)}
+				className="w-full overflow-auto bg-primary-white dark:bg-primary-dark/30 pl-2.5"
+				returnKeyType="search" // Changes the keyboard button to "Search"
+				theme={{
+					roundness: 25,
+					colors: {
+						outline: '#623bff', // Outline color
+					},
+				}}
+				onSubmitEditing={() => { // Triggered when Enter is pressed
+					Keyboard.dismiss();
+					debouncedFetchExtract();
+				}}
+			/>
+			<TouchableOpacity
+				className="absolute items-center justify-center transform translate-y-[-12] rounded-full right-4 top-4 w-9"
+				onPress={() => {
+					Keyboard.dismiss();
+					debouncedFetchExtract();
+				}}>
+				<Ionicons name="search" size={24} color={theme.colors.primary} />
+			</TouchableOpacity>
+		</View>
   )
 }
 

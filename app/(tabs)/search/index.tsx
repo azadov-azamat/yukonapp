@@ -12,7 +12,7 @@ export default function SearchPage() {
   const [selectedTab, setSelectedTab] = React.useState('load');
   const insets = useSafeAreaInsets();
   const { isDarkMode } = useTheme();
-  
+
   const backgroundColor = isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(226,232,240,0.8)';
 
   React.useEffect(() => {
@@ -35,28 +35,28 @@ export default function SearchPage() {
       };
     }, [isDarkMode])
   );
-  
+
   const tabs: viewSelectorTabs[] = [
     { label: 'bookmarks.load', value: 'load', icon: 'cube' },
     { label: 'bookmarks.vehicle', value: 'vehicle', icon: 'car' },
   ];
-  
-  
+
+
   return (
     <SafeAreaProvider>
-      <ImageBackground 
+      <ImageBackground
         source={require('@/assets/images/background.png')}
         style={{ flex: 1, position: 'absolute', width: '100%', height: '100%' }}
         resizeMode="cover"
       >
-        <View style={{ flex: 1, paddingTop: insets.top, paddingBottom: insets.bottom, paddingLeft: insets.left, paddingRight: insets.right}}>
-          <View className="items-center flex-1 px-4 pt-4 bg-slate-200/80 dark:bg-primary-dark/70">
+        <View style={{ flex: 1, paddingLeft: insets.left, paddingRight: insets.right}}>
+          <View className="items-center flex-1 px-4 pt-4 bg-slate-200/80 dark:bg-primary-dark/70" style={{paddingTop: insets.top + 20}}>
             <ViewSelector
               tabs={tabs}
               selectedTab={selectedTab}
               onTabSelect={(value: string) => setSelectedTab(value)}
             />
-            <View className="flex-1 w-full">
+            <View className="flex-1 w-full mt-2">
               {selectedTab === 'load' && <SearchLoadScreen />}
               {selectedTab === 'vehicle' && <SearchVehicleScreen />}
             </View>
