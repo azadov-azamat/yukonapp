@@ -46,23 +46,37 @@ export default function MainPage() {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
 
-  const params = {
+  const params = React.useMemo(() => ({
     limit: 10,
     sort: '!createdAt',
     isArchived: false,
     isDeleted: false,
-  }
+  }), []); // Memoize params to prevent unnecessary rerenders
 
-	useFocusEffect(
-		React.useCallback(() => {
-			return () => StatusBar.setBackgroundColor("transparent"); // Reset on exit
-		}, [])
-	);
+  // Combined focus effect for data fetching and cleanup
+  useFocusEffect(
+    React.useCallback(() => {
+      let isSubscribed = true;
 
-  React.useEffect(()=> {
-    dispatch(getTopSearches());
-    dispatch(searchLoads(params));
-  }, []);
+      const fetchData = async () => {
+        if (!isSubscribed) return;
+
+        dispatch(clearLoads()); // Clear existing loads first
+        await Promise.all([
+          dispatch(getTopSearches()),
+          dispatch(searchLoads(params))
+        ]);
+      };
+
+      fetchData();
+
+      return () => {
+        isSubscribed = false;
+        dispatch(clearLoads()); // Cleanup when leaving screen
+        StatusBar.setBackgroundColor("transparent"); // Reset StatusBar on exit
+      };
+    }, [params, dispatch])
+  );
 
   React.useEffect(() => {
     if (!openModal) {
@@ -79,7 +93,6 @@ export default function MainPage() {
     }
   }, [viewId])
 
-
   const toggleSetId = (item: any) => {
     setViewId(item.id);
     dispatch(setLoad(item))
@@ -94,6 +107,20 @@ export default function MainPage() {
       fetchExtractCity(searchText);
     }, 300), [searchText]
   )
+
+  // Cleanup for debounced function
+  React.useEffect(() => {
+    return () => {
+      debouncedFetchExtract.cancel();
+    };
+  }, [debouncedFetchExtract]);
+
+  // Cleanup for animated value
+  React.useEffect(() => {
+    return () => {
+      scrollY.removeAllListeners();
+    };
+  }, [scrollY]);
 
   const fetchExtractCity = async (search: string) => {
     if (!search) return;
