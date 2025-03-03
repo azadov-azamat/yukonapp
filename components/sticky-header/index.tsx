@@ -4,6 +4,7 @@ import {
   StyleSheet,
 	Animated,
 	TouchableOpacity,
+  Platform,
 } from "react-native";
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -33,6 +34,14 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
     extrapolate: "clamp",
   });
 
+  const handleIconPress = () => {
+    if (Platform.OS === 'android') {
+      console.log("Navigating to another screen on Android");
+    } else {
+      openEditLoad(0);
+    }
+  };
+  
   return (
     <Animated.View
       style={[styles.header, { backgroundColor }]}
@@ -47,7 +56,7 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
       </View>
 
       <View style={styles.rightIcons}>
-				<TouchableOpacity onPress={() => openEditLoad(0)} style={[styles.iconButton, {marginRight: 14}]}>
+				<TouchableOpacity onPress={handleIconPress} style={[styles.iconButton, {marginRight: 14}]}>
 					<Animated.Text style={{ color: iconColor }}>
 						<MaterialCommunityIcons name="plus-circle-outline" size={24} />
 					</Animated.Text>
