@@ -158,3 +158,20 @@ export const PlanSerializer = new Serializer('plan', {
     'planType',
   ],
 });
+
+export const NotificationSerializer = new Serializer('notification', {
+  attributes: [
+    'title',
+    'message',
+    'status',
+    'nType',
+    'createdAt',
+    'updatedAt',
+  ],
+  relationships: {
+    user: {
+      ref: 'id',
+      attributes: [],
+    },
+  },
+});

@@ -4,6 +4,8 @@ import { NotificationInitialProps } from '@/interface/redux/notification.interfa
 import { deserialize } from '@/utils/general';
 import { INotificationModel } from '@/interface/redux/notification.interface';
 import NotificationModel from '@/models/notification';
+import { NotificationSerializer } from '@/serializers';
+import { deserializeNotification } from '@/utils/deserializer';
 
 export const getNotifications = createAsyncThunk('notification/getNotifications', async (query: any, { rejectWithValue }) => {
   try {
@@ -15,6 +17,16 @@ export const getNotifications = createAsyncThunk('notification/getNotifications'
   } catch (error) {
     return rejectWithValue(error);
   }
+});
+
+export const updateNotification = createAsyncThunk('notification/updateNotification', async (data: Partial<NotificationModel>, { rejectWithValue }) => {
+	try {
+			const response = await http.patch(`/notifications/${data.id}`, NotificationSerializer.serialize(data));
+			let notification = await deserialize(response.data)
+			return deserializeNotification(notification);
+	} catch (error) {
+			return rejectWithValue(error);
+	}
 });
 
 const initialState: NotificationInitialProps = {

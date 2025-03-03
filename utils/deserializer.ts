@@ -9,6 +9,8 @@ import VehicleModel from "@/models/vehicle";
 import SubscriptionModel from "@/models/subscription";
 import CityModel from "@/models/city";
 import CountryModel from "@/models/country";
+import NotificationModel from "@/models/notification";
+import { INotificationModel } from "@/interface/redux/notification.interface";
 
 export const deserializeUser = (data: IUserModel): UserModel => {
     return new UserModel(data);
@@ -37,4 +39,8 @@ export const deserializeCity = (data: ICityModel): CityModel => {
 
 export const deserializeCountry = (data: ICountryModel): CountryModel => {
 	return new CountryModel(data);
+};
+
+export const deserializeNotification = (data: INotificationModel): NotificationModel => {
+	return new NotificationModel(data);
 };

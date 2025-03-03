@@ -3,6 +3,8 @@ import { View, Text, FlatList, StyleSheet } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import type { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
 import { Badge } from 'react-native-paper';
+import { useAppDispatch } from "@/redux/hooks";
+import { getNotifications } from "@/redux/reducers/notification";
 
 type NotificationType = 'job_interest' | 'job_match' | 'project_update' | 'vetting_confirmed';
 
@@ -71,6 +73,11 @@ const NotificationList: React.FC<TabScreenProps> = ({ route }) => {
 const Tab = createMaterialTopTabNavigator<TabParamList>();
 
 const NotificationsScreen = () => {
+	const dispatch = useAppDispatch();
+	React.useEffect(() => {
+		dispatch(getNotifications({}));
+	}, [])
+
   return (
     <Tab.Navigator
 			screenOptions={{
