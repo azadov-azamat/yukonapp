@@ -40,6 +40,7 @@ export const OPTIONS = {
         { value: 'isWebAd', label: 'is-web-ad' },
         { value: 'isDagruz', label: 'dagruz' },
         { value: 'hasPrepayment', label: 'has-prepayment' }
-    ]
+    ],
+    'currencies': ['UZS', 'USD', 'RUB']
   };
-  
+    

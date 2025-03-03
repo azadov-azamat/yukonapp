@@ -29,3 +29,15 @@ export const vehicleValidationSchema = Yup.object().shape({
 	truckType: Yup.string().required("errors.enter-required"),
 	weight: Yup.number().positive().required("errors.enter-required"),
 });
+
+// Define Yup validation schema
+export const adsValidationSchema = Yup.object().shape({
+  goods: Yup.string().required('Goods are required'),
+  phone: Yup.string().required('Phone is required'),
+  // truckType: Yup.string().required('Truck type is required'),
+  weight: Yup.number().required('Weight is required').positive('Weight must be positive'),
+  originCountry: Yup.object().nullable().required('Origin country is required'),
+  destinationCountry: Yup.object().nullable().required('Destination country is required'),
+  originCity: Yup.object().nullable().required('Origin city is required'),
+  destinationCity: Yup.object().nullable().required('Destination city is required'),
+});

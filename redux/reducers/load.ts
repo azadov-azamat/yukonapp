@@ -5,6 +5,7 @@ import { deserialize } from "@/utils/general";
 import { deserializeLoad } from "@/utils/deserializer";
 import { LoadSerializer } from "@/serializers";
 import { UrlParamsDataProps } from "@/interface/search/search.interface";
+import LoadModel from "@/models/load";
 
 // Fetch Bookmarks Searches
 export const getBookmarks = createAsyncThunk('load/getBookmarks', async (data, { rejectWithValue }) => {
@@ -82,7 +83,7 @@ export const getLoadById = createAsyncThunk('load/getLoadById', async (id: strin
 });
 
 // Patch Load by ID
-export const updateLoad = createAsyncThunk('load/updateLoad', async (data: Partial<ILoadModel>, { rejectWithValue }) => {
+export const updateLoad = createAsyncThunk('load/updateLoad', async (data: LoadModel, { rejectWithValue }) => {
     try {
         const response = await http.patch(`/loads/${data.id}`, LoadSerializer.serialize(data));
         let load = await deserialize(response.data)

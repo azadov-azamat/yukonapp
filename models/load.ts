@@ -43,6 +43,7 @@ export default class LoadModel implements ILoadModel {
   originCountry?: ICountryModel;
   destinationCity?: ICityModel;
   destinationCountry?: ICountryModel;
+  currency: "UZS" | "USD" | "RUB" = "UZS";
   createdAt?: string;
   updatedAt?: string;
   
