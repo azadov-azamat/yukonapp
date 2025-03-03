@@ -15,7 +15,7 @@ import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/conte
 import { startLoading, stopLoading } from '@/redux/reducers/variable'
 import { LoadModal, SubscriptionModal } from '@/components/modal'
 import { updateUserSubscriptionModal } from '@/redux/reducers/auth'
-import { TextInput } from "react-native-paper";
+import { TextInput, ActivityIndicator } from "react-native-paper";
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from "@/config/ThemeContext";
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
@@ -30,7 +30,7 @@ const SearchLoadScreen = () => {
     const {user} = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
     const { openLoadView } = useBottomSheet();
-    
+
     const [dateRange, setDateRange] = React.useState([]);
     const truckTypes = OPTIONS['truck-types'].filter(item => item.value !== 'not_specified');
     const booleanFiltersData = OPTIONS['boolean-filters'];
@@ -44,23 +44,23 @@ const SearchLoadScreen = () => {
     const [selectedFitlers, setSelectedFilters] = React.useState([]);
     const [limit, setLimit] = React.useState(10);
     const [page, setPage] = React.useState(1);
-    
+
     const arrival = route.params?.arrival;
-    const departure = route.params?.departure; 
-    
+    const departure = route.params?.departure;
+
     const [searchText, setSearchText] = React.useState(arrival ? `${arrival} ${departure}` : '');
-    
+
     const [origin, setOrigin] = React.useState(null);
     const [destination, setDestination] = React.useState(null);
     const [viewId, setViewId] = React.useState(null);
     const [isGridView, setIsGridView] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
-    
-    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard changes={true} onPress={() => toggleSetId(item)} load={item} /> : 
+
+    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard changes={true} onPress={() => toggleSetId(item)} load={item} /> :
                                                                 <LoadGridCard onPress={() => toggleSetId(item)} load={item} />);
     const RenderContentLoadItem = React.memo(() => isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
-  
+
     const toggleView = () => {
       setIsGridView((prev) => !prev);
     };
@@ -68,12 +68,12 @@ const SearchLoadScreen = () => {
     const toggleModal = () => {
       setOpenModal(!openModal)
     };
-    
+
     const toggleSetId = (item) => {
       openLoadView(item.id);
       dispatch(setLoad(item))
     }
-    
+
     const debouncedFetchExtract = React.useCallback(
       debounce(() => {
         fetchExtractCity();
@@ -85,7 +85,7 @@ const SearchLoadScreen = () => {
         fetchLoads();
       }, 300),
     )
-    
+
     React.useEffect(() => {
       if (viewId) {
         toggleModal();
@@ -100,7 +100,7 @@ const SearchLoadScreen = () => {
         setViewId(null);
       }
     }, [openModal])
-    
+
     // 3. Arrival va departure page yuklanganda o'rnatiladi
     React.useEffect(() => {
       if (arrival) {
@@ -133,7 +133,7 @@ const SearchLoadScreen = () => {
         handleClear();
       }
     }, []);
-    
+
     const onRefresh = () => {
       if (arrival || origin) {
         setRefreshing(true);
@@ -149,7 +149,7 @@ const SearchLoadScreen = () => {
         }, 2000); // 2 soniyalik kechikish
       }
     };
-    
+
     const handleSwapCities = () => {
       setOrigin((prevOrigin) => {
         const prevDestination = destination;
@@ -173,7 +173,7 @@ const SearchLoadScreen = () => {
       dispatch(clearLoads());
       dispatch(stopLoading());
     };
-    
+
     const handleBadgeChange = (value) => {
       setSelectedItems((prevSelected) =>
         prevSelected.includes(value)
@@ -252,19 +252,19 @@ const SearchLoadScreen = () => {
     }
 
     const fetchLoads = async () => {
-        try {
-          if (!origin) {
-            dispatch(clearLoads());
-            return;
-          }
-    
-          const params = requestParams();
-          await dispatch(searchLoads(params));
-        } catch (error) {
-          console.error('Error fetching loads:', error);
-        } finally {
-          dispatch(stopLoading());
-        }
+			try {
+				if (!origin) {
+					dispatch(clearLoads());
+					return;
+				}
+
+				const params = requestParams();
+				await dispatch(searchLoads(params));
+			} catch (error) {
+				console.error('Error fetching loads:', error);
+			} finally {
+				dispatch(stopLoading());
+			}
     };
 
     const onChange = (value) => {
@@ -279,7 +279,7 @@ const SearchLoadScreen = () => {
       );
       checkAndFetch();
     };
-    
+
     const checkAndFetch =()=> {
       if (origin) {
         setPage(1);
@@ -287,16 +287,23 @@ const SearchLoadScreen = () => {
         debouncedFetchExtract();
       }
     }
-  
+
     const isLast = pagination?.totalPages === page;
-    
-    const handleViewMore = () => {
-      if (isLast) {
-        dispatch(clearLoads())
-      } else {
-        setPage(previous => previous + 1);
-      }
-    }
+
+		const handleViewMore = () => {
+			if (isLast) return;
+			setPage(previous => previous + 1);
+		}
+
+		const handleMomentumScrollEnd = (event) => {
+			const layoutHeight = event.nativeEvent.layoutMeasurement.height;
+			const contentHeight = event.nativeEvent.contentSize.height;
+			const scrollPosition = event.nativeEvent.contentOffset.y;
+
+			if (scrollPosition + layoutHeight >= contentHeight - 20) { // Adjust threshold as needed
+				handleViewMore();
+			}
+		};
 
     const toggleSubscriptionModal = (fetch = true) => {
       dispatch(updateUserSubscriptionModal())
@@ -304,20 +311,20 @@ const SearchLoadScreen = () => {
         toggleModal();
       }
     }
-    
+
     return (
       <View className="flex-1">
-        
-        {origin ? 
+
+        {origin ?
           <LoadRouteSelector
             origin={origin}
             destination={destination}
             onClear={handleClear}
             onSwapCities={handleSwapCities}
-          /> : <SearchInput 
-                searchText={searchText} 
-                setSearchText={setSearchText} 
-                debouncedFetchExtract={debouncedFetchExtract} 
+          /> : <SearchInput
+                searchText={searchText}
+                setSearchText={setSearchText}
+                debouncedFetchExtract={debouncedFetchExtract}
               />
         }
 
@@ -349,39 +356,33 @@ const SearchLoadScreen = () => {
         />
         ) : (
           <FlatList
-              data={loads}
-              keyExtractor={(item) => item?.id?.toString()}
-              showsVerticalScrollIndicator={false}
-              // ItemSeparatorComponent={separatorComp}
-              ListHeaderComponent={
-                <View>
-                   <CustomBadgeSelector
-                  items={booleanFiltersData}
-                  selectedItems={selectedFitlers}
-                  onChange={onChange}
-                />
-                  <CustomBadgeSelector
-                  items={truckTypes}
-                  selectedItems={selectedItems}
-                  onChange={handleBadgeChange}
-                />
-                </View>
-              }
-              ListFooterComponent={<View className={`mb-3 ${(!loads.length || loads.length < limit) && 'hidden'}`}>
-                <CustomButton
-                    title={t (isLast ? 'show-less' : 'show-more', {
-                      nextIndex: page * limit,
-                      count: pagination?.totalCount
-                    })}
-                    buttonStyle='bg-primary'
-                    onPress={handleViewMore}
-                    loading={cargoLoad}
-                />
-              </View>}
-              ListEmptyComponent={<EmptyStateCard type="load"/>}
-              renderItem={({ item }) => <RenderLoadItem item={item} />}
-              refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          />
+						data={loads}
+						keyExtractor={(item) => item?.id?.toString()}
+						showsVerticalScrollIndicator={false}
+						onMomentumScrollEnd={handleMomentumScrollEnd}
+						ListHeaderComponent={
+							<View>
+							   <CustomBadgeSelector
+							  items={booleanFiltersData}
+							  selectedItems={selectedFitlers}
+							  onChange={onChange}
+							/>
+							  <CustomBadgeSelector
+							  items={truckTypes}
+							  selectedItems={selectedItems}
+							  onChange={handleBadgeChange}
+							/>
+							</View>
+						}
+						ListFooterComponent={cargoLoad ? (
+							<View style={{ padding: 10, alignItems: 'center' }} className={`mb-3 ${(!loads.length || loads.length < limit) && 'hidden'}`}>
+								<ActivityIndicator size={20} color="#623bff" />
+							</View>
+						) : null}
+						ListEmptyComponent={<EmptyStateCard type="load"/>}
+						renderItem={({ item }) => <RenderLoadItem item={item} />}
+						refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+					/>
         )}
         {/* <LoadModal open={openModal} toggle={toggleModal}/> */}
         <SubscriptionModal open={!!user?.isSubscriptionModal || false} toggle={toggleSubscriptionModal}/>
