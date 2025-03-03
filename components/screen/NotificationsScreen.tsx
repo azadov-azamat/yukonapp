@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import React from "react";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import type { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
+import { Badge } from 'react-native-paper';
 
 type NotificationType = 'job_interest' | 'job_match' | 'project_update' | 'vetting_confirmed';
 
@@ -14,9 +15,8 @@ type Notification = {
 
 type NotificationsData = {
   all: Notification[];
-  community: Notification[];
-  jobs: Notification[];
-  profile: Notification[];
+  ads: Notification[];
+  news: Notification[];
 };
 
 const notificationsData: NotificationsData = {
@@ -26,16 +26,13 @@ const notificationsData: NotificationsData = {
     { id: "3", type: "project_update", title: "Brandy Kennedy posted a new project: Plants vs. Zombies", company: "Community" },
     { id: "4", type: "vetting_confirmed", title: "✅ Your credits for Asgard's Wrath have been vetted", company: "System" },
   ],
-  community: [
+  ads: [
     { id: "3", type: "project_update", title: "Brandy Kennedy posted a new project: Plants vs. Zombies", company: "Community" },
   ],
-  jobs: [
+  news: [
     { id: "1", type: "job_interest", title: "🎉 You have been invited to an interview at Rockstar Games!", company: "Rockstar Games" },
     { id: "2", type: "job_match", title: "Sound Engineer position available at EA", company: "Electronic Arts" },
-  ],
-  profile: [
-    { id: "4", type: "vetting_confirmed", title: "✅ Your credits for Asgard's Wrath have been vetted", company: "System" },
-  ],
+  ]
 };
 
 // Get counts for tabs
@@ -44,7 +41,8 @@ const getTabCount = (tab: keyof NotificationsData) => notificationsData[tab].len
 // Component for displaying notification items
 const NotificationItem = ({ item }: { item: Notification }) => {
   return (
-    <View style={[styles.notificationItem, getNotificationStyle(item.type)]}>
+    <View style={styles.notificationItem}>
+			<Badge style={[getNotificationStyle(item.type), { paddingHorizontal: 10, alignSelf: 'flex-start', marginBottom: 10, borderRadius: 5 }]} size={20}>{item.type}</Badge>
       <Text style={styles.title}>{item.title}</Text>
       <Text style={styles.company}>{item.company}</Text>
     </View>
@@ -53,9 +51,8 @@ const NotificationItem = ({ item }: { item: Notification }) => {
 
 type TabParamList = {
   'All': undefined;
-  'Community': undefined;
-  'Jobs': undefined;
-  'Profile': undefined;
+  'Ads': undefined;
+  'News': undefined;
 };
 
 type TabScreenProps = MaterialTopTabScreenProps<TabParamList>;
@@ -75,11 +72,20 @@ const Tab = createMaterialTopTabNavigator<TabParamList>();
 
 const NotificationsScreen = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="All" options={{ title: `All (${getTabCount("all")})` }} component={NotificationList} />
-      <Tab.Screen name="Community" options={{ title: `Community (${getTabCount("community")})` }} component={NotificationList} />
-      <Tab.Screen name="Jobs" options={{ title: `Jobs (${getTabCount("jobs")})` }} component={NotificationList} />
-      <Tab.Screen name="Profile" options={{ title: `Profile (${getTabCount("profile")})` }} component={NotificationList} />
+    <Tab.Navigator
+			screenOptions={{
+				tabBarStyle: {
+					// padding: 1
+				},
+			}}
+		>
+      <Tab.Screen
+        name="All"
+        options={{ title: `All (${getTabCount("all")})`}}
+        component={NotificationList}
+      />
+      <Tab.Screen name="Ads" options={{ title: `Ads (${getTabCount("ads")})` }} component={NotificationList} />
+      <Tab.Screen name="News" options={{ title: `News (${getTabCount("news")})` }} component={NotificationList} />
     </Tab.Navigator>
   );
 };
@@ -88,26 +94,25 @@ const NotificationsScreen = () => {
 const getNotificationStyle = (type: NotificationType) => {
   switch (type) {
     case "job_interest":
-      return { backgroundColor: "#ffebee", borderLeftColor: "#e53935" };
+      return { backgroundColor: "#ffcc00", borderLeftColor: "#ff6d00" };
     case "job_match":
-      return { backgroundColor: "#e3f2fd", borderLeftColor: "#1e88e5" };
+      return { backgroundColor: "#00b8d9", borderLeftColor: "#007acc" };
     case "project_update":
-      return { backgroundColor: "#f3e5f5", borderLeftColor: "#8e24aa" };
+      return { backgroundColor: "#ff99cc", borderLeftColor: "#e040fb" };
     case "vetting_confirmed":
-      return { backgroundColor: "#e8f5e9", borderLeftColor: "#43a047" };
+      return { backgroundColor: "#4caf50", borderLeftColor: "#008c00" };
     default:
-      return { backgroundColor: "#f5f5f5", borderLeftColor: "#bdbdbd" };
+      return { backgroundColor: "#f9f9f9", borderLeftColor: "#e0e0e0" };
   }
 };
 
 // Styles
 const styles = StyleSheet.create({
   notificationItem: {
-    padding: 15,
-    marginVertical: 5,
-    marginHorizontal: 10,
-    borderRadius: 8,
-    borderLeftWidth: 6,
+    paddingHorizontal: 25,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+		borderColor: "#ced4da",
   },
   title: {
     fontSize: 16,

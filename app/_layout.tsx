@@ -80,7 +80,7 @@ function App() {
 						<View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? 10 : 0, backgroundColor: 'white' }}>
 							<Stack screenOptions={{ headerShown: false }}>
 								{isAuthenticated ? (
-									<Stack.Screen name="(tabs)" />
+									<Stack.Screen name="(tabs)" options={{ animation: "slide_from_left" }} />
 								) : (
 									<Stack.Screen name="auth" />
 								)}

@@ -20,6 +20,7 @@ export default function NotificationsPage() {
 							goToRoute={"(tabs)" as RelativePathString}
 						/>
 					),
+					// animation: "slide_from_left",
 				}}
 			/>
 
