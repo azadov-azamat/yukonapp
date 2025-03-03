@@ -1,5 +1,5 @@
 import React from "react";
-import { Keyboard, View, Text, ScrollView, StyleSheet, RefreshControl, TouchableOpacity, Animated } from "react-native";
+import { Keyboard, View, Text, StyleSheet, RefreshControl, TouchableOpacity, Animated, StatusBar } from "react-native";
 import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
@@ -18,7 +18,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { LoadModal } from '@/components/modal'
-// import { ILoadModel } from "@/interface/redux/load.interface";
+import { useFocusEffect } from "@react-navigation/native";
 
 const HEADER_HEIGHT = 50;
 const SCROLL_THRESHOLD = 30;
@@ -27,7 +27,6 @@ export default function MainPage() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const router = useRouter();
-
 
   const { topSearches, loads, loadingTopSearches, loadingSearchLoads, loadingLoadById } = useAppSelector(state => state.load);
 
@@ -38,6 +37,11 @@ export default function MainPage() {
   const [refreshing, setRefreshing] = React.useState(false);
 
 	const scrollY = React.useRef(new Animated.Value(0)).current;
+	const statusBarBackgroundColor = scrollY.interpolate({
+		inputRange: [15, SCROLL_THRESHOLD],
+		outputRange: ["#623bff", "#FFFFFF"], // From purple to white on scroll
+		extrapolate: "clamp",
+	});
 
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -48,6 +52,12 @@ export default function MainPage() {
     isArchived: false,
     isDeleted: false,
   }
+
+	useFocusEffect(
+		React.useCallback(() => {
+			return () => StatusBar.setBackgroundColor("transparent"); // Reset on exit
+		}, [])
+	);
 
   React.useEffect(()=> {
     dispatch(getTopSearches());
@@ -111,6 +121,10 @@ export default function MainPage() {
 
   return (
     <View style={{ flex: 1 }}>
+			<Animated.View style={{ backgroundColor: statusBarBackgroundColor, height: insets.top, padding: 0, margin: 0 }}>
+				<StatusBar translucent barStyle="dark-content" />
+			</Animated.View>
+
       <LinearGradient
         colors={['#623bff', '#CCADFF', '#FFFFFF']}
         locations={[0, 0.5, 1]}  // 50% gradient, 50% white
@@ -122,7 +136,7 @@ export default function MainPage() {
         <View className="z-10 flex-1 overflow-visible">
           <Animated.ScrollView
             className="flex-1"
-            style={{ paddingTop: (HEADER_HEIGHT + insets.top) }}
+            style={{ paddingTop: HEADER_HEIGHT }}
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
             scrollEventThrottle={16}

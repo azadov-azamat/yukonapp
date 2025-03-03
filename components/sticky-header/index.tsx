@@ -41,7 +41,7 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
 
   return (
     <Animated.View
-      style={[styles.header, { backgroundColor, marginTop: insets.top }]}
+      style={[styles.header, { backgroundColor }]}
       className="px-4"
     >
       <View style={styles.leftIcons}>
