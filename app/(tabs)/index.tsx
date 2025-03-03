@@ -43,7 +43,7 @@ export default function MainPage() {
 		extrapolate: "clamp",
 	});
 
-  const { theme } = useTheme();
+	const { theme, isDarkMode } = useTheme();
   const insets = useSafeAreaInsets();
 
   const params = React.useMemo(() => ({
@@ -149,7 +149,11 @@ export default function MainPage() {
   return (
     <View style={{ flex: 1 }}>
 			<Animated.View style={{ backgroundColor: statusBarBackgroundColor, height: insets.top, padding: 0, margin: 0 }}>
-				<StatusBar translucent barStyle="dark-content" />
+				<StatusBar
+					translucent
+					barStyle={isDarkMode ? "light-content" : "dark-content"}
+					backgroundColor={'transparent'}
+				/>
 			</Animated.View>
 
       <LinearGradient
