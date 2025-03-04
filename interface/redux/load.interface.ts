@@ -5,6 +5,8 @@ import { defaultData, ICityModel, ICountryModel } from "./variable.interface";
 export interface LoadInitialProps {
     load: LoadModel | null;
     loads: LoadModel[] | [];
+		latestLoads: LoadModel[] | [];
+		loadingLatestLoads: boolean;
     bookmarks: LoadModel[] | [];
     topSearches: DirectionItemProps[] | [];
     pagination: any;

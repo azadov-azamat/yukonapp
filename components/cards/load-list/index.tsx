@@ -39,7 +39,7 @@ const LoadCard = ({load, onPress, showElement = false, showIcon = false, changes
       </View>
 
       <View className="items-end">
-      <Text className="text-sm text-border-color">{dateFromNow(load.publishedDate || load.createdAt || '')}</Text>
+      <Text className="text-sm text-border-color">{dateFromNow(load.createdAt || '')}</Text>
     </View>
     </View>
   </ParentComponent>

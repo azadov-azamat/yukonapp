@@ -3,7 +3,7 @@ import { Keyboard, View, Text, StyleSheet, RefreshControl, TouchableOpacity, Ani
 import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
-import { clearLoads, getTopSearches, searchLoads, setLoad, clearLoad, getLoadById } from "@/redux/reducers/load";
+import { getTopSearches, setLoad, fetchLatestLoads, getLoadById } from "@/redux/reducers/load";
 import { ContentLoaderTopSearches } from "@/components/content-loader";
 import { debounce } from 'lodash';
 import { getExtractCity } from "@/redux/reducers/city";
@@ -28,11 +28,10 @@ export default function MainPage() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const { topSearches, loads, loadingTopSearches, loadingSearchLoads, loadingLoadById } = useAppSelector(state => state.load);
+  const { topSearches, latestLoads, loadingTopSearches, loadingLatestLoads, loadingLoadById } = useAppSelector(state => state.load);
 
   const [viewId, setViewId] = React.useState(null);
   const [openModal, setOpenModal] = React.useState(false);
-
   const [searchText, setSearchText] = React.useState<string>('');
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -46,37 +45,26 @@ export default function MainPage() {
 	const { theme, isDarkMode } = useTheme();
   const insets = useSafeAreaInsets();
 
-  const params = React.useMemo(() => ({
-    limit: 10,
-    sort: '!createdAt',
-    isArchived: false,
-    isDeleted: false,
-  }), []); // Memoize params to prevent unnecessary rerenders
-
   // Combined focus effect for data fetching and cleanup
-  useFocusEffect(
-    React.useCallback(() => {
-      let isSubscribed = true;
+  React.useEffect(() => {
+		let isSubscribed = true;
 
-      const fetchData = async () => {
-        if (!isSubscribed) return;
+		const fetchData = async () => {
+			if (!isSubscribed) return;
 
-        dispatch(clearLoads()); // Clear existing loads first
-        await Promise.all([
-          dispatch(getTopSearches()),
-          dispatch(searchLoads(params))
-        ]);
-      };
+			await Promise.all([
+				dispatch(getTopSearches()),
+				dispatch(fetchLatestLoads())
+			]);
+		};
 
-      fetchData();
+		fetchData();
 
-      return () => {
-        isSubscribed = false;
-        dispatch(clearLoads()); // Cleanup when leaving screen
-        StatusBar.setBackgroundColor("transparent"); // Reset StatusBar on exit
-      };
-    }, [params, dispatch])
-  );
+		return () => {
+			isSubscribed = false;
+			StatusBar.setBackgroundColor("transparent"); // Reset StatusBar on exit
+		};
+	}, []);
 
   React.useEffect(() => {
     if (!openModal) {
@@ -128,7 +116,6 @@ export default function MainPage() {
     const cityResponse = await dispatch(getExtractCity({ search })).unwrap();
     const { origin: fetchedOrigin, destination: fetchedDestination } = cityResponse;
     if (!fetchedOrigin) {
-      dispatch(clearLoads());
       return;
     }
 
@@ -140,8 +127,7 @@ export default function MainPage() {
     setRefreshing(true);
 
 		dispatch(getTopSearches());
-		dispatch(searchLoads(params));
-		dispatch(clearLoads());
+		dispatch(fetchLatestLoads());
 
     setRefreshing(false);
   };
@@ -226,9 +212,9 @@ export default function MainPage() {
                 </Text>
 
                 {
-                  !loadingSearchLoads ? (
+                  !loadingLatestLoads ? (
                     <FlashList
-                      data={loads}
+                      data={latestLoads}
                       keyExtractor={(item, index) => `${item.id}-${index}`}
                       ListEmptyComponent={<EmptyStateCard type="load" />}
                       renderItem={({ item }) => <LatestLoadCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />}

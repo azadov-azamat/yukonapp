@@ -33,7 +33,7 @@ const LatestLoadCard = ({load, onPress, showElement = false}: loadCardInterfaceP
       </View>
 
       <View className="items-end">
-      <Text className="text-sm text-gray-600">{dateFromNow(load.publishedDate || load.createdAt || '')}</Text>
+      <Text className="text-sm text-gray-600">{dateFromNow(load.createdAt || '')}</Text>
     </View>
     </View>
   </ParentComponent>

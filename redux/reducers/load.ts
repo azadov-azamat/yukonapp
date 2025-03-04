@@ -53,6 +53,24 @@ export const searchLoads = createAsyncThunk('load/searchLoads', async (query: an
     }
 });
 
+export const fetchLatestLoads = createAsyncThunk('load/latestLoads', async (_, { rejectWithValue }) => {
+	try {
+			const query = {
+				limit: 10,
+				sort: '!createdAt',
+				isArchived: false,
+				isDeleted: false,
+			}
+			const response = await http.get('/loads', { params: query });
+			let deserializedData = await deserialize(response.data)
+			deserializedData.map((item: ILoadModel) => deserializeLoad(item));
+
+			return deserializedData;
+	} catch (error) {
+			return rejectWithValue(error);
+	}
+});
+
 // Fetch Load by ID
 export const getLoadById = createAsyncThunk('load/getLoadById', async (id: string, { rejectWithValue }) => {
     try {
@@ -86,6 +104,7 @@ export const createLoad = createAsyncThunk('load/createLoad', async (data: ILoad
 
 const initialState: LoadInitialProps = {
     loads: [],
+		latestLoads: [],
     bookmarks: [],
     load: null,
     topSearches: [],
@@ -95,6 +114,7 @@ const initialState: LoadInitialProps = {
     loadingTopSearches: false,
     loadingSearchLoads: false,
     loadingLoadById: false,
+		loadingLatestLoads: false,
 };
 
 export const loadSlice = createSlice({
@@ -167,6 +187,21 @@ export const loadSlice = createSlice({
             state.loading = false;
             state.loadingSearchLoads = false;
         });
+
+				// Latest Loads
+				builder.addCase(fetchLatestLoads.fulfilled, (state, action) => {
+					state.latestLoads = action.payload;
+					state.loadingLatestLoads = false;
+				});
+				builder.addCase(fetchLatestLoads.pending, (state) => {
+					state.loading = true;
+					state.loadingLatestLoads = true;
+				});
+				builder.addCase(fetchLatestLoads.rejected, (state) => {
+					state.loading = false;
+					state.loadingLatestLoads = false;
+					state.latestLoads = [];
+				});
 
         // Get Load by ID
         builder.addCase(getLoadById.fulfilled, (state, action) => {
