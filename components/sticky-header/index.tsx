@@ -1,4 +1,4 @@
-import React, { useRef, ReactNode } from "react";
+import React from "react";
 import {
   View,
   StyleSheet,
@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 
 interface StickyHeaderProps {
   title?: string;
@@ -19,6 +19,7 @@ const HEADER_HEIGHT = 50;
 const SCROLL_THRESHOLD = 30;
 
 const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
+  const router = useRouter();
 	const { openEditLoad } = useBottomSheet();
 
 	const backgroundColor = scrollY.interpolate({
@@ -36,7 +37,7 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
 
   const handleIconPress = () => {
     if (Platform.OS === 'android') {
-      console.log("Navigating to another screen on Android");
+      router.push('/profile/android/load/create');
     } else {
       openEditLoad(0);
     }

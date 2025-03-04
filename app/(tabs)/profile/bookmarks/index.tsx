@@ -15,7 +15,7 @@ export default function BookmarksPage() {
   
   
   return (
-    <View className="items-center flex-1 px-4 pt-4 bg-gray-100">
+    <View className="items-center flex-1 px-4 pt-4 bg-primary-light dark:bg-primary-dark">
       <ViewSelector
         tabs={tabs}
         selectedTab={selectedTab}

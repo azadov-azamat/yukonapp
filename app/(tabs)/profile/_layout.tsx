@@ -1,4 +1,4 @@
-import { RelativePathString, Stack } from "expo-router";
+import { RelativePathString, Stack, useLocalSearchParams } from "expo-router";
 import { useTranslation } from "react-i18next";
 import CustomHeader from "@/components/custom/header";
 
@@ -62,6 +62,23 @@ export default function ProfileLayout() {
               goToRoute={"/profile" as RelativePathString} // Navigate back to Profile
             />
           ),
+        }}
+      />
+       {/* android/load/edit-load subroute */}
+       <Stack.Screen
+        name="android/load/[edit-create]"
+        options={() => {
+          const params = useLocalSearchParams(); 
+          const param = params['edit-create'];
+
+          return {
+            header: () => (
+              <CustomHeader
+                title={param === 'create' ? t ("pages.create-add") : t ("pages.just-edit")}
+                goToRoute={"/" as RelativePathString}
+              />
+            ),
+          };
         }}
       />
     </Stack>
