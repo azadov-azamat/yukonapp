@@ -5,6 +5,8 @@ import variable from './reducers/variable'
 import card from './reducers/card'
 import vehicle from './reducers/vehicle'
 import country from './reducers/country'
+import notification from './reducers/notification'
+import notificationSettings from './reducers/notificationSettings'
 
 export const reducer = {
     auth,
@@ -14,4 +16,6 @@ export const reducer = {
 		card,
 		vehicle,
 		country,
+    notification,
+    notificationSettings,
 }

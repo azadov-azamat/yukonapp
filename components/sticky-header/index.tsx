@@ -5,14 +5,9 @@ import {
 	Animated,
 	TouchableOpacity,
 } from "react-native";
-import { useTheme } from "@/config/ThemeContext";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-// import { CustomIconButton } from "@/components/custom";
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CustomIconButton from "../custom/icon-button";
 import { router } from "expo-router";
-import { useNavigation } from "@react-navigation/native";
 
 interface StickyHeaderProps {
   title?: string;
@@ -23,10 +18,6 @@ const HEADER_HEIGHT = 50;
 const SCROLL_THRESHOLD = 30;
 
 const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
-  const { theme } = useTheme();
-  const insets = useSafeAreaInsets();
-	const navigation = useNavigation();
-
 	const { openEditLoad } = useBottomSheet();
 
 	const backgroundColor = scrollY.interpolate({
@@ -61,7 +52,7 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
 						<MaterialCommunityIcons name="plus-circle-outline" size={24} />
 					</Animated.Text>
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => navigation.navigate("notifications" as never)} style={[styles.iconButton]}>
+				<TouchableOpacity onPress={() => router.push("/notifications")} style={[styles.iconButton]}>
 					<Animated.Text style={{ color: iconColor }}>
 						<MaterialCommunityIcons name="bell" size={24} />
 					</Animated.Text>

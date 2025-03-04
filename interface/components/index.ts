@@ -82,6 +82,7 @@ export interface HeaderProps {
     title: string; // Title of the header
     goToRoute: RelativePathString | ExternalPathString; // Route to navigate when back button is clicked
     rightComponent?: React.ReactNode;
+    headerStyle?: StyleProp<ViewStyle>;
 }
 
 export interface InputSelectorProps<T> {
