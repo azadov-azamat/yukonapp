@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { Keyboard, View, Text, StyleSheet, RefreshControl, TouchableOpacity, Animated, StatusBar } from "react-native";
 import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -36,35 +36,42 @@ export default function MainPage() {
   const [refreshing, setRefreshing] = React.useState(false);
 
 	const scrollY = React.useRef(new Animated.Value(0)).current;
-	const statusBarBackgroundColor = scrollY.interpolate({
-		inputRange: [15, SCROLL_THRESHOLD],
-		outputRange: ["#623bff", "#FFFFFF"], // From purple to white on scroll
-		extrapolate: "clamp",
-	});
+	const statusBarBackgroundColor = useMemo(() =>
+		scrollY.interpolate({
+			inputRange: [15, SCROLL_THRESHOLD],
+			outputRange: ["#623bff", "#FFFFFF"],
+			extrapolate: "clamp",
+		}),
+	[scrollY]);
 
 	const { theme, isDarkMode } = useTheme();
   const insets = useSafeAreaInsets();
 
   // Combined focus effect for data fetching and cleanup
-  React.useEffect(() => {
-		let isSubscribed = true;
+  useEffect(() => {
+    const abortController = new AbortController();
+    let isSubscribed = true;
 
-		const fetchData = async () => {
-			if (!isSubscribed) return;
+    const fetchData = async () => {
+      if (!isSubscribed) return;
+      try {
+        await Promise.all([
+          dispatch(getTopSearches()),
+          dispatch(fetchLatestLoads())
+        ]);
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
+    };
 
-			await Promise.all([
-				dispatch(getTopSearches()),
-				dispatch(fetchLatestLoads())
-			]);
-		};
+    fetchData();
 
-		fetchData();
-
-		return () => {
-			isSubscribed = false;
-			StatusBar.setBackgroundColor("transparent"); // Reset StatusBar on exit
-		};
-	}, []);
+    return () => {
+      isSubscribed = false;
+      abortController.abort();
+      StatusBar.setBackgroundColor("transparent");
+    };
+  }, []);
 
   React.useEffect(() => {
     if (!openModal) {
@@ -81,14 +88,29 @@ export default function MainPage() {
     }
   }, [viewId])
 
-  const toggleSetId = (item: any) => {
-    setViewId(item.id);
-    dispatch(setLoad(item))
-  }
+  // Memoize child components
+  const MemoizedLatestLoadCard = React.memo(LatestLoadCard);
+  const MemoizedPopularDirectionCard = React.memo(PopularDirectionCard);
+  const MemoizedContentLoader = React.memo(ContentLoaderTopSearches);
 
-  const toggleModal = () => {
-    setOpenModal(!openModal)
-  };
+  // Memoize callbacks
+  const toggleSetId = useCallback((item: any) => {
+    setViewId(item.id);
+    dispatch(setLoad(item));
+  }, [dispatch]);
+
+  const toggleModal = useCallback(() => {
+    setOpenModal(prev => !prev);
+  }, []);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await Promise.all([
+      dispatch(getTopSearches()),
+      dispatch(fetchLatestLoads())
+    ]);
+    setRefreshing(false);
+  }, [dispatch]);
 
   const debouncedFetchExtract = React.useCallback(
     debounce(() => {
@@ -123,14 +145,16 @@ export default function MainPage() {
     router.push(`/(tabs)/search?arrival=${getCityName(fetchedOrigin)}&departure=${getCityName(fetchedDestination)}`)
   }
 
-  const onRefresh = () => {
-    setRefreshing(true);
+  const getItemKey = useCallback((item: any, index: number) =>
+    `${item.id}-${index}`, []);
 
-		dispatch(getTopSearches());
-		dispatch(fetchLatestLoads());
-
-    setRefreshing(false);
-  };
+  const renderLatestLoad = useCallback(({ item }: { item: any }) => (
+    <MemoizedLatestLoadCard
+      onPress={() => toggleSetId(item)}
+      load={item}
+      close={toggleModal}
+    />
+  ), [toggleSetId, toggleModal]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -215,16 +239,15 @@ export default function MainPage() {
                   !loadingLatestLoads ? (
                     <FlashList
                       data={latestLoads}
-                      keyExtractor={(item, index) => `${item.id}-${index}`}
-                      ListEmptyComponent={<EmptyStateCard type="load" />}
-                      renderItem={({ item }) => <LatestLoadCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />}
+                      keyExtractor={getItemKey}
+                      renderItem={renderLatestLoad}
                       estimatedItemSize={100}
                     />
                   ) : (
                     <FlashList
                       data={[1, 2, 3, 4, 5]}
                       keyExtractor={(item) => item.toString()}
-                      renderItem={() => <ContentLoaderTopSearches />}
+                      renderItem={() => <MemoizedContentLoader />}
                       estimatedItemSize={50} // ✅ Adjust for smaller placeholders
                     />
                   )
@@ -243,14 +266,14 @@ export default function MainPage() {
                       data={topSearches}
                       keyExtractor={(item, index) => `${item.origin.id}-${item.destination.id}-${index}`}
                       ListEmptyComponent={<EmptyStateCard type="load" />}
-                      renderItem={({ item }) => <PopularDirectionCard {...item} />}
+                      renderItem={({ item }) => <MemoizedPopularDirectionCard {...item} />}
                       estimatedItemSize={100}
                     />
                   ) : (
                     <FlashList
                       data={[1, 2, 3, 4, 5]}
                       keyExtractor={(item) => item.toString()}
-                      renderItem={() => <ContentLoaderTopSearches />}
+                      renderItem={() => <MemoizedContentLoader />}
                       estimatedItemSize={50} // ✅ Adjust for smaller placeholders
                     />
                   )

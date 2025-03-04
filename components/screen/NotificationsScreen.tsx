@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import type { MaterialTopTabScreenProps } from '@react-navigation/material-top-tabs';
+import { View, Text, FlatList, StyleSheet, useWindowDimensions } from "react-native";
+import { TabView, TabBar } from 'react-native-tab-view';
 import { Badge } from 'react-native-paper';
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getNotifications } from "@/redux/reducers/notification";
@@ -23,24 +22,15 @@ const NotificationItem = ({ item }: { item: INotificationModel }) => {
   );
 };
 
-type TabParamList = {
-  All: undefined;
-  Ads: undefined;
-  News: undefined;
-};
-
-type TabScreenProps = MaterialTopTabScreenProps<TabParamList>;
-
-const NotificationList: React.FC<TabScreenProps> = ({ route }) => {
+const NotificationList = ({ type }: { type: string }) => {
   const notifications = useAppSelector((state: RootState) => state.notification.notifications) || [];
-  const tabName = route.name.toLowerCase();
 
   const filteredNotifications = React.useMemo(() => {
-    if (tabName === 'all') return notifications;
+    if (type === 'all') return notifications;
     return notifications.filter((notification: INotificationModel) =>
-      notification.nType.toLowerCase().includes(tabName)
+      notification.nType.toLowerCase().includes(type)
     );
-  }, [notifications, tabName]);
+  }, [notifications, type]);
 
   return (
     <FlatList
@@ -51,67 +41,63 @@ const NotificationList: React.FC<TabScreenProps> = ({ route }) => {
   );
 };
 
-const Tab = createMaterialTopTabNavigator<TabParamList>();
-
 export const NotificationsScreen = () => {
   const dispatch = useAppDispatch();
-  const notifications = useAppSelector((state: RootState) => state.notification.notifications) || [];
-  const [selectedTab, setSelectedTab] = useState<NotificationType>('all');
+  // const notifications = useAppSelector((state: RootState) => state.notification.notifications) || [];
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'all', title: 'ALL' },
+    { key: 'ads', title: 'ADS'},
+    { key: 'news', title: 'NEWS' }
+  ]);
 
   useEffect(() => {
     dispatch(getNotifications({}));
   }, [dispatch]);
 
-  const getTabCount = (type: NotificationType) => {
-    if (type === 'all') return notifications.length;
-    return notifications.filter((notification: INotificationModel) => notification.nType === type).length;
-  };
+  // const getTabCount = (type: NotificationType) => {
+  //   if (type === 'all') return notifications.length;
+  //   return notifications.filter((notification: INotificationModel) => notification.nType === type).length;
+  // };
 
-  const filteredNotifications = notifications.filter((notification: INotificationModel) => {
-    if (selectedTab === 'all') return true;
-    return notification.nType === selectedTab;
-  });
+  // const renderTabLabel = (label: string, count: number, focused: boolean) => (
+  //   <View style={styles.tabLabel}>
+  //     <Text style={[styles.tabText, focused && styles.tabTextFocused]}>{label}</Text>
+  //     <View style={[styles.badge, focused && styles.badgeFocused]}>
+  //       <Text style={[styles.badgeText, focused && styles.badgeTextFocused]}>{count}</Text>
+  //     </View>
+  //   </View>
+  // );
 
-  const renderTabLabel = (label: string, count: number, focused: boolean) => (
-    <View style={styles.tabLabel}>
-      <Text style={[styles.tabText, focused && styles.tabTextFocused]}>{label}</Text>
-      <View style={[styles.badge, focused && styles.badgeFocused]}>
-        <Text style={[styles.badgeText, focused && styles.badgeTextFocused]}>{count}</Text>
-      </View>
-    </View>
+  const renderScene = ({ route }: { route: { key: string } }) => (
+    <NotificationList type={route.key} />
+  );
+
+  const renderTabBar = (props: any) => (
+    <TabBar
+      {...props}
+			// renderLabel={({ route, focused }: { route: { key: string; title: string }; focused: boolean }) =>
+			// 	renderTabLabel(route.title, getTabCount(route.key as NotificationType), focused)
+			// }
+      style={styles.tabBar}
+      indicatorStyle={styles.indicator}
+      activeColor="#623bff"
+      inactiveColor="#666"
+      pressColor="transparent"
+      tabStyle={{ elevation: 0 }}
+    />
   );
 
   return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: {
-          borderTopWidth: 1,
-          borderTopColor: "#ced4da",
-        },
-      }}
-    >
-      <Tab.Screen
-        name="All"
-        options={{
-          tabBarLabel: ({focused}) => renderTabLabel('ALL', getTabCount('all'), focused),
-        }}
-        component={NotificationList}
-      />
-      <Tab.Screen
-        name="Ads"
-        options={{
-          tabBarLabel: ({focused}) => renderTabLabel('ADS', getTabCount('ads'), focused),
-        }}
-        component={NotificationList}
-      />
-      <Tab.Screen
-        name="News"
-        options={{
-          tabBarLabel: ({focused}) => renderTabLabel('NEWS', getTabCount('news'), focused),
-        }}
-        component={NotificationList}
-      />
-    </Tab.Navigator>
+    <TabView
+      navigationState={{ index, routes }}
+      renderScene={renderScene}
+      onIndexChange={setIndex}
+      initialLayout={{ width: layout.width }}
+      renderTabBar={renderTabBar}
+    />
   );
 };
 
@@ -174,6 +160,14 @@ const styles = StyleSheet.create({
   },
   badgeTextFocused: {
     fontWeight: 'bold',
+  },
+  tabBar: {
+    backgroundColor: 'white',
+    borderTopWidth: 1,
+    borderTopColor: "#ced4da",
+  },
+  indicator: {
+    backgroundColor: '#623bff',
   },
 });
 
