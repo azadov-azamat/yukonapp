@@ -421,7 +421,8 @@
     "payment": "To'lov",
     "just-edit": "E'lon taxrirlash",
     "create-add": "E'lon qo'shish",
-    "notifications": "Xabarnomalar"
+    "notifications": "Xabarnomalar",
+    "notifications-config": "Xabarnomalar sozlamasi"
   },
   "date-range": {
     "title": "Sana",
@@ -429,6 +430,16 @@
     "yesterday": "Kechagi",
     "last-three-days": "3 kunlik"
   },
-  "subscription_date": "Obuna muddati"
+  "subscription_date": "Obuna muddati",
+	"notifications": {
+		"title": "Xabarnomalar",
+		"preferences": "Xabarnomalar sozlamasi",
+		"types": "Xabarnomalar turi",
+		"newsUpdates": "Yangiliklar",
+		"ads": "E'lonlar",
+		"textMessages": "Matn xabarlari",
+		"pushNotifications": "Push xabarlari",
+		"emailNotifications": "Elektron pochta xabarlari"
+	}
 }
 

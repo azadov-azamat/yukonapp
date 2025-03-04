@@ -20,7 +20,7 @@ export default function NotificationsLayout() {
           headerShown: true,
           header: () => (
             <CustomHeader
-              title={t ("pages.notifications")}
+              title={t ("pages.notifications-config")}
               goToRoute={"/notifications" as RelativePathString}
             />
           ),

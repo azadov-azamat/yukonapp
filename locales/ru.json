@@ -420,7 +420,8 @@
     "payment": "Оплата",
     "just-edit": "Редактировать",
     "create-add": "Добавить объявление",
-    "notifications": "Уведомления"
+    "notifications": "Уведомления",
+    "notifications-config": "Настройки уведомлений"
   },
   "date-range": {
     "title": "Дата",
@@ -428,5 +429,15 @@
     "yesterday": "Вчера",
     "last-three-days": "последние 3 дня"
   },
-  "subscription_date": "Срок подписки"
+  "subscription_date": "Срок подписки",
+  "notifications": {
+    "title": "Уведомления",
+    "preferences": "Настройки уведомлений",
+    "types": "Типы уведомлений",
+    "newsUpdates": "Новости",
+    "ads": "Объявления",
+    "textMessages": "Текстовые сообщения",
+    "pushNotifications": "Push-уведомления",
+    "emailNotifications": "Электронные уведомления"
+  }
 }

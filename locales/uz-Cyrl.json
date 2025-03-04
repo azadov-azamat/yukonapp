@@ -419,7 +419,8 @@
     "payment": "Тўлов",
 		"just-edit": "Эълон тахрирлаш",
     "create-add": "Эълон қўшиш",
-    "notifications": "Хабарномалар"
+    "notifications": "Хабарномалар",
+    "notifications-config": "Хабарномалар созламаси"
   },
   "date-range": {
     "title": "Сана",
@@ -427,5 +428,15 @@
     "yesterday": "Кечаги",
     "last-three-days": "3 кунлик"
   },
-  "subscription_date": "Обуна муддати"
+  "subscription_date": "Обуна муддати",
+  "notifications": {
+    "title": "Хабарномалар",
+    "preferences": "Хабарномалар созламаси",
+    "types": "Хабарномалар турлари",
+    "newsUpdates": "Янгиликлар",
+    "ads": "Еълонлар",
+    "textMessages": "Текст хабарномалар",
+    "pushNotifications": "Push хабарномалар",
+    "emailNotifications": "Электрон почта хабарномалар"
+  }
 }
