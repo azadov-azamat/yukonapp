@@ -12,14 +12,14 @@ const EditLoad = () => {
   const dispatch = useAppDispatch();
   const params = useLocalSearchParams(); 
   
-  const { load } = useAppSelector(state => state.load);
+  // const { load } = useAppSelector(state => state.load);
   const param = params['edit-create'];
   
-  React.useEffect(() => {
-    if (param !== 'create') {
-      dispatch(getLoadById(param as string));
-    }
-  }, [param]);  
+  // React.useEffect(() => {
+  //   if (param !== 'create') {
+  //     dispatch(getLoadById(param as string));
+  //   }
+  // }, [param]);  
   
   return (
     <SafeAreaProvider style={{ flex: 1, paddingLeft: 10, paddingRight: 10 }}>
@@ -29,7 +29,7 @@ const EditLoad = () => {
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
             >
-        <AdsFormComponent recordId={load ? Number(load.id) : 0} />
+        <AdsFormComponent recordId={param !== 'create' ? Number(param) : 0} />
       </ScrollView>
     </SafeAreaProvider>
   );
