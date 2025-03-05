@@ -1,8 +1,8 @@
-import {  Text, TouchableOpacity, View, TextInput } from 'react-native'
+import {  Text, TouchableOpacity, View, TextInput, Switch } from 'react-native'
 import React from 'react'
 import { ICountryModel } from '@/interface/redux/variable.interface'
 import { Formik } from 'formik'
-import { capitalize, set } from 'lodash';
+import { capitalize, set, values } from 'lodash';
 import { ICityModel } from '@/interface/redux/variable.interface';
 import { getCities, getCountryCities } from '@/redux/reducers/city';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
@@ -20,6 +20,8 @@ import { LoadSerializer } from '@/serializers';
 import VehicleModel from '@/models/vehicle';
 import CityModel from '@/models/city';
 import { DatePickerModal } from 'react-native-paper-dates';
+import CountryModel from '@/models/country';
+import { useTheme } from '@/config/ThemeContext';
 
 const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 'load' | 'vehicle'}> = ({recordId, close, model = 'load'}) => {
     const dispatch = useAppDispatch();
@@ -31,6 +33,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     const { vehicle } = useAppSelector((state) => state.vehicle);
     const { allCountries, countries, loading: countryLoading } = useAppSelector((state) => state.country);
     const { countryCities } = useAppSelector((state) => state.city);
+    const { theme } = useTheme();
     const [originCities, setOriginCities] = React.useState<ICityModel[]>([]);
     const [destinationCities, setDestinationCities] = React.useState<ICityModel[]>([]);
     const [originLoading, setOriginLoading] = React.useState(false);
@@ -72,13 +75,17 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         if (recordId !== 0) {
             dispatch(getLoadById(recordId.toString()));
         }
-
-        if (price && prepaymentPercentage) {
-            const calculatedAmount = (parseFloat(price) * parseFloat(prepaymentPercentage) / 100).toFixed(2);
-            setPrepaymentAmount(calculatedAmount);
-        }
     }, [recordId]);
 
+    React.useEffect(() => {
+        if (formikRef.current?.values.price && prepaymentPercentage) {
+            const calculatedAmount = (parseFloat(formikRef.current?.values.price) * parseFloat(prepaymentPercentage) / 100).toFixed(2);
+            setPrepaymentAmount(calculatedAmount);
+        } else {
+            setPrepaymentAmount('');    
+        }
+    }, [formikRef.current?.values.price, prepaymentPercentage]);
+    
     // console.log("countryCities", countryCities);
     const adTypes = [
         { value: 'load', label: t('bookmarks.load'), icon: 'cube-outline' as const},
@@ -189,7 +196,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     
     React.useEffect(() => {
         if (selectedAdType === 'load') {
-            if (load) {
+            if (recordId !== 0 && load) {
                 setRecord(load);
                 handleCountryChange(load.originCountry as ICountryModel, formikRef.current.setFieldValue, 'originCountry')
                 if  (load.destinationCountry) {
@@ -208,7 +215,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 setRecord(new LoadModel({}));
             }
         } else if (selectedAdType === 'vehicle') {
-            if (vehicle) {
+            if (recordId !== 0 && vehicle) {
                 setRecord(vehicle);
             } else {
                 setRecord(new VehicleModel({}));
@@ -234,17 +241,21 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     //  });
     console.log(values  );
 
-    //  console.log("values", LoadSerializer.serialize(updatedModel));
+    //  console.log("values", LoadSerializer.serialize(values));
     //  console.log("updateLoad", updatedModel);
      
     //  if (recordId === 0) {
     //    await dispatch(createLoad(updatedModel));
     //  } else {
-    //    await dispatch(updateLoad({ id: recordId, ...updatedModel }));
+       if (model === 'load') {
+        await dispatch(updateLoad(values as LoadModel));
+       } else {
+        // await dispatch(updateVehicle(values));
+       }
     //  }
 
-     close?.();
-                    resetFormValues();
+    //  close?.();
+                    // resetFormValues();
    }}
   >
     {({ handleChange, handleSubmit, setFieldValue, values, errors }) => (
@@ -295,7 +306,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 'country',
                 t('select-country'), 
                 values.originCountry, 
-                (item: ICountryModel) => handleCountryChange(item, setFieldValue, 'originCountry'), 
+                (item: CountryModel) => handleCountryChange(item, setFieldValue, 'originCountry'), 
                 () => onClearOriginCountry(setFieldValue), allCountries, countryLoading, false, 'name' + capitalize(currentLanguage), 'id', 
                 (query, items) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase())))
             }
@@ -303,7 +314,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
           <View className="pt-4">
             {renderCustomInputSelector('city', t('select-city'), 
             values.originCity, 
-            (item: ICityModel) => handleCityChange(item, setFieldValue, 'originCity'), 
+            (item: CityModel) => handleCityChange(item, setFieldValue, 'originCity'), 
             () => onClearOriginCity(setFieldValue), getSortedCitiesByCountryId(values.originCountry?.id as any), originLoading, !values.originCountry, 'name' + capitalize(currentLanguage), 'id', 
             (query, items) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase())))}
           </View>
@@ -313,18 +324,21 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 {t ("where-to")}
             </Text>
             <View className="pt-4">
-                {selectedAdType === 'load' && 'destinationCountry' in values && renderCustomInputSelector('country', t('select-country'), 
-                                                                        values.destinationCountry,
-                                                                        (item: ICountryModel) => handleCountryChange(item, setFieldValue, 'destinationCountry'), 
+                {selectedAdType === 'load' && (renderCustomInputSelector('country', t('select-country'), 
+                                                                        (values as LoadModel).destinationCountry, 
+                                                                        (item: CountryModel) => handleCountryChange(item, setFieldValue, 'destinationCountry'), 
                                                                         () => onClearDestinationCountry(setFieldValue), allCountries, countryLoading, !values.originCountry, 'name' + capitalize(currentLanguage), 'id', 
-                                                                        (query, items) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase())))}
+                                                                        (query, items) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))))}
             </View>
             <View className="pt-4">
-                {selectedAdType === 'load' && 'destinationCity' in values && renderCustomInputSelector('city', t('select-city'), 
-                                                                        values.destinationCity, 
-                                                                        (item: ICityModel) => handleCityChange(item, setFieldValue, 'destinationCity'), 
-                                                                        () => onClearDestinationCity(setFieldValue), getSortedCitiesByCountryId(values.destinationCountry?.id as any), destinationLoading, !values.destinationCountry, 'name' + capitalize(currentLanguage), 'id', 
-                                                                        (query, items) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase())))}
+                {selectedAdType === 'load' &&   (renderCustomInputSelector('city', t('select-city'), 
+                                                                        (values as LoadModel).destinationCity,
+                                                                        (item: CityModel) => handleCityChange(item, setFieldValue, 'destinationCity'), 
+                                                                        () => onClearDestinationCity(setFieldValue), 
+                                                                        getSortedCitiesByCountryId((values as LoadModel).destinationCountry?.id as any), 
+                                                                        destinationLoading, 
+                                                                        !(values as LoadModel).destinationCountry, 'name' + capitalize(currentLanguage), 'id', 
+                                                                        (query, items) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))))}
             </View>
           </>}
         </View>
@@ -375,15 +389,15 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         
         {renderCustomInput('weight', values.weight?.toString(), handleChange('weight'))}
 
-        {selectedAdType === 'load' && 'currency' in values && <View className="flex-row items-end space-x-2">
+        {selectedAdType === 'load' && <View className="flex-row items-end space-x-2">
           <View className="flex-1">
-            {renderCustomInput('price', values.price?.toString(), (text) => setPrice(text))}
+            {renderCustomInput('price', (values as LoadModel).price?.toString(), handleChange('price'))}
           </View>
           <View className="w-24">
             {renderCustomInputSelector(
                 'currency',
                 t('loads.currency'), 
-                values.currency,
+                (values as LoadModel).currency,
                 handleChange('currency'),
                 () => setFieldValue('currency', ''),
                 OPTIONS['currencies'],
@@ -398,7 +412,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
           </View>
         </View>}
         {selectedAdType === 'load' && 'loadReadyDate' in values && (
-            <View className="pt-4">
+            <View className="">
                 <TouchableOpacity onPress={() => setOpen(true)}>
                     <CustomInput
                         label={t('loads.load-ready-date')}
@@ -424,17 +438,29 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         )}
         {renderCustomInput('description', values.description, handleChange('description'))}
 
-        <View className="pt-4">
-            <TouchableOpacity onPress={() => setPrepayment(!prepayment)}>
-                <Text>{t('prepayment')}</Text>
-            </TouchableOpacity>
-            {prepayment && (
-                <>
-                    {renderCustomInput('prepaymentPercentage', prepaymentPercentage, (text) => setPrepaymentPercentage(text))}
-                    <Text>{t('prepaymentAmount')}: {prepaymentAmount}</Text>
-                </>
-            )}
+        <View className="flex-row items-center space-x-2 p-2.5">
+            <Text className='text-lg font-semibold text-gray-700 capitalize dark:text-white'>
+                {t('prepayment')}
+            </Text>
+            <Switch
+                value={prepayment}
+                onValueChange={setPrepayment}
+                trackColor={{ false: theme.colors.backdrop, true: theme.colors.primary }}
+                thumbColor={theme.colors.primary}
+            />
         </View>
+        {prepayment && (
+            <>
+                {renderCustomInput('prepaymentPercentage', prepaymentPercentage, (text) => setPrepaymentPercentage(text))}
+                <CustomInput
+                        label={t('prepaymentAmount')}
+                        value={prepaymentAmount}
+                        onChangeText={() => {}}
+                        editable={false}
+                        divClass='mt-4'
+                    />
+            </>
+        )}
         <CustomButton onPress={handleSubmit} buttonStyle={'bg-primary my-4'} title={t('save')} />
       </View>
     )}

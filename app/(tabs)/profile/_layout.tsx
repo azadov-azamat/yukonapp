@@ -64,23 +64,6 @@ export default function ProfileLayout() {
           ),
         }}
       />
-       {/* android/load/edit-load subroute */}
-       <Stack.Screen
-        name="android/load/[edit-create]"
-        options={() => {
-          const params = useLocalSearchParams(); 
-          const param = params['edit-create'];
-
-          return {
-            header: () => (
-              <CustomHeader
-                title={param === 'create' ? t ("pages.create-add") : t ("pages.just-edit")}
-                goToRoute={"/" as RelativePathString}
-              />
-            ),
-          };
-        }}
-      />
     </Stack>
   );
 }

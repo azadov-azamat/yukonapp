@@ -7,7 +7,8 @@ import AdsFormComponent from '@/components/forms/ads-form';
 import { getLoadById } from '@/redux/reducers/load';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-const EditLoad = () => {
+
+const AdsEditCreate = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const params = useLocalSearchParams(); 
@@ -35,4 +36,4 @@ const EditLoad = () => {
   );
 };
 
-export default EditLoad;
+export default AdsEditCreate;

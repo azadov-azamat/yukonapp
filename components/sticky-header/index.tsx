@@ -37,9 +37,9 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
 
   const handleIconPress = () => {
     if (Platform.OS === 'android') {
-      router.push('/profile/android/load/988306');
+      router.push('/android/ads/create');
     } else {
-      openEditLoad(988306);
+      openEditLoad(0);
     }
   };
   

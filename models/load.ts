@@ -1,12 +1,14 @@
 import { http } from "@/config/api";
 import { ILoadModel } from "@/interface/redux/load.interface";
-import { ICityModel, ICountryModel } from "@/interface/redux/variable.interface";
+// import { ICityModel, ICountryModel } from "@/interface/redux/variable.interface";
 import { updateLoad } from "@/redux/reducers/load";
 import { removePhoneNumbers } from "@/utils/general";
 import Toast from "react-native-toast-message";
 import UserModel from "./user";
 import { updateUserSubscriptionModal } from "@/redux/reducers/auth";
 import { phoneLoad } from "@/redux/reducers/variable";
+import CityModel from "./city";
+import CountryModel from "./country";
 
 export default class LoadModel implements ILoadModel {
   id = null;
@@ -39,10 +41,10 @@ export default class LoadModel implements ILoadModel {
   publishedDate: Date | null = null;
   loading = false;
   isWebAd = true;
-  originCity?: ICityModel;
-  originCountry?: ICountryModel;
-  destinationCity?: ICityModel;
-  destinationCountry?: ICountryModel;
+  originCity?: CityModel;
+  originCountry?: CountryModel;
+  destinationCity?: CityModel;
+  destinationCountry?: CountryModel;
   currency: "UZS" | "USD" | "RUB" = "UZS";
   createdAt?: string;
   updatedAt?: string;

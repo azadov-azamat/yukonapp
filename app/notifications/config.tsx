@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Switch } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import type { RootState } from '@/redux/store';
+
 import {
   togglePushNotifications,
   toggleEmailNotifications,
@@ -14,7 +14,7 @@ import {
 export default function NotificationsConfigScreen() {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const settings = useAppSelector((state: RootState) => state.notificationSettings);
+  const settings = useAppSelector((state) => state.notificationSettings);
 
   const handleToggle = (action: any) => {
     dispatch(action());

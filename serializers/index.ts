@@ -1,5 +1,9 @@
 // serializers.ts for React Native
 
+import CityModel from '@/models/city';
+import CountryModel from '@/models/country';
+import LoadModel from '@/models/load';
+import UserModel from '@/models/user';
 import { Serializer } from 'jsonapi-serializer';
 
 // User Serializer
@@ -29,10 +33,10 @@ export const LoadSerializer = new Serializer('load', {
   attributes: [
     'originCityName',
     'destinationCityName',
-    // 'originCity',
-    // 'destinationCity',
-    // 'originCountry',
-    // 'destinationCountry',
+    'originCity',
+    'destinationCity',
+    'originCountry',
+    'destinationCountry',
     'loadReadyDate',
     'openMessageCounter',
     'phoneViewCounter',
@@ -60,26 +64,28 @@ export const LoadSerializer = new Serializer('load', {
   ],
   relationships: {
     owner: {
-      ref: 'id',
+      ref: (load: LoadModel, owner: UserModel) => owner.id,
       attributes: [],
     },
     originCity: {
-      ref: 'id',
-      attributes: [],
+      ref: (load: LoadModel, originCity: CityModel) => originCity.id,
+      attributes: ['nameUz', 'nameRu', 'nameEn'],
     },
     originCountry: {
-      ref: 'id',
-      attributes: [],
+      ref: (load: LoadModel, originCountry: CountryModel) => originCountry.id,
+      attributes: ['nameUz', 'nameRu', 'nameEn'],
     },
     destinationCity: {
-      ref: 'id',
-      attributes: [],
+      ref: (load: LoadModel, destinationCity: CityModel) => destinationCity.id,
+      attributes: ['nameUz', 'nameRu', 'nameEn'],
     },
     destinationCountry: {
-      ref: 'id',
-      attributes: [],
+      ref: (load: LoadModel, destinationCountry: CountryModel) => destinationCountry.id,
+      attributes: ['nameUz', 'nameRu', 'nameEn'],
     },
   },
+  keyForAttribute: 'camelCase',
+  include: ['originCity', 'originCountry', 'destinationCity', 'destinationCountry'],
 });
 
 // Vehicle Serializer

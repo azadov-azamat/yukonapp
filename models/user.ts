@@ -3,6 +3,7 @@ import { IUserModel } from '@/interface/redux/user.interface';
 import { updateUser } from '@/redux/reducers/auth';
 
 export default class UserModel implements IUserModel {
+  id: number = 0;
   firstName: string = '';
   lastName: string = '';
   phone: string = '';

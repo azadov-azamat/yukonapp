@@ -19,6 +19,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { LoadModal } from '@/components/modal'
 import { useFocusEffect } from "@react-navigation/native";
+import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 
 const HEADER_HEIGHT = 50;
 const SCROLL_THRESHOLD = 30;
@@ -46,6 +47,17 @@ export default function MainPage() {
 
 	const { theme, isDarkMode } = useTheme();
   const insets = useSafeAreaInsets();
+<<<<<<< HEAD
+=======
+  const { openLoadView } = useBottomSheet();
+  
+  const params = React.useMemo(() => ({
+    limit: 10,
+    sort: '!createdAt',
+    isArchived: false,
+    isDeleted: false,
+  }), []); // Memoize params to prevent unnecessary rerenders
+>>>>>>> e39e4e3 (load price and percantage)
 
   // Combined focus effect for data fetching and cleanup
   useEffect(() => {
@@ -197,7 +209,7 @@ export default function MainPage() {
 							{ useNativeDriver: false }
 						)}
           >
-            <View className="flex-1 bg-card-background dark:bg-primary-dark/90 pt-7 mt-5 rounded-2xl">
+            <View className="flex-1 mt-5 bg-card-background dark:bg-primary-dark/90 pt-7 rounded-2xl">
               <View className="flex-row items-center mx-4 mb-8">
                 <View className="relative justify-center w-full">
                   <TextInput
@@ -205,7 +217,7 @@ export default function MainPage() {
                     placeholder={t ('search-by-destination')}
                     value={searchText}
                     onChangeText={(text) => setSearchText(text)}
-                    className="w-full overflow-auto shadow bg-primary-white dark:bg-primary-dark-sm pl-2.5"
+                    className="w-full overflow-auto shadow bg-transparent dark:bg-primary-dark-sm pl-2.5"
                     returnKeyType="search" // Changes the keyboard button to "Search"
                     theme={{
                       roundness: 25,
