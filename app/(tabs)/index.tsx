@@ -35,6 +35,7 @@ export default function MainPage() {
   const [openModal, setOpenModal] = React.useState(false);
   const [searchText, setSearchText] = React.useState<string>('');
   const [refreshing, setRefreshing] = React.useState(false);
+  const { openLoadView } = useBottomSheet();
 
 	const scrollY = React.useRef(new Animated.Value(0)).current;
 	const statusBarBackgroundColor = useMemo(() =>
@@ -47,17 +48,6 @@ export default function MainPage() {
 
 	const { theme, isDarkMode } = useTheme();
   const insets = useSafeAreaInsets();
-<<<<<<< HEAD
-=======
-  const { openLoadView } = useBottomSheet();
-  
-  const params = React.useMemo(() => ({
-    limit: 10,
-    sort: '!createdAt',
-    isArchived: false,
-    isDeleted: false,
-  }), []); // Memoize params to prevent unnecessary rerenders
->>>>>>> e39e4e3 (load price and percantage)
 
   // Combined focus effect for data fetching and cleanup
   useEffect(() => {
@@ -93,7 +83,7 @@ export default function MainPage() {
 
   React.useEffect(() => {
     if (viewId) {
-      toggleModal();
+      openLoadView(viewId);
       dispatch(getLoadById(viewId));
     } else {
       // dispatch(clearLoad())

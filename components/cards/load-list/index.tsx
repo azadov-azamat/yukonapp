@@ -32,14 +32,14 @@ const LoadCard = ({load, onPress, showElement = false, showIcon = false, changes
 
     <View className="flex-row items-center justify-between flex-1 w-full mt-1">
     <View className="flex-row items-center">
-        <Text className="text-sm text-border-color/40">{t ('truck-type.' + load.cargoType)}</Text>
+        <Text className="text-sm text-primary-descr-color dark:text-border-color/40">{t ('truck-type.' + load.cargoType)}</Text>
         <TouchableOpacity className="ml-2">
           <Text className="font-bold text-primary">{t (load.isWebAd ? 'site' : 'telegram')}</Text>
         </TouchableOpacity>
       </View>
 
       <View className="items-end">
-      <Text className="text-sm text-border-color">{dateFromNow(load.createdAt || '')}</Text>
+      <Text className="text-sm text-primary-descr-color dark:text-border-color/40">{dateFromNow(load.createdAt || '')}</Text>
     </View>
     </View>
   </ParentComponent>

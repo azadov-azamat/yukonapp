@@ -69,10 +69,10 @@ const SearchLoadScreen = () => {
       setOpenModal(!openModal)
     };
 
-    const toggleSetId = (item) => {
-      openLoadView(item.id);
-      dispatch(setLoad(item))
-    }
+    const toggleSetId = React.useCallback((item) => {
+      setViewId(item.id);
+      dispatch(setLoad(item));
+    }, [dispatch]);
 
     const debouncedFetchExtract = React.useCallback(
       debounce(() => {
@@ -88,7 +88,7 @@ const SearchLoadScreen = () => {
 
     React.useEffect(() => {
       if (viewId) {
-        toggleModal();
+        openLoadView(viewId);
         dispatch(getLoadById(viewId));
       } else {
         // dispatch(clearLoad())
