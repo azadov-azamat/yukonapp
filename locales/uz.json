@@ -346,7 +346,9 @@
     "bookmarks": "Saralangan e'lonlarim",
     "subscriptions": "Obunalar",
     "settings": "Sozlamalar",
-    "notifications": "Xabarnomalar"
+    "notifications": "Xabarnomalar",
+    "dark-mode": "Tungi rejim",
+    "light-mode": "Yorug' rejim"
   },
   "bookmarks": {
     "load": "Yuk",

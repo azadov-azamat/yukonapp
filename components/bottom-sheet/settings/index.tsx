@@ -9,6 +9,9 @@ import { useTranslation } from 'react-i18next';
 import RuIcon from "@/assets/svg/ru.svg";
 import UzIcon from "@/assets/svg/uz.svg";
 import UzCyrlIcon from "@/assets/svg/uz-Cyrl.svg";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { logout } from '@/redux/reducers/auth';
+import { useAppDispatch } from '@/redux/hooks';
 
 interface SettingItemProps {
   icon: React.ReactNode;
@@ -51,40 +54,55 @@ interface SettingConfig {
   title: string;
   showToggle?: boolean;
   route?: string;
+  value: string;
 }
 
 const SETTINGS_CONFIG: SettingConfig[] = [
   {
     icon: 'moon-outline',
-    title: 'Dark Mode',
+    title: 'profile.dark-mode',
     showToggle: true,
+    value: 'dark-mode',
   },
   {
     icon: 'cart-outline',
     title: 'profile.subscriptions',
     route: '/profile/subscriptions',
+    value: 'subscriptions',
   },
   {
     icon: 'bookmark-outline',
     title: 'profile.bookmarks',
     route: '/profile/bookmarks',
+    value: 'bookmarks',
   },
   {
-    icon: 'bookmark-outline',
+    icon: 'megaphone-outline',
     title: 'profile.my-ads',
     route: '/profile/my-ads',
+    value: 'my-ads',
   },
   {
     icon: 'shield-outline',
     title: 'Privacy',
+    value: 'privacy',
   },
   {
     icon: 'help-circle-outline',
-    title: 'Help',
+    title: 'profile.help',
+    route: '/profile/help',
+    value: 'help',
+  },
+  {
+    icon: 'log-out-outline',
+    title: 'profile.logout',
+    route: undefined,
+    value: 'logout',
   }
 ];
 
 const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const { isDarkMode, toggleTheme, themeName, theme } = useTheme();
   const { i18n, t } = useTranslation();
@@ -130,6 +148,26 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
     []
   );
 
+  const logoutFunction = async () => {
+    await AsyncStorage.clear();
+    dispatch(logout());
+    bottomSheetRef.current?.close();
+    router.replace('/auth');
+  }
+  
+  const processedSettingsConfig = SETTINGS_CONFIG.map(setting => ({
+    ...setting,
+    icon: setting.title === 'profile.dark-mode' 
+      ? (isDarkMode ? 'sunny' : 'moon-outline') 
+      : (isDarkMode ? setting.icon.replace('-outline', '') : setting.icon),
+    title: setting.title === 'profile.dark-mode' 
+      ? (isDarkMode ? 'profile.light-mode' : 'profile.dark-mode') 
+      : setting.title,
+    value: setting.title === 'profile.dark-mode' 
+      ? (isDarkMode ? 'light-mode' : 'dark-mode') 
+      : setting.value,
+  }));
+
   return (
     <BottomSheet
       ref={bottomSheetRef}
@@ -150,12 +188,12 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
             {t('profile.settings')}
           </Text>
           
-          {SETTINGS_CONFIG.map((setting) => (
+          {processedSettingsConfig.map((setting) => (
             <SettingItem
               key={setting.title}
               icon={
                 <Ionicons 
-                  name={(isDarkMode ? setting.icon.replace('-outline', '') : setting.icon) as keyof typeof Ionicons.glyphMap} 
+                  name={setting.icon as keyof typeof Ionicons.glyphMap} 
                   size={24} 
                   color={theme.colors.primary} 
                 />
@@ -164,7 +202,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
               showToggle={setting.showToggle}
               isToggled={setting.showToggle ? isDarkMode : undefined}
               onToggle={setting.showToggle ? toggleTheme : undefined}
-              onPress={setting.route ? () => {
+              onPress={setting.value === 'logout' ? logoutFunction : setting.route ? () => {
                 bottomSheetRef.current?.close();
                 router.replace(setting.route! as RelativePathString);
               } : undefined}

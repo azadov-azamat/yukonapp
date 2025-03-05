@@ -15,7 +15,7 @@ import { EmptyStateCard, SubscriptionCard } from "@/components/cards";
 import { useColorScheme } from "nativewind";
 import { Text } from "react-native";
 
-export default function ProfilePage() {
+const ProfilePage = React.memo(() => {
   const router = useRouter();
   const {t} = useTranslation();
   const dispatch = useAppDispatch();
@@ -110,12 +110,6 @@ export default function ProfilePage() {
   const handleScroll = (event: any) => {
     scrollOffset.current = event.nativeEvent.contentOffset.y;
   };
-
-  const logoutFunction = async () => {
-    await AsyncStorage.clear();
-    dispatch(logout());
-    router.replace('/auth');
-  }
 
   const collapseBottomSheet = () => {
     if (isExpanded.current) {
@@ -254,13 +248,15 @@ export default function ProfilePage() {
       </View>
     </SafeAreaProvider>
   );
-}
+})
+
 interface MenuItemProps {
   title: string;
   icon: keyof typeof Ionicons.glyphMap;
   onPress?: () => void;
 }
-const MenuItem = ({ title, icon, onPress }: MenuItemProps) => {
+
+const MenuItem = React.memo(({ title, icon, onPress }: MenuItemProps) => {
   const { t } = useTranslation();
   const { theme, isDarkMode } = useTheme();
 
@@ -282,4 +278,6 @@ const MenuItem = ({ title, icon, onPress }: MenuItemProps) => {
       </View>
     </TouchableOpacity>
   );
-};
+})
+
+export default ProfilePage;

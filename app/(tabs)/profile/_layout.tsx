@@ -58,7 +58,20 @@ export default function ProfileLayout() {
         options={{
           header: () => (
             <CustomHeader
-              title={t ("pages.my-ads")}
+              title={t ("profile.my-ads")}
+              goToRoute={"/profile" as RelativePathString} // Navigate back to Profile
+            />
+          ),
+        }}
+      />
+      
+      {/* help subroute */}
+      <Stack.Screen
+        name="help"
+        options={{
+          header: () => (
+            <CustomHeader
+              title={t ("profile.help")}
               goToRoute={"/profile" as RelativePathString} // Navigate back to Profile
             />
           ),

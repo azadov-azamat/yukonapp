@@ -1,11 +1,10 @@
-import CustomHeader from '@/components/custom/header';
-import { RelativePathString, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
-import { View, Text, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import AdsFormComponent from '@/components/forms/ads-form';
-import { getLoadById } from '@/redux/reducers/load';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { clearLoad } from '@/redux/reducers/load';
+import { useAppDispatch } from '@/redux/hooks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const AdsEditCreate = () => {
@@ -16,14 +15,14 @@ const AdsEditCreate = () => {
   // const { load } = useAppSelector(state => state.load);
   const param = params['edit-create'];
   
-  // React.useEffect(() => {
-  //   if (param !== 'create') {
-  //     dispatch(getLoadById(param as string));
-  //   }
-  // }, [param]);  
+  React.useEffect(() => {
+    return () => {
+      dispatch(clearLoad());
+    }
+  }, []);  
   
   return (
-    <SafeAreaProvider style={{ flex: 1, paddingLeft: 10, paddingRight: 10 }}>
+    <SafeAreaProvider className='flex-1 px-4 bg-primary-light/20 dark:bg-primary-dark/20'>
        <ScrollView
               contentContainerStyle={{ flexGrow: 1 }}
               keyboardShouldPersistTaps="handled"

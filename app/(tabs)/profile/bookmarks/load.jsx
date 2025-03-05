@@ -10,8 +10,9 @@ import { useTranslation } from 'react-i18next'
 import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/content-loader'
 import { startLoading, stopLoading } from '@/redux/reducers/variable'
 import { LoadModal, SubscriptionModal } from '@/components/modal'
+import { useBottomSheet } from '@/components/bottom-sheet';
 
-const BookmarksLoadScreen = () => {
+const BookmarksLoadScreen = React.memo(() => {
     const route = useRoute();
     const dispatch = useAppDispatch();
     const {t} = useTranslation();
@@ -19,6 +20,8 @@ const BookmarksLoadScreen = () => {
     const {bookmarks, pagination, stats, loading: cargoLoad} = useAppSelector(state => state.load);
     const {user} = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
+    
+    const { openLoadView } = useBottomSheet();
 
     const [limit, setLimit] = React.useState(10);
     const [page, setPage] = React.useState(1);
@@ -30,6 +33,15 @@ const BookmarksLoadScreen = () => {
     const RenderLoadItem = React.memo(({ item }) => <LoadGridCard onPress={() => toggleSetId(item)} load={item} close={toggleModal} />);
     const RenderContentLoadItem = React.memo(() => <ContentLoaderLoadGrid />);
 
+    React.useEffect(() => {
+      if (viewId) {
+        openLoadView(viewId);
+        dispatch(getLoadById(viewId));
+      } else {
+        // dispatch(clearLoad())
+      }
+    }, [viewId])
+    
     const toggleModal = () => {
       setOpenModal(!openModal)
     };
@@ -48,17 +60,9 @@ const BookmarksLoadScreen = () => {
     React.useEffect(() => {
       if (!openModal) {
         setViewId(null);
+        
       }
     }, [openModal])
-
-    React.useEffect(() => {
-      if (viewId) {
-        toggleModal();
-        dispatch(getLoadById(viewId));
-      } else {
-        // dispatch(clearLoad())
-      }
-    }, [viewId])
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -99,7 +103,7 @@ const BookmarksLoadScreen = () => {
     }
 
     return (
-        <View className="flex-1 bg-gray-100">
+        <View className="flex-1 ">
             {loading ? (
               <FlatList
               data={[1, 2, 3, 4, 6, 7]} // Foydalanilmaydigan placeholder massiv
@@ -132,6 +136,6 @@ const BookmarksLoadScreen = () => {
             <SubscriptionModal open={!!user?.isSubscriptionModal || false} toggle={toggleSubscriptionModal}/>
         </View>
     )
-}
+})
 
 export default BookmarksLoadScreen;

@@ -1,5 +1,5 @@
 import React from "react";
-import { FlatList, RefreshControl, View } from "react-native";
+import { FlatList, Platform, RefreshControl, View } from "react-native";
 import ViewSelector from "@/components/view-selector";
 import { viewSelectorTabs } from "@/interface/components";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -21,10 +21,12 @@ import { ContentLoaderLoadList } from "@/components/content-loader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LoadListCard, VehicleListCard } from '@/components/cards'
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
+import { useRouter } from "expo-router";
 
 export default function MyAdsPage() {
   const dispatch = useAppDispatch();
-	const {loads, loading: cargoLoad} = useAppSelector(state => state.load);
+  const router = useRouter();
+  const {loads, loading: cargoLoad} = useAppSelector(state => state.load);
 	const {vehicles, loading: vehicleLoad} = useAppSelector(state => state.vehicle);
   const [refreshing, setRefreshing] = React.useState(false);
   const [combinedData, setCombinedData] = React.useState<any[]>([]);
@@ -79,7 +81,11 @@ export default function MyAdsPage() {
   };
 
   const loadPreview = (item: any) => {
-    openEditLoad(item.id);
+    if (Platform.OS === 'android') {
+      router.push('/android/ads/' + item.id);
+    } else {  
+      openEditLoad(item.id);
+    }
   }
 
   return (
