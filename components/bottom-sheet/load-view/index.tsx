@@ -32,7 +32,7 @@ const LoadViewBottomSheet = React.forwardRef<LoadViewBottomSheetRef, LoadViewIte
   
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const snapPoints = React.useMemo(() => ['90%'], []);
-  const {load} = useAppSelector(state => state.load);
+  const {load, loadingLoadById} = useAppSelector(state => state.load);
   
   React.useImperativeHandle(ref, () => ({
     open: () => {
@@ -77,7 +77,10 @@ const LoadViewBottomSheet = React.forwardRef<LoadViewBottomSheetRef, LoadViewIte
       }}
     >
       <BottomSheetView className="relative flex-1">
-        {load && <View className="h-full px-4 ">
+        {loadingLoadById && <View className="items-center justify-center h-full px-4 ">
+          <ActivityIndicator size={24} color={theme.colors.primary} />
+        </View>}
+        {!loadingLoadById && load && <View className="h-full px-4 ">
           <LoadHeader load={load} t={t} bottomSheetRef={bottomSheetRef} />
 
           <LoadStatus load={load} t={t} />
@@ -205,8 +208,15 @@ const LoadHeader: React.FC<{load: LoadModel, t: TFunction, bottomSheetRef: React
               <Ionicons name='trash-outline' size={20} color={theme.colors.red}/>
             </TouchableOpacity>
             <Text className='text-lg font-bold'>{load.goods}</Text>
-            <View className="absolute right-0">
-              <ButtonBookmark model={load} paramName='bookmarkedLoadIds' size={20} style='w-8 h-8 bg-transparent'/>
+            <View className="absolute right-0 flex-row space-x-1">
+              <View className='flex-row items-center px-2 py-1 space-x-1 border rounded-2xl bg-primary/20 border-border-color/20'>
+                  <Ionicons name='eye-outline' size={18} color={theme.colors.primary}/>
+                  <Text className='text-sm font-bold text-primary-dark dark:text-primary-light'>{load.openMessageCounter}</Text>
+              </View>
+              <View className='flex-row items-center px-2 py-1 space-x-1 border rounded-2xl bg-primary/20 border-border-color/20'>
+                  <Ionicons name='call-outline' size={18} color={theme.colors.primary}/>
+                  <Text className='text-sm font-bold text-primary-dark dark:text-primary-light'>{load.phoneViewCounter}</Text>
+              </View>
             </View>
           </View>
           
@@ -290,7 +300,7 @@ const LoadDetails: React.FC<{load: LoadModel, t: TFunction}> = ({ load, t }) => 
           <Ionicons name='server-outline' size={20} color={theme.colors.primary}/>
         </View>
         <View className='space-y-1'>
-          <Text className='text-sm text-primary-dark dark:text-primary-light'>Narxi</Text>
+          <Text className='text-sm text-primary-dark dark:text-primary-light'>{t('loads.price')}</Text>
           <Text className='text-sm font-bold text-primary-dark dark:text-primary-light'>{formatPriceAndPrepayment(
           load.price, 
           load.hasPrepayment, 
@@ -306,7 +316,7 @@ const LoadDetails: React.FC<{load: LoadModel, t: TFunction}> = ({ load, t }) => 
           <Ionicons name='card-outline' size={20} color={theme.colors.primary}/>
         </View>
         <View className='space-y-1'>
-          <Text className='text-sm text-primary-dark dark:text-primary-light'>To'lov turi</Text>
+          <Text className='text-sm text-primary-dark dark:text-primary-light'>{t('loads.payment-type')}</Text>
           <Text className='text-sm font-bold text-primary-dark dark:text-primary-light'>{formatPaymentType(load.paymentType)}</Text>
         </View>
       </View>
@@ -317,7 +327,7 @@ const LoadDetails: React.FC<{load: LoadModel, t: TFunction}> = ({ load, t }) => 
           <Ionicons name='calendar-outline' size={20} color={theme.colors.primary}/>
         </View>
         <View className='space-y-1'>
-          <Text className='text-sm text-primary-dark dark:text-primary-light'>Yuklash sanasi</Text>
+          <Text className='text-sm text-primary-dark dark:text-primary-light'>{t('loads.load-ready-date')}</Text>
           <Text className='text-sm font-bold text-primary-dark dark:text-primary-light'>{formatLoadReadyDate(load.loadReadyDate)}</Text>
         </View>
       </View>
@@ -328,8 +338,19 @@ const LoadDetails: React.FC<{load: LoadModel, t: TFunction}> = ({ load, t }) => 
           <Ionicons name='person-outline' size={20} color={theme.colors.primary}/>
         </View>
         <View className='space-y-1'>
-          <Text className='text-sm text-primary-dark dark:text-primary-light'>Yuklash sanasi</Text>
+          <Text className='text-sm text-primary-dark dark:text-primary-light'>{t('loads.customs-clearance')}</Text>
           <Text className='text-sm font-bold text-primary-dark dark:text-primary-light'>{t ('customs-clearance', {customClearance: load.customsClearanceLocation})}</Text>
+        </View>
+      </View>
+    }
+
+    {load.createdAt && <View className='flex-row items-center space-x-2'>
+        <View className='p-2 border rounded-full bg-primary/20 border-border-color/20'>
+          <Ionicons name='time-outline' size={20} color={theme.colors.primary}/>
+        </View>
+        <View className='space-y-1'>
+          <Text className='text-sm text-primary-dark dark:text-primary-light'>{t('loads.created-at')}</Text>
+          <Text className='text-sm font-bold text-primary-dark dark:text-primary-light'>{dateFromNow(load.createdAt)}</Text>
         </View>
       </View>
     }
@@ -354,7 +375,7 @@ const LoadFooter: React.FC<{load: LoadModel, t: TFunction}> = ({ load, t }) => {
   return (
     <View className='absolute left-0 right-0 flex-row items-center justify-between px-2 pt-4 pb-10 my-4 space-x-2 border-t shadow-sm -bottom-10 border-border-color/20 bg-primary-light dark:bg-primary-dark'>
           
-    <ButtonBookmark model={load} paramName='bookmarkedLoadIds' size={20} style='w-10 h-10 border border-border-color/20 bg-transparent'/>
+    <ButtonBookmark model={load} paramName='bookmarkedLoadIds' size={20} style='w-10 h-10 border border-primary/20 bg-transparent'/>
 
     <View className='flex-row items-center flex-1 space-x-2'>
     {!load.phone && user && <TouchableOpacity
@@ -363,7 +384,7 @@ const LoadFooter: React.FC<{load: LoadModel, t: TFunction}> = ({ load, t }) => {
                               className='px-4 py-2.5 w-full rounded-3xl items-center bg-primary'
                             >
         <Text className="text-base font-medium dark:text-primary-dark text-primary-light">
-          {!phoneLoading ? t ('show-phone-number') : 'Loading...'}
+          {!phoneLoading ? t ('show-phone-number') : t ('loading-options')}
         </Text>
       </TouchableOpacity>}
 

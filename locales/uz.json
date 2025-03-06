@@ -180,7 +180,9 @@
     "prepayment-amount": "Oldindan to'lov miqdori",
     "add-more": "+ Yana qo'shish",
     "load-ready-date": "Yuklanish sanasi",
-    "is-archived": "Arxivda"
+    "is-archived": "Arxivda",
+    "customs-clearance": "Bojxona",
+    "created-at": "E'lon sanasi"
   },
   "truck": {
     "load-capacity": "Yuk ko'tarish vazni (tonna)"

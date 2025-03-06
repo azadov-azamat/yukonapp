@@ -132,7 +132,7 @@ export const loadSlice = createSlice({
             state.load = null;
         },
         setLoad: (state, action) => {
-            state.load = deserializeLoad(action.payload);
+            state.load = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -221,15 +221,15 @@ export const loadSlice = createSlice({
 
         // Update Load
         builder.addCase(updateLoad.fulfilled, (state, action) => {
-            state.loading = false;
+            // state.loading = false;
             state.load = action.payload;
         });
-        builder.addCase(updateLoad.pending, (state) => {
-            state.loading = true;
-        });
-        builder.addCase(updateLoad.rejected, (state) => {
-            state.loading = false;
-        });
+        // builder.addCase(updateLoad.pending, (state) => {
+        //     state.loading = true;
+        // });
+        // builder.addCase(updateLoad.rejected, (state) => {
+        //     state.loading = false;
+        // });
 
         // Create Load
         builder.addCase(createLoad.fulfilled, (state, action) => {

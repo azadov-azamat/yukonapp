@@ -5,7 +5,7 @@ import { CustomBadgeSelector, CustomButton, CustomInput } from '@/components/cus
 import LoadRouteSelector from '@/components/load-route-selector'
 import { EmptyStateCard, LoadGridCard, LoadListCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import { clearLoad, clearLoads, getLoadById, searchLoads, setLoad } from '@/redux/reducers/load'
+import { clearLoad, clearLoads, searchLoads, setLoad } from '@/redux/reducers/load'
 import { useRoute } from '@react-navigation/native';
 import { getExtractCity } from '@/redux/reducers/city'
 import { useNavigation } from '@react-navigation/native';
@@ -65,8 +65,9 @@ const SearchLoadScreen = () => {
     };
 
     const toggleSetId = React.useCallback((item) => {
+      // dispatch(getLoadById(viewId));
       openLoadView(item.id);
-      setViewId(item.id);
+      // setViewId(item.id);
       dispatch(setLoad(item));
     }, [dispatch]);
 
@@ -82,11 +83,11 @@ const SearchLoadScreen = () => {
       }, 300),
     )
 
-    React.useEffect(() => {
-      if (viewId) {
-        dispatch(getLoadById(viewId));
-      }
-    }, [viewId])
+    // React.useEffect(() => {
+    //   if (viewId) {
+    //     dispatch(getLoadById(viewId));
+    //   }
+    // }, [viewId])
 
     // 3. Arrival va departure page yuklanganda o'rnatiladi
     React.useEffect(() => {

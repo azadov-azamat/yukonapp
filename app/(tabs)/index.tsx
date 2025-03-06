@@ -49,8 +49,6 @@ export default function MainPage() {
 	const { theme, isDarkMode } = useTheme();
   const insets = useSafeAreaInsets();
 
-  const [loadingItem, setLoadingItem] = React.useState(false);
-
   // Combined focus effect for data fetching and cleanup
   useEffect(() => {
     const abortController = new AbortController();
@@ -77,13 +75,13 @@ export default function MainPage() {
     };
   }, []);
 
-  React.useEffect(() => {
-    if (viewId) {
-      dispatch(getLoadById(viewId));
-    } else {
-      // dispatch(clearLoad())
-    }
-  }, [viewId])
+  // React.useEffect(() => {
+  //   if (viewId) {
+  //     dispatch(getLoadById(viewId));
+  //   } else {
+  //     dispatch(clearLoad())
+  //   }
+  // }, [viewId])
 
   // Memoize child components
   const MemoizedLatestLoadCard = React.memo(LatestLoadCard);

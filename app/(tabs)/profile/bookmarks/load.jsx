@@ -35,7 +35,6 @@ const BookmarksLoadScreen = React.memo(() => {
 
     React.useEffect(() => {
       if (viewId) {
-        openLoadView(viewId);
         dispatch(getLoadById(viewId));
       } else {
         // dispatch(clearLoad())
@@ -48,6 +47,7 @@ const BookmarksLoadScreen = React.memo(() => {
 
     const toggleSetId = (item) => {
       setViewId(item.id);
+      openLoadView(item.id); 
       dispatch(setLoad(item))
     }
 
@@ -132,7 +132,7 @@ const BookmarksLoadScreen = React.memo(() => {
                   refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               />
             )}
-            <LoadModal open={openModal} toggle={toggleModal}/>
+            {/* <LoadModal open={openModal} toggle={toggleModal}/> */}
             <SubscriptionModal open={!!user?.isSubscriptionModal || false} toggle={toggleSubscriptionModal}/>
         </View>
     )
