@@ -12,7 +12,6 @@ import LoadModel from '@/models/load';
 import { t, TFunction } from 'i18next';
 import { CustomOpenLink, CustomPhoneCall } from '@/components/custom';
 import dayjs from 'dayjs';
-import ConfirmationModal from '@/components/modal/confirm';
 import { ConfirmModal } from '@/components/modal';
 import Toast from 'react-native-toast-message';
 
@@ -208,13 +207,13 @@ const LoadHeader: React.FC<{load: LoadModel, t: TFunction, bottomSheetRef: React
               <Ionicons name='trash-outline' size={20} color={theme.colors.red}/>
             </TouchableOpacity>
             <Text className='text-lg font-bold'>{load.goods}</Text>
-            <View className="absolute right-0 flex-row space-x-1">
+            <View className="absolute right-0 flex-row space-x-1 ">
               <View className='flex-row items-center px-2 py-1 space-x-1 border rounded-2xl bg-primary/20 border-border-color/20'>
-                  <Ionicons name='eye-outline' size={18} color={theme.colors.primary}/>
+                  <Ionicons name='eye-outline' size={20} color={theme.colors.primary}/>
                   <Text className='text-sm font-bold text-primary-dark dark:text-primary-light'>{load.openMessageCounter}</Text>
               </View>
               <View className='flex-row items-center px-2 py-1 space-x-1 border rounded-2xl bg-primary/20 border-border-color/20'>
-                  <Ionicons name='call-outline' size={18} color={theme.colors.primary}/>
+                  <Ionicons name='call-outline' size={20} color={theme.colors.primary}/>
                   <Text className='text-sm font-bold text-primary-dark dark:text-primary-light'>{load.phoneViewCounter}</Text>
               </View>
             </View>
@@ -244,7 +243,7 @@ const LoadHeader: React.FC<{load: LoadModel, t: TFunction, bottomSheetRef: React
               {load.destinationCountry && <Text className="text-primary-dark/50 dark:text-primary-light/50">{load.destinationCountry?.icon + " " + getCityName(load.destinationCountry)}</Text>}
             </View>
           </View>
-          <ConfirmationModal
+          <ConfirmModal
             open={open}
             toggle={toggle}
             text={t('is-cargo-out-date')}
@@ -375,7 +374,7 @@ const LoadFooter: React.FC<{load: LoadModel, t: TFunction}> = ({ load, t }) => {
   return (
     <View className='absolute left-0 right-0 flex-row items-center justify-between px-2 pt-4 pb-10 my-4 space-x-2 border-t shadow-sm -bottom-10 border-border-color/20 bg-primary-light dark:bg-primary-dark'>
           
-    <ButtonBookmark model={load} paramName='bookmarkedLoadIds' size={20} style='w-10 h-10 border border-primary/20 bg-transparent'/>
+    <ButtonBookmark model={load} paramName='bookmarkedLoadIds' size={20} style='w-10 h-10 border border-border-color/20 bg-transparent'/>
 
     <View className='flex-row items-center flex-1 space-x-2'>
     {!load.phone && user && <TouchableOpacity

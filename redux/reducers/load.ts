@@ -133,6 +133,14 @@ export const loadSlice = createSlice({
         },
         setLoad: (state, action) => {
             state.load = action.payload;
+        },
+        setPhone: (state, action) => {
+            state.load = {
+                ...state.load, 
+                phone: action.payload.phone,
+                telegram: action.payload.telegram,
+                phoneViewCounter: action.payload.phoneViewCounter,
+            } as LoadModel;
         }
     },
     extraReducers: (builder) => {
@@ -245,5 +253,5 @@ export const loadSlice = createSlice({
     },
 });
 
-export const { clearLoads, clearLoad, setLoad } = loadSlice.actions;
+export const { clearLoads, clearLoad, setLoad, setPhone } = loadSlice.actions;
 export default loadSlice.reducer;

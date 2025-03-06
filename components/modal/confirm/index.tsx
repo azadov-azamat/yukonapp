@@ -15,7 +15,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ open, toggle, tex
   
   return (
     <DynamicModal open={open} toggle={toggle}>
-      <View>
+      <View className='mt-4'>
         <View className="text-center d-flex">
           <Text className='text-lg font-bold text-center text-primary-title-color dark:text-primary-light'>
             {text ? t (text) : t("alert.confirm-or-deny")}

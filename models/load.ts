@@ -1,7 +1,7 @@
 import { http } from "@/config/api";
 import { ILoadModel } from "@/interface/redux/load.interface";
 // import { ICityModel, ICountryModel } from "@/interface/redux/variable.interface";
-import { updateLoad } from "@/redux/reducers/load";
+import { setPhone, updateLoad } from "@/redux/reducers/load";
 import { removePhoneNumbers } from "@/utils/general";
 import Toast from "react-native-toast-message";
 import UserModel from "./user";
@@ -82,7 +82,7 @@ export default class LoadModel implements ILoadModel {
       successCallback: async (res) => {
         const {removedPhones} = removePhoneNumbers(this.description);
 
-        this.phone = res.phone || removedPhones?.[0];
+        this.phone = res.phone || removedPhones?.[0] || res.ownerPhone;
         if (res.username) {
             this.telegram = `https://t.me/${res.username}`;
         } else if (res.ownerPhone) {
@@ -102,7 +102,7 @@ export default class LoadModel implements ILoadModel {
             });
         }
         this.loading = false;
-        // this.save(dispatch);
+        this.phoneSave(dispatch);
       },
       close
     });
@@ -179,5 +179,9 @@ export default class LoadModel implements ILoadModel {
 
   async save(dispatch: any) {
     await dispatch(updateLoad(this))
+  }
+
+  async phoneSave(dispatch: any) {
+    await dispatch(setPhone(this))
   }
 }
