@@ -31,7 +31,6 @@ const SearchLoadScreen = () => {
     const { loading } = useAppSelector(state => state.variable);
     const { openLoadView } = useBottomSheet();
 
-    const [dateRange, setDateRange] = React.useState([]);
     const truckTypes = OPTIONS['truck-types'].filter(item => item.value !== 'not_specified');
     const booleanFiltersData = OPTIONS['boolean-filters'];
     const [booleanFilters, setBooleanFilters] = React.useState(() =>
@@ -57,10 +56,6 @@ const SearchLoadScreen = () => {
     const [openModal, setOpenModal] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
 
-    const RenderLoadItem = React.memo(({ item }) => isGridView ? <LoadListCard changes={true} onPress={() => toggleSetId(item)} load={item} /> :
-                                                                <LoadGridCard onPress={() => toggleSetId(item)} load={item} />);
-    const RenderContentLoadItem = React.memo(() => isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
-
     const toggleView = () => {
       setIsGridView((prev) => !prev);
     };
@@ -70,6 +65,7 @@ const SearchLoadScreen = () => {
     };
 
     const toggleSetId = React.useCallback((item) => {
+      openLoadView(item.id);
       setViewId(item.id);
       dispatch(setLoad(item));
     }, [dispatch]);
@@ -88,18 +84,9 @@ const SearchLoadScreen = () => {
 
     React.useEffect(() => {
       if (viewId) {
-        openLoadView(viewId);
         dispatch(getLoadById(viewId));
-      } else {
-        // dispatch(clearLoad())
       }
     }, [viewId])
-
-    React.useEffect(() => {
-      if (!openModal) {
-        setViewId(null);
-      }
-    }, [openModal])
 
     // 3. Arrival va departure page yuklanganda o'rnatiladi
     React.useEffect(() => {
@@ -228,10 +215,6 @@ const SearchLoadScreen = () => {
         query.destination_country_id = destination?.id;
       }
 
-      if (dateRange.length) {
-        query.dateRange = dateRange;
-      }
-
       return query;
     }
 
@@ -324,6 +307,19 @@ const SearchLoadScreen = () => {
       }
     }
 
+    const MemoizedLoadListCard = React.memo(isGridView ? LoadListCard : LoadGridCard);
+    const MemoizedContentLoadItem = React.memo(isGridView ? ContentLoaderLoadList : ContentLoaderLoadGrid);
+    
+    const renderLoadItem = React.useCallback(({ item }) => (
+      <MemoizedLoadListCard
+        changes={true} onPress={() => toggleSetId(item)} load={item}
+      />
+    ), [toggleSetId, toggleModal]);
+
+    const renderContentLoadItem = React.useCallback(() => (
+      <MemoizedContentLoadItem />
+    ), []);
+    
     return (
       <View className="flex-1">
         {origin ?
@@ -367,7 +363,7 @@ const SearchLoadScreen = () => {
 					<FlatList
 					data={[1, 2, 3, 4, 6, 7]} // Foydalanilmaydigan placeholder massiv
 					keyExtractor={(item) => item.toString()}
-					renderItem={() => <RenderContentLoadItem />}
+					renderItem={renderContentLoadItem}
 				/>
 					) : (
 						<FlatList
@@ -397,7 +393,7 @@ const SearchLoadScreen = () => {
 								</View>
 							) : null}
 							ListEmptyComponent={<EmptyStateCard type="load"/>}
-							renderItem={({ item }) => <RenderLoadItem item={item} />}
+							renderItem={renderLoadItem}
 							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 						/>
 					)

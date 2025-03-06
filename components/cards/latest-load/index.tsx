@@ -1,14 +1,10 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { dateFromNow, formatPrice, getCityName } from '@/utils/general';
-import LoadModel from '@/models/load';
+import { dateFromNow, getCityName } from '@/utils/general';
 import { useTranslation } from 'react-i18next';
-import { useAppSelector } from '@/redux/hooks';
 import { loadCardInterfaceProps } from '@/interface/components';
 
 const LatestLoadCard = ({load, onPress, showElement = false}: loadCardInterfaceProps) => {
-  const {user} = useAppSelector(state => state.auth);
   const {t} = useTranslation();
 
   const ParentComponent = showElement ? View : TouchableOpacity;
@@ -16,7 +12,8 @@ const LatestLoadCard = ({load, onPress, showElement = false}: loadCardInterfaceP
   return (
     <ParentComponent
     {...(!showElement && { onPress })}
-    className="flex-col items-start justify-between px-5 py-3 border-t bg-primary-light dark:bg-primary-dark border-border-color dark:border-border-color/20">
+    className="flex-col items-start justify-between px-5 py-3 border-t bg-primary-light dark:bg-primary-dark border-border-color dark:border-border-color/20"
+    >
     <View className="flex-1">
       <Text className="text-lg font-semibold text-primary-title-color dark:text-primary-light">
       	<Text>{getCityName(load?.originCity)}</Text>
@@ -27,9 +24,7 @@ const LatestLoadCard = ({load, onPress, showElement = false}: loadCardInterfaceP
     <View className="flex-row items-center justify-between flex-1 w-full mt-2">
     <View className="flex-row items-center">
         <Text className="text-sm text-gray-600">{t ('truck-type.' + load.cargoType)}</Text>
-        <TouchableOpacity className="ml-2">
-          <Text className="text-sm font-bold text-blue-600">{t (load.isWebAd ? 'site' : 'telegram')}</Text>
-        </TouchableOpacity>
+        <Text className="ml-2 text-sm font-bold text-blue-600">{t (load.isWebAd ? 'site' : 'telegram')}</Text>
       </View>
 
       <View className="items-end">

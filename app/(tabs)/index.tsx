@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from "react";
-import { Keyboard, View, Text, StyleSheet, RefreshControl, TouchableOpacity, Animated, StatusBar } from "react-native";
+import { Keyboard, View, Text, StyleSheet, RefreshControl, TouchableOpacity, Animated, StatusBar, ActivityIndicator } from "react-native";
 import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
@@ -49,6 +49,8 @@ export default function MainPage() {
 	const { theme, isDarkMode } = useTheme();
   const insets = useSafeAreaInsets();
 
+  const [loadingItem, setLoadingItem] = React.useState(false);
+
   // Combined focus effect for data fetching and cleanup
   useEffect(() => {
     const abortController = new AbortController();
@@ -76,14 +78,7 @@ export default function MainPage() {
   }, []);
 
   React.useEffect(() => {
-    if (!openModal) {
-      setViewId(null);
-    }
-  }, [openModal])
-
-  React.useEffect(() => {
     if (viewId) {
-      openLoadView(viewId);
       dispatch(getLoadById(viewId));
     } else {
       // dispatch(clearLoad())
@@ -98,6 +93,7 @@ export default function MainPage() {
   // Memoize callbacks
   const toggleSetId = useCallback((item: any) => {
     setViewId(item.id);
+    openLoadView(item.id);
     dispatch(setLoad(item));
   }, [dispatch]);
 
@@ -159,14 +155,14 @@ export default function MainPage() {
   ), [toggleSetId, toggleModal]);
 
   return (
-    <View style={{ flex: 1 }}>
-			<Animated.View style={{ backgroundColor: statusBarBackgroundColor, height: insets.top, padding: 0, margin: 0 }}>
-				<StatusBar
-					translucent
-					barStyle={isDarkMode ? "light-content" : "dark-content"}
-					backgroundColor={'transparent'}
-				/>
-			</Animated.View>
+    <View style={{ flex: 1 }}>      
+      <Animated.View style={{ backgroundColor: statusBarBackgroundColor, height: insets.top, padding: 0, margin: 0 }}>
+        <StatusBar
+          translucent
+          barStyle={isDarkMode ? "light-content" : "dark-content"}
+          backgroundColor={'transparent'}
+        />
+      </Animated.View>
 
       <LinearGradient
         colors={['#623bff', '#CCADFF', '#FFFFFF']}
