@@ -11,7 +11,10 @@
     "preview": {
       "distribution": "internal",
 			"android": {
-				"image": "latest"
+				"image": "ubuntu-latest",
+        "env": {
+          "GRADLE_OPTS": "-Dorg.gradle.jvmargs=-Xmx6g"
+        }
 			}
     },
     "production": {
