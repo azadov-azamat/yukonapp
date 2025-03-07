@@ -74,7 +74,7 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
             >
-				<AdsFormComponent recordId={recordId && recordId !== 0 ? recordId : 0} close={() => bottomSheetRef.current?.close()} />
+				      <AdsFormComponent recordId={recordId && recordId !== 0 ? recordId : 0} close={() => bottomSheetRef.current?.close()} />
             </ScrollView>
           </View>
         </KeyboardAvoidingView>

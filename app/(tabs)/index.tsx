@@ -3,7 +3,7 @@ import { Keyboard, View, Text, StyleSheet, RefreshControl, TouchableOpacity, Ani
 import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
-import { getTopSearches, setLoad, fetchLatestLoads, getLoadById } from "@/redux/reducers/load";
+import { getTopSearches, setLoad, fetchLatestLoads } from "@/redux/reducers/load";
 import { ContentLoaderTopSearches } from "@/components/content-loader";
 import { debounce } from 'lodash';
 import { getExtractCity } from "@/redux/reducers/city";
@@ -18,7 +18,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { LoadModal } from '@/components/modal'
-import { useFocusEffect } from "@react-navigation/native";
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 
 const HEADER_HEIGHT = 50;
@@ -35,7 +34,7 @@ export default function MainPage() {
   const [openModal, setOpenModal] = React.useState(false);
   const [searchText, setSearchText] = React.useState<string>('');
   const [refreshing, setRefreshing] = React.useState(false);
-  const { openLoadView } = useBottomSheet();
+  const openLoadView = useBottomSheet().openLoadView;
 
 	const scrollY = React.useRef(new Animated.Value(0)).current;
 	const statusBarBackgroundColor = useMemo(() =>
@@ -74,14 +73,6 @@ export default function MainPage() {
       StatusBar.setBackgroundColor("transparent");
     };
   }, []);
-
-  // React.useEffect(() => {
-  //   if (viewId) {
-  //     dispatch(getLoadById(viewId));
-  //   } else {
-  //     dispatch(clearLoad())
-  //   }
-  // }, [viewId])
 
   // Memoize child components
   const MemoizedLatestLoadCard = React.memo(LatestLoadCard);

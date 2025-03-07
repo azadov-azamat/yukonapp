@@ -45,6 +45,7 @@ const initialState: VariableInitialProps = {
     selectedPlan: null, // Tanlangan reja
     loading: false,
     phoneLoading: false,
+    urlLoading: false,
     pagination: null,
     activeLoaders: 0, // Nechta process ishlayotganini hisoblash uchun
 }
@@ -61,6 +62,9 @@ const variableSlice = createSlice({
     },
     phoneLoad(state) {
         state.phoneLoading = !state.phoneLoading
+    },
+    urlLoad(state) {
+        state.urlLoading = !state.urlLoading
     }
   },
   extraReducers: (builder) => {
@@ -104,6 +108,6 @@ const variableSlice = createSlice({
   }
 });
 
-export const { startLoading, stopLoading, phoneLoad } = variableSlice.actions;
+export const { startLoading, stopLoading, phoneLoad, urlLoad } = variableSlice.actions;
 
 export default variableSlice.reducer;

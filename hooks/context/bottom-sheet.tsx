@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useState } from 'react';
+import React, { createContext, useContext, useRef, useState, useCallback } from 'react';
 import SettingsBottomSheet, { SettingsBottomSheetRef } from "@/components/bottom-sheet/settings";
 import EditLoadBottomSheet, { EditLoadBottomSheetRef } from "@/components/bottom-sheet/edit-load";
 import LoadViewBottomSheet, { LoadViewBottomSheetRef } from '@/components/bottom-sheet/load-view';
@@ -14,32 +14,36 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function BottomSheetProvider({ children }: { children: React.ReactNode }) {
   const settingsSheetRef = useRef<SettingsBottomSheetRef>(null);
-  const openSettings = () => settingsSheetRef.current?.open();
+  const openSettings = useCallback(() => settingsSheetRef.current?.open(), []);
 
   // Edit Load Bottom Sheet
   const EditLoadSheetRef = useRef<EditLoadBottomSheetRef>(null);
   const [recordId, setRecordId] = useState<number | null>(null);
-  const openEditLoad = (id: number) => {
+  const openEditLoad = useCallback((id: number) => {
     setRecordId(id);
     EditLoadSheetRef.current?.open();
-  };
+  }, []);
 
   // Load Vehicle View Bottom Sheet
   const LoadViewSheetRef = useRef<LoadViewBottomSheetRef>(null);
-  const openLoadView = (id: number) => {
+  const openLoadView = useCallback((id: number) => {
     LoadViewSheetRef.current?.open();
     setRecordId(id);
-  }
+  }, []);
 
   return (
     <AppContext.Provider value={{ openSettings, openEditLoad, openLoadView }}>
       {children}
-      <SettingsBottomSheet ref={settingsSheetRef} />
-      <EditLoadBottomSheet ref={EditLoadSheetRef} recordId={recordId} />
-      <LoadViewBottomSheet ref={LoadViewSheetRef} recordId={recordId} />
+      <MemoizedSettingsBottomSheet ref={settingsSheetRef} />
+      <MemoizedEditLoadBottomSheet ref={EditLoadSheetRef} recordId={recordId} />
+      <MemoizedLoadViewBottomSheet ref={LoadViewSheetRef} recordId={recordId} />
     </AppContext.Provider>
   );
 }
+
+const MemoizedSettingsBottomSheet = React.memo(SettingsBottomSheet);
+const MemoizedEditLoadBottomSheet = React.memo(EditLoadBottomSheet);
+const MemoizedLoadViewBottomSheet = React.memo(LoadViewBottomSheet);
 
 export function useBottomSheet() {
   const context = useContext(AppContext);

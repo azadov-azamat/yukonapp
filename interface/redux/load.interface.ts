@@ -43,6 +43,7 @@ export interface ILoadModel extends defaultData {
     isDeleted: boolean;
     openMessageCounter: number;
     phoneViewCounter: number;
+    viewCount: number;
     prepaymentAmount: number;
     expirationButtonCounter: number;
     publishedDate: Date | null;

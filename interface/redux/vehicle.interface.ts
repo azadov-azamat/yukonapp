@@ -30,6 +30,7 @@ export interface IVehicleModel extends defaultData{
     weight: number;
     phoneViewCounter: number;
     openMessageCounter: number;
+    viewCount: number;
     isArchived: boolean;
     isDeleted: boolean;
     deletedAt: Date | null;

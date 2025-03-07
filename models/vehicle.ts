@@ -26,6 +26,7 @@ export default class VehicleModel implements IVehicleModel {
   weight = 0;
   phoneViewCounter = 0;
   openMessageCounter = 0;
+  viewCount = 0;
   isArchived = false;
   isDeleted = false;
   deletedAt: Date | null = null;

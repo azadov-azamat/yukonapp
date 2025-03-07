@@ -9,6 +9,8 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import 'dayjs/locale/en';
 import 'dayjs/locale/ru';
 import 'dayjs/locale/uz';
+import { Linking } from "react-native";
+import { Alert } from "react-native";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -152,3 +154,21 @@ export function formatPhone(str: string, prefix = '+998 ') {
     return phone;
 }
 
+export async function openLink(url: string) {
+  if (!url) {
+    Alert.alert('Error', 'Telegram username is missing!');
+    return;
+  }
+
+  try {
+    const canOpen = await Linking.canOpenURL(url);
+    if (canOpen) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert('Error', 'Telegram app not installed!');
+    }
+  } catch (error) {
+    console.error('Failed to open Telegram:', error);
+    Alert.alert('Error', 'Unable to open Telegram.');
+  }
+};

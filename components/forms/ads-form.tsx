@@ -8,15 +8,12 @@ import { getCities, getCountryCities } from '@/redux/reducers/city';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { useTranslation } from 'react-i18next';
 import { fetchCountries } from '@/redux/reducers/country';
-import { createLoad, updateLoad, getLoadById } from '@/redux/reducers/load';
-import { ILoadModel } from '@/interface/redux/load.interface';
+import { updateLoad, getLoadById } from '@/redux/reducers/load';
 import { getName } from '@/utils/general';
 import { CustomButton, CustomInput, CustomInputSelector } from '../custom';
-import { adsValidationSchema } from '@/validations/form';
 import { Ionicons } from '@expo/vector-icons';
 import { OPTIONS } from '@/utils/constants';
 import LoadModel from '@/models/load';
-import { LoadSerializer } from '@/serializers';
 import VehicleModel from '@/models/vehicle';
 import CityModel from '@/models/city';
 import { DatePickerModal } from 'react-native-paper-dates';
@@ -95,16 +92,12 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     const handleCountryChange = async (
         item: ICountryModel,
         setFieldValue: (field: string, value: any) => void,
-        // setCities: (cities: ICityModel[]) => void,
-        // set÷Loading: (loading: boolean) => void,
         field: string
     ) => {
         setFieldValue(field, item);
-        // setLoading(true);
-        await dispatch(getCountryCities({ countryId: item.id }));
-        // setLoading(false);
+        await dispatch(getCountryCities({ countryId: item?.id }));
     };
-    
+    console.log("ads-form rendering...");
     const handleCityChange = (
         item: ICityModel | any,
         setFieldValue: (field: string, value: any) => void,

@@ -1,14 +1,16 @@
 import { http } from "@/config/api";
 import { ILoadModel } from "@/interface/redux/load.interface";
 // import { ICityModel, ICountryModel } from "@/interface/redux/variable.interface";
-import { setPhone, updateLoad } from "@/redux/reducers/load";
-import { removePhoneNumbers } from "@/utils/general";
+import { updateLoad } from "@/redux/reducers/load";
+import { openLink, removePhoneNumbers } from "@/utils/general";
 import Toast from "react-native-toast-message";
 import UserModel from "./user";
 import { updateUserSubscriptionModal } from "@/redux/reducers/auth";
-import { phoneLoad } from "@/redux/reducers/variable";
+import { phoneLoad, urlLoad } from "@/redux/reducers/variable";
 import CityModel from "./city";
 import CountryModel from "./country";
+import { Alert } from "react-native";
+import { Linking } from "react-native";
 
 export default class LoadModel implements ILoadModel {
   id = null;
@@ -37,6 +39,7 @@ export default class LoadModel implements ILoadModel {
   openMessageCounter = 0;
   phoneViewCounter = 0;
   prepaymentAmount = 0;
+  viewCount = 0;
   expirationButtonCounter = 0;
   publishedDate: Date | null = null;
   loading = false;
@@ -102,7 +105,7 @@ export default class LoadModel implements ILoadModel {
             });
         }
         this.loading = false;
-        this.phoneSave(dispatch);
+        this.save(dispatch);
       },
       close
     });
@@ -110,14 +113,30 @@ export default class LoadModel implements ILoadModel {
 
   async urlFunction(user: UserModel, dispatch: any): Promise<void> {
     this.loading = true;
+    if (this.url) {
+      window.location.href = this.url;
+      this.openMessageCounter += 1;
+      this.loading = false;
+      return;
+    }
     await this.handleFunction({
         endpoint: `loads/${this.id}/url`, 
         user, 
         dispatch,
         successCallback: async (response) => {
-            console.log('Opening URL:', response.url);
-            this.openMessageCounter += 1;
+            if (!response.url) {
+              Toast.show({
+                  type: 'error',
+                  text1: 'url-not-found',
+              });
+            } else {
+              this.url = response.url;
+              this.openMessageCounter += 1;
+              openLink(this.url);
+            }
+
             this.loading = false;
+            this.save(dispatch);
         }}
     );
   }
@@ -135,10 +154,16 @@ export default class LoadModel implements ILoadModel {
     successCallback: (response: any) => void;
     close?: () => void;
   }) {
-    dispatch(phoneLoad()); // loading true
+    let loading: any;
+    if (endpoint.endsWith('/phone')) {
+      loading = phoneLoad;
+    } else if (endpoint.endsWith('/url')){
+      loading = urlLoad;
+    }
+    dispatch(loading()); // loading true
 
     if (!user) {
-        dispatch(phoneLoad()); // loading false
+        dispatch(loading()); // loading false
         return ''
     }
 
@@ -161,9 +186,9 @@ export default class LoadModel implements ILoadModel {
       }
     } catch (e) {
       console.error('An error occurred:', e);
-      dispatch(phoneLoad()); // loading false
+      dispatch(loading()); // loading false
     } finally {
-      dispatch(phoneLoad()); // loading false
+      dispatch(loading()); // loading false
       close?.();
     }
   }
@@ -179,9 +204,5 @@ export default class LoadModel implements ILoadModel {
 
   async save(dispatch: any) {
     await dispatch(updateLoad(this))
-  }
-
-  async phoneSave(dispatch: any) {
-    await dispatch(setPhone(this))
   }
 }

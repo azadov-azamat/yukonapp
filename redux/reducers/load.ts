@@ -86,8 +86,7 @@ export const getLoadById = createAsyncThunk('load/getLoadById', async (id: strin
 export const updateLoad = createAsyncThunk('load/updateLoad', async (data: LoadModel, { rejectWithValue }) => {
     try {
         const response = await http.patch(`/loads/${data.id}`, LoadSerializer.serialize(data));
-        let load = await deserialize(response.data)
-        return deserializeLoad(load);
+        return deserializeLoad(await deserialize(response.data));
     } catch (error) {
         return rejectWithValue(error);
     }
@@ -132,15 +131,7 @@ export const loadSlice = createSlice({
             state.load = null;
         },
         setLoad: (state, action) => {
-            state.load = action.payload;
-        },
-        setPhone: (state, action) => {
-            state.load = {
-                ...state.load, 
-                phone: action.payload.phone,
-                telegram: action.payload.telegram,
-                phoneViewCounter: action.payload.phoneViewCounter,
-            } as LoadModel;
+            state.load = new LoadModel(action.payload);
         }
     },
     extraReducers: (builder) => {
@@ -229,15 +220,15 @@ export const loadSlice = createSlice({
 
         // Update Load
         builder.addCase(updateLoad.fulfilled, (state, action) => {
-            // state.loading = false;
-            state.load = action.payload;
+            const load = new LoadModel({
+                ...action.payload,
+                phone: state.load?.phone,
+                telegram: state.load?.telegram,
+                url: state.load?.url
+            })
+            console.log('load', load);
+            state.load = load;
         });
-        // builder.addCase(updateLoad.pending, (state) => {
-        //     state.loading = true;
-        // });
-        // builder.addCase(updateLoad.rejected, (state) => {
-        //     state.loading = false;
-        // });
 
         // Create Load
         builder.addCase(createLoad.fulfilled, (state, action) => {
@@ -253,5 +244,5 @@ export const loadSlice = createSlice({
     },
 });
 
-export const { clearLoads, clearLoad, setLoad, setPhone } = loadSlice.actions;
+export const { clearLoads, clearLoad, setLoad } = loadSlice.actions;
 export default loadSlice.reducer;

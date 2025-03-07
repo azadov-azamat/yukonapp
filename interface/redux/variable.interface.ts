@@ -9,6 +9,7 @@ export interface VariableInitialProps {
     selectedPlan: PlanModel | null;
     loading: boolean;
     phoneLoading: boolean;
+    urlLoading: boolean;
     pagination: any;
     activeLoaders: number;
 }
