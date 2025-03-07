@@ -38,6 +38,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "40873140-b77a-4dbb-a259-38a116d27142"
+      }
+    },
+    "owner": "crack_me"
   }
 }
