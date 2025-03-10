@@ -36,6 +36,7 @@ export default class VehicleModel implements IVehicleModel {
   invalidButtonCounter = 0;
   originCity?: ICityModel;
   originCountry?: ICountryModel;
+  currency: "UZS" | "USD" | "RUB" = "UZS";
   createdAt?: string;
   updatedAt?: string;
   

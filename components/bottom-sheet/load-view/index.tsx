@@ -14,19 +14,13 @@ import dayjs from 'dayjs';
 import { ConfirmModal } from '@/components/modal';
 import Toast from 'react-native-toast-message';
 
-interface LoadViewItemProps {
-  recordId: number | null;
-}
-
 export interface LoadViewBottomSheetRef {
   open: () => void;
   close: () => void;
 }
 
-const LoadViewBottomSheet = React.forwardRef<LoadViewBottomSheetRef, LoadViewItemProps>(({ recordId }, ref) => {
+const LoadViewBottomSheet = React.forwardRef<LoadViewBottomSheetRef>((_, ref) => {
   const { isDarkMode, theme } = useTheme();
-  // const dispatch = useAppDispatch();
-  const { t } = useTranslation();
   
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const snapPoints = React.useMemo(() => ['90%'], []);
@@ -70,30 +64,30 @@ const LoadViewBottomSheet = React.forwardRef<LoadViewBottomSheetRef, LoadViewIte
           <ActivityIndicator size={24} color={theme.colors.primary} />
         </View>} */}
         <View className="h-full px-4 ">
-          <LoadHeader t={t} bottomSheetRef={bottomSheetRef} />
+          <LoadHeader bottomSheetRef={bottomSheetRef} />
 
-          <LoadStatus t={t} />
+          <LoadStatus />
           
           <View className='w-full mt-1 border-b border-border-color'/>
                 
           {/* Load Details */}
-          <LoadDetails t={t} />
+          <LoadDetails />
           
           {/* Phone Call Button */}
-          <LoadFooter t={t} />
+          <LoadFooter />
           
-          {/* <LoadGridCard load={load} showElement isUpdate/> */}
           </View>
       </BottomSheetView>
     </BottomSheet>
   );
 });
 
-const LoadStatus: React.FC<{t: TFunction}> = React.memo(({ t }) => {
+const LoadStatus: React.FC = React.memo(() => {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const flatListRef = React.useRef<FlatList<any>>(null);
   const { load } = useAppSelector(state => state.load);
-  console.log("load-status rendering...");
+  console.log("load-view-status rendering...");
   
   function handleDetermineTon(weight: number) {
     if (weight < 0.5) {
@@ -170,7 +164,8 @@ const LoadStatus: React.FC<{t: TFunction}> = React.memo(({ t }) => {
   );
 });
 
-const LoadHeader: React.FC<{t: TFunction, bottomSheetRef: React.RefObject<BottomSheet>}> = React.memo(({ t, bottomSheetRef }) => {
+const LoadHeader: React.FC<{bottomSheetRef: React.RefObject<BottomSheet>}> = React.memo(({ bottomSheetRef }) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { theme } = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -248,7 +243,8 @@ const LoadHeader: React.FC<{t: TFunction, bottomSheetRef: React.RefObject<Bottom
   )
 });
 
-const LoadDetails: React.FC<{t: TFunction}> = React.memo(({ t }) => {  
+const LoadDetails: React.FC = React.memo(() => {
+  const { t } = useTranslation();
   const { theme } = useTheme();
   const { load } = useAppSelector(state => state.load);
 
@@ -369,7 +365,8 @@ const LoadDetails: React.FC<{t: TFunction}> = React.memo(({ t }) => {
   )
 });
 
-const LoadFooter: React.FC<{t: TFunction}> = React.memo(({ t }) => {  
+const LoadFooter: React.FC = React.memo(() => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { phoneLoading, urlLoading } = useAppSelector(state => state.variable);
   const { user } = useAppSelector(state => state.auth);

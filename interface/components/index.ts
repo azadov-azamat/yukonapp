@@ -98,6 +98,7 @@ export interface InputSelectorProps<T> {
   disabled?: boolean;
   rightData?: (item: T) => React.ReactElement | null;
   rowItem: (item: T) => React.ReactElement | null;
+  translate?: boolean;
   [key: string]: any; // This allows passing other props like style, etc.
 }
 

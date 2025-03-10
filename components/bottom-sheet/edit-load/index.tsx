@@ -19,7 +19,7 @@ type EditLoadBottomSheetProps = {
 const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomSheetProps>(({ recordId }, ref) => {
   const { isDarkMode, theme } = useTheme();
   const { t } = useTranslation();
-	
+  
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['100%'], []);
 
@@ -61,13 +61,13 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
         >
           <View style={{ padding: 16, flex: 1 }}>
             <View className='flex-row items-center justify-between'>
-				<Text style={{ paddingBottom: 8, fontSize: 24, fontWeight: 'bold', color: isDarkMode ? 'white' : 'black' }}>
-				{recordId === 0 ? t('pages.create-add') : t('pages.just-edit')}
-				</Text>
-				<TouchableOpacity onPress={() => bottomSheetRef.current?.close()}>
-					<Ionicons name='close-circle-outline' size={24} color={theme.colors.primary}/>
-				</TouchableOpacity>
-			</View>
+              <Text style={{ paddingBottom: 8, fontSize: 24, fontWeight: 'bold', color: isDarkMode ? 'white' : 'black' }}>
+                {recordId === 0 ? t('pages.create-add') : t('pages.just-edit')}
+              </Text>
+              <TouchableOpacity onPress={() => bottomSheetRef.current?.close()}>
+                <Ionicons name='close-circle-outline' size={24} color={theme.colors.primary}/>
+              </TouchableOpacity>
+			      </View>
             <ScrollView
               contentContainerStyle={{ flexGrow: 1 }}
               keyboardShouldPersistTaps="handled"

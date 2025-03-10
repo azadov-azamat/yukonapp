@@ -41,6 +41,10 @@ export const OPTIONS = {
         { value: 'isDagruz', label: 'dagruz' },
         { value: 'hasPrepayment', label: 'has-prepayment' }
     ],
-    'currencies': ['UZS', 'USD', 'RUB']
+    'currencies': [
+      {label: 'UZB', value: 'UZB'},
+      {label: 'USD', value: 'USD'},
+      {label: 'RUB', value: 'RUB'},
+    ]
   };
     

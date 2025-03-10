@@ -108,7 +108,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
   const { i18n, t } = useTranslation();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['50%'], []);
-
+  
   const languages = [
     { code: "ru", label: "Русский", icon: RuIcon },
     { code: "uz", label: "O'zbekcha", icon: UzIcon },

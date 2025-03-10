@@ -19,43 +19,30 @@ import CityModel from '@/models/city';
 import { DatePickerModal } from 'react-native-paper-dates';
 import CountryModel from '@/models/country';
 import { useTheme } from '@/config/ThemeContext';
+import { updateVehicle } from '@/redux/reducers/vehicle';
+import { all } from 'axios';
 
 const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 'load' | 'vehicle'}> = ({recordId, close, model = 'load'}) => {
     const dispatch = useAppDispatch();
     const { t, i18n } = useTranslation();
     
-    
+    console.log("ads-form componentrendering...");
     const { user } = useAppSelector((state) => state.auth);
     const { load } = useAppSelector((state) => state.load);
     const { vehicle } = useAppSelector((state) => state.vehicle);
     const { allCountries, countries, loading: countryLoading } = useAppSelector((state) => state.country);
     const { countryCities } = useAppSelector((state) => state.city);
     const { theme } = useTheme();
-    const [originCities, setOriginCities] = React.useState<ICityModel[]>([]);
-    const [destinationCities, setDestinationCities] = React.useState<ICityModel[]>([]);
+    
     const [originLoading, setOriginLoading] = React.useState(false);
     const [destinationLoading, setDestinationLoading] = React.useState(false);
-    const [truckTypes, setTruckTypes] = React.useState(OPTIONS['truck-types']);
+    const [truckType, setTruckType] = React.useState(OPTIONS['truck-types'][0]);
+    const [currency, setCurrency] = React.useState(OPTIONS['currencies'][0]);
     
     const currentLanguage = i18n.language;
 
     const [record, setRecord] = React.useState(model === 'load' ? new LoadModel({}) : new VehicleModel({}));
 
-    // const [initialValues, setInitialValues] = React.useState({
-    //   goods: '',
-    //   phone: '',
-    //   truckType: '',
-    //   weight: '',
-    //   originCountry: null,
-    //   destinationCountry: null,
-    //   originCity: null,
-    //   destinationCity: null,
-    //   currency: 'UZS',
-    //   price: '',
-    //   loadReadyDate: '',
-    //   description: '',
-    // });
-  
     const [selectedAdType, setSelectedAdType] = React.useState(model);
     const formikRef = React.useRef<any>(null);
   
@@ -97,7 +84,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         setFieldValue(field, item);
         await dispatch(getCountryCities({ countryId: item?.id }));
     };
-    console.log("ads-form rendering...");
+    
     const handleCityChange = (
         item: ICityModel | any,
         setFieldValue: (field: string, value: any) => void,
@@ -156,8 +143,9 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         rowItem?: (item: any) => JSX.Element,
         search: boolean = true
     ) => {
-        // console.log("renderCustomInputSelector", labelField);
-        
+        // Translate the selected value
+        const translatedValue = value ? t(value[labelField]) : '';
+
         return (
             <CustomInputSelector
                 label={label}
@@ -220,6 +208,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         setFieldValue(field, null);
     }, []);
     
+
   return (
     <Formik
     innerRef={formikRef}
@@ -227,28 +216,21 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     // validationSchema={adsValidationSchema}
     enableReinitialize
      onSubmit={async (values, { resetForm }) => {
-    //  const updatedModel = new LoadModel({
-    //    ...loadModel,
-    //    ...values,
-    //    id: recordId === 0 ? null : recordId,
-    //  });
+    
     console.log(values  );
 
-    //  console.log("values", LoadSerializer.serialize(values));
-    //  console.log("updateLoad", updatedModel);
-     
     //  if (recordId === 0) {
     //    await dispatch(createLoad(updatedModel));
     //  } else {
-       if (model === 'load') {
-        await dispatch(updateLoad(values as LoadModel));
-       } else {
-        // await dispatch(updateVehicle(values));
-       }
+    //    if (model === 'load') {
+    //     await dispatch(updateLoad(values as LoadModel));
+    //    } else {
+    //     await dispatch(updateVehicle(values));
+    //    }
     //  }
 
-    //  close?.();
-                    // resetFormValues();
+    close?.();
+    resetFormValues();
    }}
   >
     {({ handleChange, handleSubmit, setFieldValue, values, errors }) => (
@@ -295,21 +277,38 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
             {t ("where-from")}
           </Text>
           <View className="pt-4">
-            {renderCustomInputSelector(
-                'country',
-                t('select-country'), 
-                values.originCountry, 
-                (item: CountryModel) => handleCountryChange(item, setFieldValue, 'originCountry'), 
-                () => onClearOriginCountry(setFieldValue), allCountries, countryLoading, false, 'name' + capitalize(currentLanguage), 'id', 
-                (query, items) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase())))
-            }
+            <CustomInputSelector
+                label={t('country')}
+                value={values.originCountry}
+                onChange={(item: CountryModel) => handleCountryChange(item, setFieldValue, 'originCountry')}
+                onClear={() => onClearOriginCountry(setFieldValue)}
+                placeholder={t('select-country')}
+                loading={countryLoading}
+                disabled={false}    
+                items={allCountries}
+                labelField={'nameUz'}
+                valueField="id"
+                search={true}
+                searchFunction={(query: string, items: CountryModel[]) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))}
+                rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+            />
           </View>
           <View className="pt-4">
-            {renderCustomInputSelector('city', t('select-city'), 
-            values.originCity, 
-            (item: CityModel) => handleCityChange(item, setFieldValue, 'originCity'), 
-            () => onClearOriginCity(setFieldValue), getSortedCitiesByCountryId(values.originCountry?.id as any), originLoading, !values.originCountry, 'name' + capitalize(currentLanguage), 'id', 
-            (query, items) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase())))}
+            <CustomInputSelector
+                search
+                label={t('city')}
+                value={values.originCity}
+                onChange={(item: CityModel) => handleCityChange(item, setFieldValue, 'originCity')}
+                onClear={() => onClearOriginCity(setFieldValue)}
+                placeholder={t('select-city')}
+                loading={originLoading}
+                disabled={!values.originCountry}
+                items={getSortedCitiesByCountryId(values.originCountry?.id as any)}
+                labelField={'name' + capitalize(currentLanguage)}
+                valueField="id"
+                searchFunction={(query: string, items: CityModel[]) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))}
+                rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+            />
           </View>
 
           {selectedAdType === 'load' && <>
@@ -317,21 +316,36 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 {t ("where-to")}
             </Text>
             <View className="pt-4">
-                {selectedAdType === 'load' && (renderCustomInputSelector('country', t('select-country'), 
-                                                                        (values as LoadModel).destinationCountry, 
-                                                                        (item: CountryModel) => handleCountryChange(item, setFieldValue, 'destinationCountry'), 
-                                                                        () => onClearDestinationCountry(setFieldValue), allCountries, countryLoading, !values.originCountry, 'name' + capitalize(currentLanguage), 'id', 
-                                                                        (query, items) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))))}
+                <CustomInputSelector
+                    label={t('country')}
+                    value={(values as LoadModel).destinationCountry}
+                    onChange={(item: CountryModel) => handleCountryChange(item, setFieldValue, 'destinationCountry')}
+                    onClear={() => onClearDestinationCountry(setFieldValue)}
+                    placeholder={t('select-country')}
+                    loading={countryLoading}
+                    disabled={!values.originCountry}
+                    items={allCountries}
+                    labelField={'nameUz'}
+                    valueField="id"
+                    searchFunction={(query: string, items: CountryModel[]) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))}
+                    rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+                />
             </View>
             <View className="pt-4">
-                {selectedAdType === 'load' &&   (renderCustomInputSelector('city', t('select-city'), 
-                                                                        (values as LoadModel).destinationCity,
-                                                                        (item: CityModel) => handleCityChange(item, setFieldValue, 'destinationCity'), 
-                                                                        () => onClearDestinationCity(setFieldValue), 
-                                                                        getSortedCitiesByCountryId((values as LoadModel).destinationCountry?.id as any), 
-                                                                        destinationLoading, 
-                                                                        !(values as LoadModel).destinationCountry, 'name' + capitalize(currentLanguage), 'id', 
-                                                                        (query, items) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))))}
+                <CustomInputSelector
+                    label={t('city')}
+                    value={(values as LoadModel).destinationCity}
+                    onChange={(item: CityModel) => handleCityChange(item, setFieldValue, 'destinationCity')}
+                    onClear={() => onClearDestinationCity(setFieldValue)}
+                    placeholder={t('select-city')}
+                    loading={destinationLoading}
+                    disabled={!(values as LoadModel).destinationCountry}
+                    items={getSortedCitiesByCountryId((values as LoadModel).destinationCountry?.id as any)}
+                    labelField={'name' + capitalize(currentLanguage)}
+                    valueField="id"
+                    searchFunction={(query: string, items: CityModel[]) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))}
+                    rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+                />
             </View>
           </>}
         </View>
@@ -343,41 +357,32 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
             <Text className="mt-4 mb-1.5 text-lg font-semibold text-gray-700 dark:text-white">
                 {t ("loads.truck-type")}
             </Text>
-            {renderCustomInputSelector(
-            t('loads.truck-type'),
-            t('loads.truck-type'),
-            values.cargoType,
-            (item: any) => handleCityChange(item.value, setFieldValue, 'cargoType'),
-            () => setFieldValue('cargoType', ''),
-            OPTIONS['truck-types'],
-            false,
-            false,
-            'label',
-            'value',
-            undefined,
-            (item) => <Text>{t (item.label)}</Text>,
-            false
-            )}
+            <CustomInputSelector
+                translate
+                value={OPTIONS['truck-types'].find(item => item.value === values.cargoType)}
+                onChange={(item) => setFieldValue('cargoType', item.value)}
+                placeholder={t('loads.truck-type')}
+                items={OPTIONS['truck-types']}
+                labelField="label"
+                valueField="value"
+                rowItem={(item) => <Text>{t(item.label)}</Text>}
+            />
         </View>}
 
         {selectedAdType === 'vehicle' && 'truckType' in values && <View className="pt-4">
             <Text className="mt-4 mb-1.5 text-lg font-semibold text-gray-700 dark:text-white">
                 {t ("loads.truck-type")}
             </Text>
-            {renderCustomInputSelector(
-            t('loads.truck-type'),
-            t('loads.truck-type'),
-            values.truckType,
-            handleChange('truckType'),
-            () => setFieldValue('truckType', ''),
-            OPTIONS['truck-types'],
-            false,
-            false,
-            'label',
-            'value',
-            (query: string, items: any[]) => items.filter((item: any) => item.label.toLowerCase().includes(query.toLowerCase())),
-            (item) => <Text>{t(item.label)}</Text>
-            )}
+            <CustomInputSelector
+                translate
+                value={OPTIONS['truck-types'].find(item => item.value === values.truckType)}
+                onChange={(item) => setFieldValue('truckType', item.value)}
+                placeholder={t('loads.truck-type')}
+                items={OPTIONS['truck-types']}
+                labelField="label"
+                valueField="value"
+                rowItem={(item) => <Text>{t(item.label)}</Text>}
+            />
         </View>}
         
         {renderCustomInput('weight', values.weight?.toString(), handleChange('weight'))}
@@ -387,21 +392,15 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
             {renderCustomInput('price', (values as LoadModel).price?.toString(), handleChange('price'))}
           </View>
           <View className="w-24">
-            {renderCustomInputSelector(
-                'currency',
-                t('loads.currency'), 
-                (values as LoadModel).currency,
-                handleChange('currency'),
-                () => setFieldValue('currency', ''),
-                OPTIONS['currencies'],
-                false,
-                false,
-                'label',
-                'value',
-                undefined,
-                (item) => <Text>{item}</Text>,
-                false
-            )}
+            <CustomInputSelector
+                value={OPTIONS['currencies'].find(item => item.value === values.currency)}
+                onChange={(item: any) => setFieldValue('currency', item.value)}
+                placeholder={t('loads.currency')}
+                items={OPTIONS['currencies']}
+                labelField="label"
+                valueField="value"
+                rowItem={(item) => <Text>{item.label}</Text>}
+            />
           </View>
         </View>}
         {selectedAdType === 'load' && 'loadReadyDate' in values && (

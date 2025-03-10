@@ -6,6 +6,7 @@ export default class CityModel implements ICityModel {
     nameRu: string = '';
     nameUz: string = '';
     nameEn: string = '';
+    names: string = '';
     countryId: string = '';
     country?: CountryModel;
   

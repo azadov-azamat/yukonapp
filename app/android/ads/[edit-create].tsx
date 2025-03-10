@@ -1,14 +1,13 @@
 import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { useTranslation } from 'react-i18next';
-import AdsFormComponent from '@/components/forms/ads-form';
-import { clearLoad } from '@/redux/reducers/load';
 import { useAppDispatch } from '@/redux/hooks';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { clearLoad } from '@/redux/reducers/load';
+import AdsFormComponent from '@/components/forms/ads-form';
 
 const AdsEditCreate = () => {
-  const { t } = useTranslation();
+
   const dispatch = useAppDispatch();
   const params = useLocalSearchParams(); 
   

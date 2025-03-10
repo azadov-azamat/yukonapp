@@ -40,8 +40,5 @@ export interface IVehicleModel extends defaultData{
     invalidButtonCounter: number;
     originCity?: ICityModel;
     originCountry?: ICountryModel;
-
-    // phoneFunction(close?: () => void): Promise<void>;
-    // urlFunction(): Promise<void>;
-    // handleFunction(endpoint: string, successCallback: (response: any) => void, close?: () => void): Promise<void>;
+    currency: 'UZS' | 'USD' | 'RUB';
   }

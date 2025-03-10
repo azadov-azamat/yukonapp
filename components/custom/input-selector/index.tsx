@@ -4,9 +4,10 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { InputSelectorProps } from '@/interface/components';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '@/config/ThemeContext';
 
 const Input: React.FC<InputSelectorProps<any>> = ({
-  label,
+//   label,
   value,
   onSearch,
   onChange,
@@ -24,10 +25,13 @@ const Input: React.FC<InputSelectorProps<any>> = ({
   rowItem,
   disabled,
   search,
+  translate = false,
   ...rest
 }) => {
   const {t} = useTranslation();
+  const {theme} = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
+  const [isFocus, setIsFocus] = useState(false);
 
 	const filteredData = items
 		? search
@@ -37,15 +41,28 @@ const Input: React.FC<InputSelectorProps<any>> = ({
 			: items
 		: [];
 
-	const renderItem = (item: any, labelField: string) => {
-    return (
-      <View style={styles.item}>
-        {rowItem(item)}
-        {rightData && rightData(item)}
-    	</View>
-    )
+	const renderItem = (item: any, labelField: string) => {		
+		return (
+		<View style={styles.item}>
+			{rowItem(item)}
+			{rightData && rightData(item)}
+			</View>
+		)
   };
 
+  const renderLabel = () => {
+	if (value || isFocus) {
+		console.log(value, labelField);
+		
+	  return (
+		<Text style={[styles.label, isFocus && { color: theme.colors.dark }]}>
+		  {value && value[labelField] ? translate ? t (value[labelField])  : value[labelField] : t ('payment-type.not_specified')}
+		</Text>
+	  );
+	}
+	return null;
+  };
+  
 	return (
 		<View style={[styles.dropdownWrapper, disabled && styles.disabledWrapper]}>
 			<Dropdown
@@ -54,18 +71,23 @@ const Input: React.FC<InputSelectorProps<any>> = ({
 				selectedTextStyle={styles.selectedTextStyle}
 				iconStyle={[
 					styles.iconStyle,
-					onClear && value ? { display: 'none' } : {} // Changed 'hidden' to 'none'
+					onClear && value ? { display: 'none' } : {}
 				]}
 				data={filteredData}
 				maxHeight={300}
 				disable={disabled}
-				labelField={value && value[labelField] ? labelField : t ('payment-type.not_specified')}
+				labelField={value && value[labelField] ? labelField : t('payment-type.not_specified')}
 				valueField={valueField}
-				placeholder={t (placeholder)}
-				searchPlaceholder="Search..."
+				placeholder={!isFocus ? t(placeholder) : '...'}
+				searchPlaceholder={t("search")}
 				value={value}
-				onChange={(item) => onChange(item)}
+				onChange={item => {
+					onChange(item);
+					setIsFocus(false);
+				}}
 				containerStyle={styles.dropdownStyle}
+				onFocus={() => setIsFocus(true)}
+				onBlur={() => setIsFocus(false)}
 				renderItem={(item) => renderItem(item, labelField)}
 				search
 				renderInputSearch={() =>
@@ -74,7 +96,7 @@ const Input: React.FC<InputSelectorProps<any>> = ({
 							<TextInput
 								style={styles.inputSearchStyle}
 								value={searchQuery}
-								placeholder="Search..."
+								placeholder={t("search")}
 								onChangeText={(text) => {
 									setSearchQuery(text);
 									onSearch && onSearch(text, items);
@@ -85,9 +107,8 @@ const Input: React.FC<InputSelectorProps<any>> = ({
 				}
 				{...rest}
 			/>
-			{/* Clear Button */}
-      {onClear && value && (
-        <TouchableOpacity
+			{onClear && value && (
+				<TouchableOpacity
 					style={styles.clearButton}
 					onPress={() => {
 						onClear(null);
@@ -98,7 +119,6 @@ const Input: React.FC<InputSelectorProps<any>> = ({
         </TouchableOpacity>
       )}
 
-			{/* Black Overlay when disabled */}
 			{disabled && <View style={styles.disabledOverlay} />}
 		</View>
 
@@ -196,6 +216,16 @@ const styles = StyleSheet.create({
 	inputSearchWrapperStyle: {
     margin: 6,
     padding: 4,
+	},
+	label: {
+		position: 'absolute',
+		backgroundColor: 'white',
+		left: 10,
+		top: 16,
+		zIndex: 999,
+		paddingHorizontal: 8,
+		fontSize: 16,
+		paddingRight: 24,
 	},
 	dropdownStyle: {
     borderRadius: 12,

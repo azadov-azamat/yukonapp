@@ -36,7 +36,7 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
       {children}
       <MemoizedSettingsBottomSheet ref={settingsSheetRef} />
       <MemoizedEditLoadBottomSheet ref={EditLoadSheetRef} recordId={recordId} />
-      <MemoizedLoadViewBottomSheet ref={LoadViewSheetRef} recordId={recordId} />
+      <MemoizedLoadViewBottomSheet ref={LoadViewSheetRef} />
     </AppContext.Provider>
   );
 }
