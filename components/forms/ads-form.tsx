@@ -393,7 +393,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
           </View>
           <View className="w-24">
             <CustomInputSelector
-                value={OPTIONS['currencies'].find(item => item.value === values.currency)}
+                value={OPTIONS['currencies'].find(item => item.value === values.currency) || 'UZS'}
                 onChange={(item: any) => setFieldValue('currency', item.value)}
                 placeholder={t('loads.currency')}
                 items={OPTIONS['currencies']}

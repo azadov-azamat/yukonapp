@@ -3,7 +3,7 @@
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
-    "start": "expo start",
+    "start": "expo start --dev-client",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -17,10 +17,11 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
-    "@gorhom/bottom-sheet": "^5.1.1",
+    "@gorhom/bottom-sheet": "^5.1.2",
     "@hookform/resolvers": "^4.1.2",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/blur": "^4.4.1",
+    "@react-native-community/cli-platform-android": "3.0.3",
     "@react-native-picker/picker": "2.9.0",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/material-top-tabs": "^7.1.1",
@@ -80,6 +81,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@react-native-community/cli": "latest",
     "@types/jest": "^29.5.12",
     "@types/jsonapi-serializer": "^3.6.8",
     "@types/lodash": "^4.17.14",
