@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text, Linking } from 'react-native';
 import { useFormik } from 'formik';
 import { loginValidationSchema } from '@/validations/form';
 import { CustomInput, CustomButton } from '@/components/custom';
@@ -11,6 +11,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 import { debounce } from 'lodash';
 import UserModel from '@/models/user';
+import { Checkbox } from 'react-native-paper';
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -25,6 +26,7 @@ const RegisterForm = () => {
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string>>({});
+  const [isAgreed, setIsAgreed] = React.useState(false);
 
   const checkPhoneNumber = async (phone: string) => {
     const response = await dispatch(uniquePhone({ phone: phone }));
@@ -55,7 +57,7 @@ const RegisterForm = () => {
   };
 
   const handleSubmit = async () => {
-    if (validate()) {
+    if (validate() && isAgreed) {
       const user = new UserModel({
         phone: phone,
         password: password,
@@ -111,7 +113,6 @@ const RegisterForm = () => {
         onPress={sendCode}
         buttonStyle={'bg-primary mt-2'}
       />
- 
 
       {/* Parol */}
       {
@@ -135,9 +136,28 @@ const RegisterForm = () => {
             error={errors.confirmPassword}
             divClass='mb-4'
           />
+
+            {/* Foydalanuvchi shartlari bilan tanishish checkboxi */}
+          <View className='flex-row items-start mt-2'>
+            <Checkbox
+              status={isAgreed ? 'checked' : 'unchecked'}
+              onPress={() => {
+                setIsAgreed(!isAgreed);
+              }}
+            />
+            <Text onPress={() => {
+              setIsAgreed(!isAgreed);
+            }}>
+              Foydalanuvchi shartlari bilan tanishdim{' '}
+              <Text className='text-blue-500' onPress={() => Linking.openURL('https://drive.google.com/file/d/1XZx_fxz7ciU6vhM5knd5XTMb7TRKJqPn/view?pli=1')}>
+                bu yerda
+              </Text>
+            </Text>
+          </View>
+      
            <CustomButton
             loading={loading}
-            disabled={loading}
+            disabled={loading || !isAgreed}
             title={t('register')}
             onPress={handleSubmit}
             buttonStyle={'bg-primary mt-2'}
