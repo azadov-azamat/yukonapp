@@ -35,6 +35,7 @@
   "top-searches-result": "Umumiy {{count}} ta e'lon, {{todayCounter}} tasi bugungi",
   "repeat-password": "Tasqidlqash",
   "forgot-password": "Parolni unutdingizmi?",
+  "forgot-password-description": "Telefon raqamingizni kiriting, biz sizga parolni tiklash uchun SMS kod yuboramiz",
   "reset-password-by-code": "Kod orqali parolni tiklash",
   "code": "Kod",
   "to-message": "Xabarga oʻtish",
@@ -232,7 +233,8 @@
     "login": "Tizimga muvaffaqiyatli kirildi!",
     "create" : "Muvaffaqiyatli yaratildi",
     "update" : "Muvaffaqiyatli o'zgartirildi",
-    "unarchive" : "Muvaffaqiyatli faollashtirildi!"
+    "unarchive" : "Muvaffaqiyatli faollashtirildi!",
+    "password-update": "Parol muvaffaqiyatli yangilandi."
   },
   "change-password": {
     "title": "Parolni o'zgartirish",
@@ -264,7 +266,6 @@
     "get-enough-amount": "Kartangizda mablag' yetarli emas!",
     "destination-not-found": "Kiritilgan manzil topilmadi! Shahar nomini tekshiring",
     "phone-not-exist": "Telefon raqami mavjud emas",
-    "password-update": "Parol muvaffaqiyatli yangilandi.",
     "empty-confirm-password": "Parol kiritilmagan."
   },
   "user-saved": "Ma'lumotlaringiz muvaffaqiyatli yangilandi.",

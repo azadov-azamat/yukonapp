@@ -48,6 +48,15 @@ export const createUser = createAsyncThunk('auth/createUser', async (data: UserM
     }
 });
 
+export const resetPassword = createAsyncThunk('auth/resetPassword', async (data: {phone: string, smsToken: string, password: string}, { rejectWithValue }) => {
+    try {
+        const response = await http.post(`/auth/reset-password`, data);
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
 export const uniquePhone = createAsyncThunk('auth/uniquePhone', async (data: {phone: string}, { rejectWithValue }) => {
     try {
         const response = await http.get(`/users/unique/phone`, {params: data});
@@ -93,6 +102,7 @@ export const authSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
+        // Login
         builder.addCase(login.fulfilled, (state: AuthInitialProps, action) => {
             state.loading = false;
             state.auth = action.payload;
@@ -109,6 +119,8 @@ export const authSlice = createSlice({
                 text2: `${action.payload}`,
             });
         })
+
+        // Get User Me
         builder.addCase(getUserMe.fulfilled, (state: AuthInitialProps, action) => {
             state.loading = false
             state.user = action.payload
@@ -130,6 +142,7 @@ export const authSlice = createSlice({
             state.loading = false;
         });
 
+        // Unique Phone
         builder.addCase(uniquePhone.fulfilled, (state, action) => {
             state.uniquePhoneExists = action.payload?.exist;
             state.loading = false;
@@ -140,6 +153,8 @@ export const authSlice = createSlice({
         builder.addCase(uniquePhone.rejected, (state) => {
             state.loading = false;
         });
+
+        // Send SMS Code
         builder.addCase(sendSmsCode.fulfilled, (state, action) => {
             state.loading = false;
             state.successSendSms = true;
@@ -152,6 +167,8 @@ export const authSlice = createSlice({
             state.loading = false;
             state.successSendSms = false;
         });
+
+        // Create User
         builder.addCase(createUser.fulfilled, (state, action) => {
             state.loading = false;
             console.log(action.payload);
@@ -161,6 +178,17 @@ export const authSlice = createSlice({
             state.loading = true;
         });
         builder.addCase(createUser.rejected, (state) => {
+            state.loading = false;
+        });
+
+        // Reset Password
+        builder.addCase(resetPassword.fulfilled, (state, action) => {
+            state.loading = false;
+        });
+        builder.addCase(resetPassword.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(resetPassword.rejected, (state) => {
             state.loading = false;
         });
     }

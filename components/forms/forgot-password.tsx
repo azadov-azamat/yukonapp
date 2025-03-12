@@ -1,39 +1,34 @@
 import React from 'react';
-import { View, Text, Linking } from 'react-native';
-import { useFormik } from 'formik';
-import { loginValidationSchema } from '@/validations/form';
+import { View } from 'react-native';
 import { CustomInput, CustomButton } from '@/components/custom';
 import { useRouter } from "expo-router";
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { createUser, login, sendSmsCode, uniquePhone } from '@/redux/reducers/auth';
+import { createUser, login, resetPassword, sendSmsCode, uniquePhone } from '@/redux/reducers/auth';
 import Toast from 'react-native-toast-message';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 import { debounce } from 'lodash';
 import UserModel from '@/models/user';
-import { Checkbox } from 'react-native-paper';
 
-const RegisterForm = () => {
+const ForgotPasswordForm = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const { loading, uniquePhoneExists, successSendSms } = useAppSelector(state => state.auth);
+  const { loading, successSendSms } = useAppSelector(state => state.auth);
   
   const [phone, setPhone] = React.useState('');
-  const [isSmsSent, setIsSmsSent] = React.useState(false);
   const [isVerifyPhone, setIsVerifyPhone] = React.useState(false);
   const [smsCode, setSmsCode] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string>>({});
-  const [isAgreed, setIsAgreed] = React.useState(false);
 
   const checkPhoneNumber = async (phone: string) => {
     const response = await dispatch(uniquePhone({ phone: phone }));
-    if (response.payload?.exist) {
+    if (!response.payload?.exist) {
       Toast.show({
         type: 'error',
-        text1: t('errors.phone-exist'),
+        text1: t('errors.phone-not-exist'),
       });
     } else {
       setIsVerifyPhone(true);
@@ -57,18 +52,17 @@ const RegisterForm = () => {
   };
 
   const handleSubmit = async () => {
-    if (validate() && isAgreed) {
-      const user = new UserModel({
+    if (validate()) {
+      const data = {
         phone: phone,
         password: password,
         smsToken: smsCode,
-        isAgreed: true,
-      });
-      dispatch(createUser(user)).then(unwrapResult).then((res) => {
+      };
+      dispatch(resetPassword(data)).then(unwrapResult).then((res) => {
         router.push('/auth');
         Toast.show({
           type: 'success',
-          text1: t('success.register'),
+          text1: t('success.password-update'),
         }); 
       }).catch((err) => {
         console.log(err);
@@ -81,13 +75,17 @@ const RegisterForm = () => {
   };
 
   const sendCode = () => {
-    dispatch(sendSmsCode({ phone: phone, action: 'register' })).then(unwrapResult).then((res) => {
+    dispatch(sendSmsCode({ phone: phone, action: 'reset-password' })).then(unwrapResult).then((res) => {
       Toast.show({
         type: 'success',
         text1: t('success.code-sent'),
       });
     }).catch((err) => {
       console.log(err);
+      Toast.show({
+        type: 'error',
+        text1: t('errors.something-wrong'),
+      });
     });
   };
   
@@ -119,7 +117,8 @@ const RegisterForm = () => {
       }           
       {/* Sms jo'natish tugmasi */}
       <CustomButton
-        disabled={!isVerifyPhone}
+        disabled={!isVerifyPhone || loading}
+        loading={loading}
         title={successSendSms ? t('send-code-again') : t('send-verification')}
         onPress={sendCode}
         buttonStyle={'bg-primary mt-2'}
@@ -147,29 +146,11 @@ const RegisterForm = () => {
             error={errors.confirmPassword}
             divClass='mb-4'
           />
-
-            {/* Foydalanuvchi shartlari bilan tanishish checkboxi */}
-          <View className='flex-row items-start mt-2'>
-            <Checkbox
-              status={isAgreed ? 'checked' : 'unchecked'}
-              onPress={() => {
-                setIsAgreed(!isAgreed);
-              }}
-            />
-            <Text onPress={() => {
-              setIsAgreed(!isAgreed);
-            }}>
-              Foydalanuvchi shartlari bilan tanishdim{' '}
-              <Text className='text-blue-500' onPress={() => Linking.openURL('https://drive.google.com/file/d/1XZx_fxz7ciU6vhM5knd5XTMb7TRKJqPn/view?pli=1')}>
-                bu yerda
-              </Text>
-            </Text>
-          </View>
       
            <CustomButton
             loading={loading}
-            disabled={loading || !isAgreed}
-            title={t('register')}
+            disabled={loading}
+            title={t('save')}
             onPress={handleSubmit}
             buttonStyle={'bg-primary mt-2'}
           />
@@ -180,4 +161,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default ForgotPasswordForm;
