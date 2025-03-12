@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
+import { View } from 'react-native';
 import { useFormik } from 'formik';
 import { loginValidationSchema } from '@/validations/form';
 import { CustomInput, CustomButton } from '@/components/custom';
@@ -23,11 +23,11 @@ const LoginForm = () => {
       dispatch(login(values))
         .then(unwrapResult)
         .then(res => {
+          router.replace("/(tabs)");
           Toast.show({
               type: 'success',
               text1: t ('success.login')
           });
-          router.replace("/(tabs)");
         })
         .catch(err => {
           switch(err.status) {

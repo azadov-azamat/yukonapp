@@ -8,6 +8,7 @@ import Toast from 'react-native-toast-message';
 import { IUserModel } from "@/interface/redux/user.interface";
 import { UserSerializer } from "@/serializers";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import UserModel from "@/models/user";
 
 export const getUserMe = createAsyncThunk('auth/getUserMe', async (id: number, {rejectWithValue}) => {
     try {
@@ -38,9 +39,38 @@ export const updateUser = createAsyncThunk('auth/updateUser', async (data: Parti
     }
 });
 
+export const createUser = createAsyncThunk('auth/createUser', async (data: UserModel, { rejectWithValue }) => {
+    try {
+        const response = await http.post(`/users`, UserSerializer.serialize(data));
+        return deserializeUser(await deserialize(response.data));
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
+export const uniquePhone = createAsyncThunk('auth/uniquePhone', async (data: {phone: string}, { rejectWithValue }) => {
+    try {
+        const response = await http.get(`/users/unique/phone`, {params: data});
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
+export const sendSmsCode = createAsyncThunk('auth/sendSmsCode', async (data: {phone: string, action: string}, { rejectWithValue }) => {
+    try {
+        const response = await http.post(`/auth/send-token`, data);
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
 const initialState: AuthInitialProps = {
     user: null,
     auth: null,
+    uniquePhoneExists: false,
+    successSendSms: false,
     loading: false
 }
 
@@ -100,6 +130,39 @@ export const authSlice = createSlice({
             state.loading = false;
         });
 
+        builder.addCase(uniquePhone.fulfilled, (state, action) => {
+            state.uniquePhoneExists = action.payload?.exist;
+            state.loading = false;
+        });
+        builder.addCase(uniquePhone.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(uniquePhone.rejected, (state) => {
+            state.loading = false;
+        });
+        builder.addCase(sendSmsCode.fulfilled, (state, action) => {
+            state.loading = false;
+            state.successSendSms = true;
+        });
+        builder.addCase(sendSmsCode.pending, (state) => {
+            state.loading = true;
+            state.successSendSms = false;
+        });
+        builder.addCase(sendSmsCode.rejected, (state) => {
+            state.loading = false;
+            state.successSendSms = false;
+        });
+        builder.addCase(createUser.fulfilled, (state, action) => {
+            state.loading = false;
+            console.log(action.payload);
+            // state.user = action.payload;
+        });
+        builder.addCase(createUser.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(createUser.rejected, (state) => {
+            state.loading = false;
+        });
     }
 })
 

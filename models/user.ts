@@ -11,9 +11,9 @@ export default class UserModel implements IUserModel {
   telegramUsername?: string;
   password: string = '';
   smsToken: string = '';
-  role: string = '';
-  vehicleSearchLimit: number = 6;
-  loadSearchLimit: number = 30;
+  role: string | null = null;
+  vehicleSearchLimit: number = 5;
+  loadSearchLimit: number = 24;
   newLoadsNotifierEnabled: boolean = false;
   hasPassword: boolean = false;
   bookmarkedLoadIds: string[] = [];
@@ -21,6 +21,8 @@ export default class UserModel implements IUserModel {
   markedExpiredLoads: string[] = [];
   markedInvalidVehicles: string[] = [];
   isSubscriptionModal: boolean = false;
+  isRegistered: boolean = false;
+  isAgreed: boolean = false;
 
   constructor(data: Partial<IUserModel>) {
     Object.assign(this, data);
@@ -29,7 +31,8 @@ export default class UserModel implements IUserModel {
     this.phone = data.phone || '';
     this.password = data.password || '';
     this.smsToken = data.smsToken || '';
-    this.role = data.role || '';
+    this.role = data.role || null;
+    this.isAgreed = data.isAgreed || false;
   }
 
   get fullName(): string {

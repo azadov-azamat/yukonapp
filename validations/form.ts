@@ -41,3 +41,12 @@ export const adsValidationSchema = Yup.object().shape({
   originCity: Yup.object().nullable().required('Origin city is required'),
   destinationCity: Yup.object().nullable().required('Destination city is required'),
 });
+
+export const registrationValidationSchema = Yup.object().shape({
+  password: Yup.string()
+    .min(6, 'errors.password-too-short')
+    .required('errors.enter-required'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], 'errors.passwords-must-match')
+    .required('errors.enter-required'),
+});

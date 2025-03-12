@@ -8,7 +8,7 @@ export interface IUserModel extends defaultData {
     telegramUsername?: string;
     password: string;
     smsToken: string;
-    role: string;
+    role: string | null;
     vehicleSearchLimit: number;
     loadSearchLimit: number;
     newLoadsNotifierEnabled: boolean;
@@ -17,5 +17,6 @@ export interface IUserModel extends defaultData {
     bookmarkedVehicleIds: string[];
     markedExpiredLoads: string[];
     markedInvalidVehicles: string[];
+    isAgreed: boolean;
 }
   

@@ -50,8 +50,6 @@
   "phone": "Telefon raqam",
   "cargo-details": "Yuk ma'lumotlari",
   "vehicle-details": "Transport ma'lumotlari",
-  "success-create": "Muvaffaqiyatli yaratildi",
-  "success-unarchive": "Muvaffaqiyatli faollashtirildi!",
   "added-bookmark": "{{adType}} muvaffaqiyatli belgilandi",
   "removed-bookmark": "{{adType}} muvaffaqiyatli o'chirildi",
   "something-wrong": "Nimadir noto'g'ri, qayta urinib ko'ring!",
@@ -225,10 +223,16 @@
     "not_specified": "Har qanday"
   },
   "success": {
+    "register":"Siz muvaffaqiyatli roʻyxatdan oʻtdingiz, yaratilgan akkauntingiz orqali tizimga kiring.",
+    "deleted" : "E'lon muvaffaqiyatli o'chirildi",
+    "payment-subscription": "✅ Toʻlov muvaffaqiyatli amalga oshirildi va sizning obunangiz faollashtirildi!\n✅ Sizning - '*{plan}*' obunangiz: {endDate} sanasigacha amal qiladi.",
     "profile": "Kontakt ma'lumotlari muvaffaqiyatli o'zgartirildi!",
     "password": "Parol muvaffaqiyatli almashtirildi!",
     "notification-saved": "Xabar sozlamalari muvaffaqiyatli saqlandi",
-    "login": "Tizimga muvaffaqiyatli kirildi!"
+    "login": "Tizimga muvaffaqiyatli kirildi!",
+    "create" : "Muvaffaqiyatli yaratildi",
+    "update" : "Muvaffaqiyatli o'zgartirildi",
+    "unarchive" : "Muvaffaqiyatli faollashtirildi!"
   },
   "change-password": {
     "title": "Parolni o'zgartirish",
@@ -263,9 +267,7 @@
     "password-update": "Parol muvaffaqiyatli yangilandi.",
     "empty-confirm-password": "Parol kiritilmagan."
   },
-  "success-register": "Siz muvaffaqiyatli roʻyxatdan oʻtdingiz, yaratilgan akkauntingiz orqali tizimga kiring.",
   "user-saved": "Ma'lumotlaringiz muvaffaqiyatli yangilandi.",
-  "successfully-deleted": "E'lon muvaffaqiyatli o'chirildi",
   "who-are-you": "Siz kimsiz?",
   "more": "Batafsil",
   "select-from-list": "Ro'yxatdan variantni tanlang",
@@ -306,7 +308,6 @@
   "alert": {
     "confirm-or-deny": "Haqiqatan ham, bu amalni bajarmoqchimisiz?"
   },
-  "success-payment-subscription": "✅ Toʻlov muvaffaqiyatli amalga oshirildi va sizning obunangiz faollashtirildi!\n✅ Sizning - '*{plan}*' obunangiz: {endDate} sanasigacha amal qiladi.",
   "user-roles": {
     "driver": "Yuk tashovchi",
     "dispatcher": "Dispetcher / Logist",
