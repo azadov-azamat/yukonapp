@@ -1,165 +1,121 @@
-// import { useAppDispatch } from '@/redux/hooks';
-// import { useState } from 'react';
-// import { useTranslation } from 'react-i18next';
-// import { Alert } from 'react-native';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { createCard, getVerifyToken, verifyCard, createReceipts, payReceipts } from '@/redux/reducers/card';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { Alert, Platform } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { formatDate } from '@/utils/general';
+import { getName } from '@/utils/general';
+import Toast from 'react-native-toast-message';
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
 
-// // Notifications va intl uchun zamena funksiyalar
-// const notifications = {
-//   error: (message: string) => Alert.alert('Error', message),
-// };
+const usePayment = () => {
+    const dispatch = useAppDispatch();
+    const {t} = useTranslation();
+    const router = useRouter();
+    const { card, receipt, verifyData } = useAppSelector(state => state.card);
+    const { selectedPlan } = useAppSelector(state => state.variable);
+    const [remainingSeconds, setRemainingSeconds] = useState(0);
 
-// export default function usePayment() {
-//     const dispatch = useAppDispatch();
-//     const { t } = useTranslation();
-//   const [loading, setLoading] = useState(false);
-//   const [cardData, setCardData] = useState(null);
-//   const [sendingData, setSendingData] = useState(null);
-//   const [remainingSeconds, setRemainingSeconds] = useState(0);
-//   const [receipt, setReceipt] = useState(null);
+    const handleRequestError = (error: any) => {
+        const errorMessages: Record<string, string> = {
+            "-31300": t("errors.card-data-incorrect"),
+            "-31001": t("errors.please-try-again"),
+            "-31900": t("errors.card-data-incorrect"),
+            "-31103": t("errors.confirmation-code-incorrect"),
+            "-31101": t("errors.confirmation-code-expired"),
+            "-31630": t("errors.get-enough-amount"),
+            "-31400": t("errors.confirmation-code-incorrect"),
+            "-31650": t ("errors.card-no-supported")
+        };
 
-//   const sendRequest = async (url, body, method = 'POST') => {
-//     try {
-//       let response = await fetch(url, {
-//         method,
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(body),
-//       });
+        Toast.show({
+            type: 'error',
+            text1: errorMessages[String(error.code)] || t("errors.unhandled-error")
+        });
+    };
 
-//       let jsonResponse = await response.json();
-//       if (jsonResponse.error) {
-//         handleRequestError(jsonResponse.error);
-//         return null;
-//       }
-//       return jsonResponse.result;
-//     } catch (e) {
-//       console.error('Network error:', e);
-//       return null;
-//     }
-//   };
+    const startCountdown = (millis: number) => {
+        const seconds = Math.floor(millis / 1000);
+        setRemainingSeconds(seconds);
+        const interval = setInterval(() => {
+            setRemainingSeconds((prev) => {
+                if (prev <= 1) {
+                    clearInterval(interval);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+        return () => clearInterval(interval);
+    };
 
-//   const handleRequestError = (error: any) => {
-//     const errorMessages = {
-//       '-31300': t('errors.card-data-incorrect'),
-//       '-31900': t('errors.card-data-incorrect'),
-//       '-31103': t('errors.confirmation-code-incorrect'),
-//       '-31101': t('errors.confirmation-code-expired'),
-//       '-31630': t('errors.get-enough-amount'),
-//     };
-//     if (errorMessages[error.code]) {
-//       notifications.error(errorMessages[error.code]);
-//     } else {
-//       console.error('Unhandled error:', error);
-//     }
-//   };
+    useEffect(() => {
+        if (verifyData) {
+            startCountdown(verifyData.wait);
+        }
+    }, [verifyData]);
 
-//   const extractNumbers = (input: string) => input.replace(/\D/g, '');
+    const createNewCard = async (number: string, expire: string) => {
+        const result = await dispatch(createCard({ number, expire })).then(unwrapResult);
+        if (result.error) {
+            handleRequestError(result.error.data?.code ? result.error.data : result.error);
+        }        
+        return result.result.card.token;
+    };
 
-//   const createCard = async (cardNumber: string, expiry: string) => {
-//     setLoading(true);
+    const verifyAndPay = async (code: string, planId: string) => {
+        const verifyResult = await dispatch(verifyCard({ code, token: card ? card.token : '' })).then(unwrapResult);
+        if (verifyResult.error) {
+            handleRequestError(verifyResult.error);
+        }
 
-//     const number = extractNumbers(cardNumber); // cardNumber
-//     const expire = extractNumbers(expiry); // expiry
-//     const body = { number, expire };
+        const resCreateReceipts = await dispatch(createReceipts({ planId })).then(unwrapResult);
+        if (resCreateReceipts.error) {
+            handleRequestError(resCreateReceipts.error);
+        }
 
-//     dispatch(createCard(body));
-//     const result = await sendRequest('cards', body);
-//     if (result) {
-//       setCardData(result.card);
-//       await getVerifyWithToken();
-//     }
+        const checkId = receipt ? receipt._id : resCreateReceipts.result.receipt._id;
+        const token = card ? card.token : '';
+        const resPayReceipts = await dispatch(payReceipts({ checkId, token, paymentType: 'mobile' })).then(unwrapResult);
+        if (resPayReceipts.error) {
+            handleRequestError(resPayReceipts.error);
+        }
 
-//     setLoading(false);
-//   };
+        Toast.show({
+            type: 'success',
+            text1: t('success.create'),
+            text2: t('success.payment-subscription', {plan: getName(selectedPlan, 'name'), endDate: formatDate(new Date(resPayReceipts.result.endDate))})
+        })
+        return router.push('/profile');;
+    };
 
-//   const getVerifyWithToken = async () => {
-//     setLoading(true);
+    const resendVerificationCode = async (token: string) => {
+        if (card || token) {
+            const result = await dispatch(getVerifyToken({ token: card ? card.token : token })).then(unwrapResult);
+            if (result.error) {
+                return handleRequestError(result.error);
+            }
+            Toast.show({
+                type: 'success',
+                text1: t('success.verify-code')
+            })
+        }
+    };
 
-//     if (!cardData) return;
+    const formatTime = (seconds: number) => {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+    };
 
-//     const { token } = cardData;
-//     const body = { token };
+    return {
+        createNewCard,
+        verifyAndPay,
+        resendVerificationCode,
+        remainingSeconds,
+        time: formatTime,
+    };
+};
 
-//     const result = await sendRequest('cards/verify-code', body);
-//     if (result) {
-//       setSendingData(result);
-//       setRemainingSeconds(result.wait);
-//       startCountdown(result.wait);
-//     }
-
-//     setLoading(false);
-//   };
-
-//   const getVerifyCode = async (code) => {
-//     setLoading(true);
-
-//     if (!cardData) return;
-
-//     const { token } = cardData;
-//     const body = { token, code };
-
-//     const result = await sendRequest('cards/verify', body);
-//     if (result) {
-//       setCardData(result.card);
-//       await createReceipt();
-//     }
-
-//     setLoading(false);
-//   };
-
-//   const createReceipt = async () => {
-//     setLoading(true);
-
-//     const body = { planId: 'your_plan_id_here' };
-
-//     const result = await sendRequest('receipts', body);
-//     if (result) {
-//       setReceipt(result.receipt);
-//       await receiptPay();
-//     }
-
-//     setLoading(false);
-//   };
-
-//   const receiptPay = async () => {
-//     setLoading(true);
-
-//     if (!cardData || !receipt) return;
-
-//     const { token } = cardData;
-//     const body = { checkId: receipt._id, token };
-
-//     const result = await sendRequest('receipts/pay', body);
-//     if (result) {
-//       Alert.alert('Success', 'Payment successful!');
-//       console.log('Subscription:', result);
-//       // Navigate to another screen, e.g., navigation.navigate('SearchVehicle');
-//     }
-
-//     setLoading(false);
-//   };
-
-//   const startCountdown = (seconds) => {
-//     setRemainingSeconds(seconds);
-//     const interval = setInterval(() => {
-//       setRemainingSeconds((prev) => {
-//         if (prev <= 1) {
-//           clearInterval(interval);
-//           return 0;
-//         }
-//         return prev - 1;
-//       });
-//     }, 1000);
-//   };
-
-//   return {
-//     loading,
-//     cardData,
-//     sendingData,
-//     remainingSeconds,
-//     receipt,
-//     createCard,
-//     getVerifyCode,
-//   };
-// }
+export default usePayment;

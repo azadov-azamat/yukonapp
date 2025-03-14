@@ -1,6 +1,6 @@
 import { ContentSubscriptionLoader } from '@/components/content-loader';
 import SubscriptionModel from '@/models/subscription';
-import { formatPrice, getName } from '@/utils/general';
+import { formatPrice, getName, formatDate } from '@/utils/general';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text } from 'react-native';
@@ -16,16 +16,6 @@ const Subscriptions: React.FC<SubscriptionProps> = ({subscription}) => {
     if (!subscription || !subscription.plan) {
         return <ContentSubscriptionLoader/>    
     }
-
-    const formatDate = (date: Date) => {
-        return date ? new Date(date).toLocaleString('uz-UZ', {
-            hour: '2-digit',
-            minute: '2-digit',
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        }).replace(',', '') : '';
-    };
 
     if (subscription.status === 'expired') {
         return (

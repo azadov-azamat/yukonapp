@@ -95,7 +95,7 @@
   "for-1": "1 kun uchun",
   "for-3": "3 kun uchun",
   "subscribe": "Obuna bo'lish",
-  "payment-price": "To'lanadigan narx: {price} so'm",
+  "payment-price": "To'lanadigan narx: {{price}} so'm",
   "accept-terms": "\"Davom etish\" tugmasini bosish orqali siz oferta shartlariga qo'shilasiz",
   "card-data-info": "Sizning kartangiz ma'lumotlari ushbu xizmatga uzatilmaydi va Payme xizmatining xavfsiz hududida saqlanadi",
   "daily-limit-text": "Kunlik limitingiz tugadi, limitni olib tashlashni xoxlasangiz obunalardan birini sotib oling",
@@ -121,11 +121,11 @@
     "remember": "Eslab qolish",
     "continue": "Davom etish",
     "month": "OY/YIL",
-    "time-left": "Qolgan vaqt: {time} sekund",
+    "time-left": "Qolgan vaqt: {{time}} sekund",
     "resend-code": "Kodni qayta yuborish",
     "confirm": "Tasdiqlash",
     "enter-confirm-code": "Tasdiqlash kodini kiriting",
-    "send-this-phone": "Tasdiqlash kodi quyidagi raqamga yuborildi: {phone}",
+    "send-this-phone": "Tasdiqlash kodi quyidagi raqamga yuborildi: {{phone}}",
     "confirm-code": "Tasdiqlash kodi"
   },
   "load-filters": {
@@ -226,7 +226,7 @@
   "success": {
     "register":"Siz muvaffaqiyatli roʻyxatdan oʻtdingiz, yaratilgan akkauntingiz orqali tizimga kiring.",
     "deleted" : "E'lon muvaffaqiyatli o'chirildi",
-    "payment-subscription": "✅ Toʻlov muvaffaqiyatli amalga oshirildi va sizning obunangiz faollashtirildi!\n✅ Sizning - '*{plan}*' obunangiz: {endDate} sanasigacha amal qiladi.",
+    "payment-subscription": "✅ Toʻlov muvaffaqiyatli amalga oshirildi va sizning obunangiz faollashtirildi!\n✅ Sizning - '*{{plan}}*' obunangiz: {{endDate}} sanasigacha amal qiladi.",
     "profile": "Kontakt ma'lumotlari muvaffaqiyatli o'zgartirildi!",
     "password": "Parol muvaffaqiyatli almashtirildi!",
     "notification-saved": "Xabar sozlamalari muvaffaqiyatli saqlandi",
@@ -234,7 +234,8 @@
     "create" : "Muvaffaqiyatli yaratildi",
     "update" : "Muvaffaqiyatli o'zgartirildi",
     "unarchive" : "Muvaffaqiyatli faollashtirildi!",
-    "password-update": "Parol muvaffaqiyatli yangilandi."
+    "password-update": "Parol muvaffaqiyatli yangilandi.",
+    "verify-code": "Tasdiqlash kodi muvaffaqiyatli yuborildi"
   },
   "change-password": {
     "title": "Parolni o'zgartirish",
@@ -266,7 +267,10 @@
     "get-enough-amount": "Kartangizda mablag' yetarli emas!",
     "destination-not-found": "Kiritilgan manzil topilmadi! Shahar nomini tekshiring",
     "phone-not-exist": "Telefon raqami mavjud emas",
-    "empty-confirm-password": "Parol kiritilmagan."
+    "empty-confirm-password": "Parol kiritilmagan.",
+    "please-try-again": "Iltimos, qayta urinib ko'ring.",
+    "unhandled-error": "Xatolik, qayta urinib ko'ring.",
+    "card-no-supported": "Kiritilgan karta qo'llab-quvvatlanmaydi"
   },
   "user-saved": "Ma'lumotlaringiz muvaffaqiyatli yangilandi.",
   "who-are-you": "Siz kimsiz?",

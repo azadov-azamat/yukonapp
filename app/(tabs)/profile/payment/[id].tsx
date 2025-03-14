@@ -8,27 +8,26 @@ import { useTranslation } from "react-i18next";
 import PaymentForm from "@/components/forms/payment";
 import { ContentPaymentPageLoader } from "@/components/content-loader";
 import ConfirmCodeForm from "@/components/forms/confirm-code";
-import { getVerifyToken } from "@/redux/reducers/card";
+import { resetState } from "@/redux/reducers/card";
 
 export default function Payment() {
-    const router = useRouter()
     const {id} = useLocalSearchParams(); 
     const { t } = useTranslation();
     const dispatch = useAppDispatch();
     const { selectedPlan } = useAppSelector(state => state.variable);
-    const {card, verifyData} = useAppSelector(state => state.card);
-    
-    React.useEffect(() => {
-        if (card) {
-            dispatch(getVerifyToken({token: card.token}))
-        }    
-    }, [card]);
+    const { verifyData, card } = useAppSelector(state => state.card);
     
     React.useEffect(() => {
         if (id) {
             dispatch(getPlanById(Number(id))).unwrap();
         }
     }, [id]);
+    
+    React.useEffect(() => {
+        return ()=> {
+            dispatch(resetState());
+        }
+    }, []);
     
     if  (!selectedPlan) {
         return <ContentPaymentPageLoader/>
@@ -56,7 +55,7 @@ export default function Payment() {
                 </View>
 
                 {/* Form */}
-                {!verifyData ? <PaymentForm/> : <ConfirmCodeForm/>}
+                {!verifyData || !card ? <PaymentForm/> : <ConfirmCodeForm/>}
             </View>
         </View>
     );

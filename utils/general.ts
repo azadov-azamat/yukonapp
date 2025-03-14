@@ -9,8 +9,7 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import 'dayjs/locale/en';
 import 'dayjs/locale/ru';
 import 'dayjs/locale/uz';
-import { Linking } from "react-native";
-import { Alert } from "react-native";
+import { Linking, Alert } from "react-native";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
@@ -153,6 +152,16 @@ export function formatPhone(str: string, prefix = '+998 ') {
 
     return phone;
 }
+
+export const formatDate = (date: Date) => {
+  return date ? new Date(date).toLocaleString('uz-UZ', {
+      hour: '2-digit',
+      minute: '2-digit',
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+  }).replace(',', '') : '';
+};
 
 export async function openLink(url: string) {
   if (!url) {

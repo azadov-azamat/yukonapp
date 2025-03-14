@@ -9,9 +9,9 @@ export const loginValidationSchema = Yup.object().shape({
 });
 
 export const paymentValidationSchema = Yup.object().shape({
-  cardNumber: Yup.string()
+  number: Yup.string()
     .required("errors.enter-required"),
-    expiry: Yup.string()
+  expire: Yup.string()
     .required('errors.enter-required'),
 });
 

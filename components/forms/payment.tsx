@@ -1,31 +1,28 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { useFormik } from 'formik';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { paymentValidationSchema } from '@/validations/form';
 import { CustomInput, CustomButton, CustomOpenLink } from '@/components/custom';
-import { useRouter } from "expo-router";
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { useAppSelector } from '@/redux/hooks';
 import { useTranslation } from 'react-i18next';
-import { createCard } from '@/redux/reducers/card';
+import usePayment from '@/hooks/payment';
 
 const PaymentForm = () => {
-  const dispatch = useAppDispatch();
   const {t} = useTranslation();
   const { loading } = useAppSelector(state => state.card)
+  const { createNewCard, resendVerificationCode } = usePayment();
   
   const extractNumbers = (input: string) => input.replace(/\D/g, '');
   
   const formik = useFormik({
     initialValues: { number: '', expire: '' },
     validationSchema: paymentValidationSchema,
-    onSubmit: (values) => {
-      console.log('Formik submitted:', values);
-      const number = extractNumbers(values.number);
-      const expire = extractNumbers(values.expire);
-      const body = { number, expire };
-      console.log(body);
-      
-      dispatch(createCard(body))
+    onSubmit: async (values) => {
+      const token = await createNewCard(extractNumbers(values.number), extractNumbers(values.expire));
+      if (token) {
+        await resendVerificationCode(token);
+      }
     },
   });
   

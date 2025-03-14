@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Toast from 'react-native-toast-message';
 
 // API: cards.create
-export const createCard = createAsyncThunk('variable/createCard', async (data:{ number: string, expire: string }, { rejectWithValue }) => {
+export const createCard = createAsyncThunk('card/createCard', async (data:{ number: string, expire: string }, { rejectWithValue }) => {
     try {
       const response = await http.post('/cards', data);
       return response.data;
@@ -15,7 +15,7 @@ export const createCard = createAsyncThunk('variable/createCard', async (data:{ 
 );
 
 // API: cards.get_verify_code
-export const getVerifyToken = createAsyncThunk('variable/getVerifyToken', async (data:{token: string}, { rejectWithValue }) => {
+export const getVerifyToken = createAsyncThunk('card/getVerifyToken', async (data:{token: string}, { rejectWithValue }) => {
     try {
       const response = await http.post('/cards/verify-code', data);
       return response.data;
@@ -26,7 +26,7 @@ export const getVerifyToken = createAsyncThunk('variable/getVerifyToken', async 
 );
 
 // API: cards.verify
-export const verifyCard = createAsyncThunk('variable/verifyCard', async (data: { token: string, code: string }, { rejectWithValue }) => {
+export const verifyCard = createAsyncThunk('card/verifyCard', async (data: { token: string, code: string }, { rejectWithValue }) => {
     try {
       const response = await http.post('/cards/verify', data);
       return response.data;
@@ -37,7 +37,7 @@ export const verifyCard = createAsyncThunk('variable/verifyCard', async (data: {
 );
 
 // API: cards.check
-export const checkCard = createAsyncThunk('variable/checkCard', async (data:{ token: string }, { rejectWithValue }) => {
+export const checkCard = createAsyncThunk('card/checkCard', async (data:{ token: string }, { rejectWithValue }) => {
     try {
       const response = await http.post('/cards/check', data);
       return response.data;
@@ -48,9 +48,31 @@ export const checkCard = createAsyncThunk('variable/checkCard', async (data:{ to
 );
 
 // API: cards.remove
-export const removeCard = createAsyncThunk('variable/removeCard', async (data: { token: string }, { rejectWithValue }) => {
+export const removeCard = createAsyncThunk('card/removeCard', async (data: { token: string }, { rejectWithValue }) => {
     try {
         const response = await http.post('/cards/remove', data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+// API: cards.create_receipt
+export const createReceipts = createAsyncThunk('card/createReceipts', async (data: { planId: string }, { rejectWithValue }) => {
+    try {
+        const response = await http.post('/receipts', data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+// API: cards.pay_receipt
+export const payReceipts = createAsyncThunk('card/payReceipts', async (data: { checkId: string; token: string; paymentType: string }, { rejectWithValue }) => {
+    try {
+        const response = await http.post('/receipts/pay', data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -62,17 +84,19 @@ export const removeCard = createAsyncThunk('variable/removeCard', async (data: {
 const initialState: CardInitialProps = {
   card: null,
   verifyData: null,
+  receipt: null,
   loading: false,
 };
 
 // Redux slice
-const variableSlice = createSlice({
-  name: 'variable',
+const cardSlice = createSlice({
+  name: 'card',
   initialState,
   reducers: {
     resetState(state) {
       state.card = null;
       state.verifyData = null;
+      state.receipt = null;
       state.loading = false;
     },
   },
@@ -87,11 +111,6 @@ const variableSlice = createSlice({
     });
     builder.addCase(createCard.rejected, (state, action) => {
       state.loading = false;
-      Toast.show({
-        type: 'error',
-        text1: `${action.payload}`,
-      });
-    //   state.error = action.payload;
     });
 
     // getVerifyCode
@@ -104,10 +123,6 @@ const variableSlice = createSlice({
     });
     builder.addCase(getVerifyToken.rejected, (state, action) => {
       state.loading = false;
-      Toast.show({
-        type: 'error',
-        text1: `${action.payload}`,
-      });
     });
 
     // verifyCard
@@ -116,15 +131,12 @@ const variableSlice = createSlice({
     });
     builder.addCase(verifyCard.fulfilled, (state, action) => {
       state.loading = false;
-      state.card = action.payload;
+      if (action.payload?.result?.card) {
+        state.card = action.payload?.result?.card;
+      }
     });
     builder.addCase(verifyCard.rejected, (state, action) => {
       state.loading = false;
-      Toast.show({
-        type: 'error',
-        text1: `${action.payload}`,
-      });
-    //   state.error = action.payload;
     });
 
     // checkCard
@@ -136,11 +148,6 @@ const variableSlice = createSlice({
     });
     builder.addCase(checkCard.rejected, (state, action) => {
       state.loading = false;
-      Toast.show({
-        type: 'error',
-        text1: `${action.payload}`,
-      });
-    //   state.error = action.payload;
     });
 
     // removeCard
@@ -153,15 +160,35 @@ const variableSlice = createSlice({
     });
     builder.addCase(removeCard.rejected, (state, action) => {
       state.loading = false;
-      Toast.show({
-        type: 'error',
-        text1: `${action.payload}`,
-      });
-    //   state.error = action.payload;
+    });
+
+    // createReceipts
+    builder.addCase(createReceipts.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(createReceipts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.receipt = action.payload?.result?.receipt;
+    });
+    builder.addCase(createReceipts.rejected, (state, action) => {
+      state.loading = false;
+      state.receipt = null;
+    });
+
+    // payReceipts
+    builder.addCase(payReceipts.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(payReceipts.fulfilled, (state) => {
+      state.loading = false;
+      // state.card = null;
+    });
+    builder.addCase(payReceipts.rejected, (state, action) => {
+      state.loading = false;
     });
   },
 });
 
-export const { resetState } = variableSlice.actions;
+export const { resetState } = cardSlice.actions;
 
-export default variableSlice.reducer;
+export default cardSlice.reducer;

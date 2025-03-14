@@ -23,6 +23,7 @@ NativeWindStyleSheet.setOutput({
 
 function App() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const { auth } = useAppSelector((state) => state.auth);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -43,7 +44,12 @@ function App() {
 
         if (userId) {
           const res = await dispatch(getUserMe(userId));
-          setIsAuthenticated(res.type === "auth/getUserMe/fulfilled");
+          if (res.type === "auth/getUserMe/fulfilled") {
+            setIsAuthenticated(true);
+            router.push("/(tabs)");
+          } else {
+            setIsAuthenticated(false);
+          }
         } else {
           setIsAuthenticated(false);
         }
@@ -57,6 +63,8 @@ function App() {
 
     checkAuth();
   }, [auth]);
+
+  useEffect(() => {}, [isAuthenticated]);
 
   if (isAuthLoading) {
     return (

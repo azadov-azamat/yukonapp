@@ -95,7 +95,7 @@
     "for-1": "1 кунга",
     "for-3": "3 кунга",
     "subscribe": "Обуна бўлиш",
-    "payment-price": "Тўлов суммаси: {price} сум",
+    "payment-price": "Тўлов суммаси: {{price}} сум",
     "accept-terms": "«Davom etish» tugmasini bosish orqali siz taklif shartlariga rozi bo'lasiz",
     "card-data-info": "Картангиз маълумотлари бу хизматга ўтказилмайди ва Payme хизматининг хавфсиз зонасида сақланади",
     "daily-limit-text": "Сизнинг кунлик лимитингиз тугади, агар лимитни олиб ташламоқчи бўлсангиз, обуналардан бирини сотиб олинг",
@@ -121,11 +121,11 @@
       "remember": "Эслаб қолиш",
       "continue": "Давом этиш",
       "month": "ММ/YY",
-      "time-left": "Вақт қолди: {time} секунд",
+      "time-left": "Вақт қолди: {{time}} секунд",
       "resend-code": "Кодни яна юбориш",
       "confirm": " tasdiqlash",
       "enter-confirm-code": "Тасдиқ кодини киритинг",
-      "send-this-phone": "Тасдиқ коди қуйидаги рақамга юборилди: {phone}",
+      "send-this-phone": "Тасдиқ коди қуйидаги рақамга юборилди: {{phone}}",
       "confirm-code": "Тасдиқ коди"
     },
     "load-filters": {
@@ -234,7 +234,8 @@
       "create": "Муваффақиятли яратилди",
       "update": "Муваффақиятли ўзгартирилди",
       "unarchive": "Муваффақиятли фаоллаштирилди!",
-      "password-update": "Парол муваффақиятли янгиланди."
+      "password-update": "Парол муваффақиятли янгиланди.",
+      "verify-code": "Тасдиқ коди муваффақиятли юборилди"
     },
     "change-password": {
       "title": "Паролни ўзгартириш",
@@ -266,7 +267,10 @@
       "get-enough-amount": "Сизда картанинг етарли маблағи йўқ!",
       "destination-not-found": "Кўрсатилган жой топилмади! Шаҳар номини текширинг",
       "phone-not-exist": "Телефон рақами мавжуд эмас",
-      "empty-confirm-password": "Парол киритилмаган."
+      "empty-confirm-password": "Парол киритилмаган.",
+      "please-try-again": "Илтимос, қайта уриниб кўринг.",
+      "unhandled-error": "Хатолик, қайта уриниб кўринг.",
+      "card-no-supported": "Кўрсатилган карта қўллаб-қувватланмайди"
     },
     "user-saved": "Сизнинг маълумотларингиз муваффақиятли янгиланди.",
     "who-are-you": "Сиз кимсиз?",
