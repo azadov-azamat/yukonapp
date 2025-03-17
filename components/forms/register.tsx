@@ -27,6 +27,7 @@ const RegisterForm = () => {
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [errors, setErrors] = React.useState<Record<string, string>>({});
   const [isAgreed, setIsAgreed] = React.useState(false);
+  const [currentStep, setCurrentStep] = React.useState(1);
 
   const checkPhoneNumber = async (phone: string) => {
     const response = await dispatch(uniquePhone({ phone: phone }));
@@ -90,45 +91,51 @@ const RegisterForm = () => {
       console.log(err);
     });
   };
-  
-  return (  
-    <View className="w-4/5">
-      {/* Telefon raqami */}
-      <CustomInput
-        type={'phone'}
-        label={t('phone')}
-        value={phone}
-        onChangeText={(text) => {
-          setPhone(text);
-          debouncedCheckPhoneNumber(text);
-        }}
-        placeholder="90 123 45 67"
-        divClass='mb-4'
-      />
 
-      {
-         successSendSms && (<CustomInput
-         label={t('enter-code')}
-         value={smsCode}
-         maxLength={4}
-         onChangeText={setSmsCode}
-         placeholder="****"
-         divClass='mb-4'
+  const handleNextStep = () => {
+    if (currentStep < 3) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePreviousStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  return (
+    <View>
+      {/* Step 1: Phone Input */}
+      {currentStep === 1 && (
+        <CustomInput
+          type={'phone'}
+          label={t('phone')}
+          value={phone}
+          onChangeText={(text) => {
+            setPhone(text);
+            debouncedCheckPhoneNumber(text);
+          }}
+          placeholder="90 123 45 67"
+          divClass='mb-4'
         />
-        )
-      }           
-      {/* Sms jo'natish tugmasi */}
-      <CustomButton
-        disabled={!isVerifyPhone}
-        title={successSendSms ? t('send-code-again') : t('send-verification')}
-        onPress={sendCode}
-        buttonStyle={'bg-primary mt-2'}
-      />
+      )}
 
-      {/* Parol */}
-      {
-        successSendSms && smsCode.length === 4 && (
-          <>
+      {/* Step 2: SMS Code Input */}
+      {currentStep === 2 && successSendSms && (
+        <CustomInput
+          label={t('enter-code')}
+          value={smsCode}
+          maxLength={4}
+          onChangeText={setSmsCode}
+          placeholder="****"
+          divClass='mb-4'
+        />
+      )}
+
+      {/* Step 3: Password Inputs */}
+      {currentStep === 3 && successSendSms && smsCode.length === 4 && (
+        <>
           <CustomInput
             label={t('password')}
             type={'password'}
@@ -147,8 +154,6 @@ const RegisterForm = () => {
             error={errors.confirmPassword}
             divClass='mb-4'
           />
-
-            {/* Foydalanuvchi shartlari bilan tanishish checkboxi */}
           <View className='flex-row items-start mt-2'>
             <Checkbox
               status={isAgreed ? 'checked' : 'unchecked'}
@@ -165,17 +170,39 @@ const RegisterForm = () => {
               </Text>
             </Text>
           </View>
-      
-           <CustomButton
-            loading={loading}
-            disabled={loading || !isAgreed}
-            title={t('register')}
-            onPress={handleSubmit}
-            buttonStyle={'bg-primary mt-2'}
+        </>
+      )}
+
+      {/* Navigation Buttons */}
+      <View className='flex-row justify-between mt-4'>
+        {currentStep > 1 && (
+          <CustomButton
+            title={t('go-back')}
+            onPress={handlePreviousStep}
+            buttonStyle={'flex-1 bg-secondary mr-2'}
           />
-          </>
-        )
-      }
+        )}
+        <CustomButton
+          title={
+            currentStep === 1
+              ? t('send-verification')
+              : currentStep === 2
+              ? t('confirm')
+              : t('complete')
+          }
+          onPress={handleNextStep}
+          disabled={
+            (currentStep === 1 && !phone) ||
+            (currentStep === 2 && !smsCode) ||
+            (currentStep === 3 && (!password || !confirmPassword))
+          }
+          buttonStyle={
+            currentStep === 1
+              ? 'flex-1 bg-primary'
+              : 'flex-1 bg-primary'
+          }
+        />
+      </View>
     </View>
   );
 };

@@ -18,7 +18,7 @@ const Button: React.FC<ButtonComponentProps> = ({
     <TouchableOpacity
       onPress={onPress}
       disabled={loading || disabled} // Disable button when loading or disabled
-      className={`flex-row items-center justify-center py-2 px-5 rounded ${buttonStyle}`}
+      className={`flex-row items-center justify-center py-2 px-5 rounded-2xl ${buttonStyle}`}
       style={{
         opacity: loading || disabled ? 0.6 : 1, // Button becomes semi-transparent when disabled or loading
       }}
@@ -32,7 +32,7 @@ const Button: React.FC<ButtonComponentProps> = ({
           <Ionicons name={icon} size={iconSize} color="white" />
         ) : (
           // Show text if no icon is required
-          <Text className={`${buttonStyle && 'text-white'} text-lg ${textStyle}`}>{title}</Text>
+          <Text className={`${buttonStyle && 'text-white'} text-sm leading-6 text-primary-black dark:text-primary-light ${textStyle}`}>{title}</Text>
         )
       )}
     </TouchableOpacity>

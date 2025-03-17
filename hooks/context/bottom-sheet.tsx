@@ -2,11 +2,14 @@ import React, { createContext, useContext, useRef, useState, useCallback } from 
 import SettingsBottomSheet, { SettingsBottomSheetRef } from "@/components/bottom-sheet/settings";
 import EditLoadBottomSheet, { EditLoadBottomSheetRef } from "@/components/bottom-sheet/edit-load";
 import LoadViewBottomSheet, { LoadViewBottomSheetRef } from '@/components/bottom-sheet/load-view';
+import LanguageBottomSheet, { LanguageBottomSheetRef, languages } from '@/components/bottom-sheet/language';
 
 type AppContextType = {
   openSettings: () => void;
   openEditLoad: (id: number) => void;
   openLoadView: (id: number) => void;
+  openLanguage: () => void;
+  languages: Array<{ code: string; label: string; icon: any; short: string }>;
 };
 
 // Create the context
@@ -31,12 +34,17 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
     setRecordId(id);
   }, []);
 
+  // Language Bottom Sheet
+  const LanguageSheetRef = useRef<LanguageBottomSheetRef>(null);
+  const openLanguage = useCallback(() => LanguageSheetRef.current?.open(), []);
+  
   return (
-    <AppContext.Provider value={{ openSettings, openEditLoad, openLoadView }}>
+    <AppContext.Provider value={{ openSettings, openEditLoad, openLoadView, openLanguage, languages }}>
       {children}
       <MemoizedSettingsBottomSheet ref={settingsSheetRef} />
       <MemoizedEditLoadBottomSheet ref={EditLoadSheetRef} recordId={recordId} />
       <MemoizedLoadViewBottomSheet ref={LoadViewSheetRef} />
+      <MemoizedLanguageBottomSheet ref={LanguageSheetRef} />
     </AppContext.Provider>
   );
 }
@@ -44,6 +52,7 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
 const MemoizedSettingsBottomSheet = React.memo(SettingsBottomSheet);
 const MemoizedEditLoadBottomSheet = React.memo(EditLoadBottomSheet);
 const MemoizedLoadViewBottomSheet = React.memo(LoadViewBottomSheet);
+const MemoizedLanguageBottomSheet = React.memo(LanguageBottomSheet);
 
 export function useBottomSheet() {
   const context = useContext(AppContext);

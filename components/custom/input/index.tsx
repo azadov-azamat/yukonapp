@@ -3,6 +3,7 @@ import { StyleSheet, Platform, Text, View, TextInput, TouchableOpacity, Activity
 import { MaterialIcons } from '@expo/vector-icons'; // Ikonkalar uchun kutubxona
 import { InputProps } from '@/interface/components';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '@/config/ThemeContext';
 
 const Input: React.FC<InputProps> = ({
   label,
@@ -18,7 +19,7 @@ const Input: React.FC<InputProps> = ({
 }) => {
   const {t} = useTranslation();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false); // Parolni ko'rsatish holati
-
+  const { theme } = useTheme();
   function formatExpiryDate(value: string) {
     value = value.slice(0, 5);
     if (value.length === 2) {
@@ -48,41 +49,31 @@ const Input: React.FC<InputProps> = ({
   }
 
   return (
-    <View style={[styles.container]} className={`relative = ${divClass}`}>
+    <View className={`relative ${divClass}`}>
       {/* Label */}
-      {label && <Text className="mb-1 text-lg font-semibold text-gray-700">{label}</Text>}
+      {label && <Text className="mb-2 text-[15px] leading-[22.5px] font-semibold text-primary-title-color dark:text-primary-light">{label}</Text>}
 
-      <View className={`flex-row items-center px-3 text-lg bg-white border rounded-md ${
-            error ? 'border-primary-red' : 'border-border-color'
+      <View className={`flex-row items-center px-3 text-lg border bg-primary-bg-light dark:bg-primary-bg-dark rounded-2xl ${
+            error ? 'border-primary-red' : 'border-transparent'
           }`}>
         {/* Telefon uchun prefix */}
         {type === 'phone' && (
-          <Text className="mr-2 text-lg">+998</Text>
+          <Text className="mr-2 text-sm text-input-color">+998</Text>
         )}
 
         {/* Input */}
         <TextInput
           style={[styles.input]}
-          className={`text-lg h-12 flex-1 focus-visible:outline-0 focus:outline-0 `}
+          className={`h-12 flex-1 focus-visible:outline-0 focus:outline-0 text-sm text-input-color`}
           value={value}
           onChangeText={updateValue}
           onBlur={onBlur}
           placeholder={placeholder}
+          placeholderTextColor={theme.colors.inputColor}
           secureTextEntry={type === 'password' && !isPasswordVisible}
           keyboardType={type === 'phone' ? 'phone-pad' : 'default'}
           {...rest}
         />
-
-        {/* Parol uchun ko'rish/ko'rmaslik icon */}
-        {type === 'password' && (
-          <TouchableOpacity onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-            <MaterialIcons
-              name={isPasswordVisible ? 'visibility' : 'visibility-off'}
-              size={24}
-              color={'gray'}
-            />
-          </TouchableOpacity>
-        )}
 
         {loading && <ActivityIndicator size="small" color="gray" />}
       </View>
@@ -95,15 +86,10 @@ const Input: React.FC<InputProps> = ({
 
 const styles = StyleSheet.create({
   input: {
-    flex: 1,
-    height: 48,
-    fontSize: 18,
-    lineHeight: Platform.OS === 'ios' ? 21.5 : Platform.OS === 'web' ? 48 : undefined,
+    
+    // lineHeight: Platform.OS === 'ios' ? 21.5 : Platform.OS === 'web' ? 48 : undefined,
     textAlignVertical: Platform.OS === 'ios' ? 'center' : 'auto',
-		outlineWidth: 0, // it works
-  },
-  container: {
-    zIndex: undefined,
+    
   }
 });
 

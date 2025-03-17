@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity, Text, Alert } from 'react-native';
 import { useFormik } from 'formik';
 import { loginValidationSchema } from '@/validations/form';
 import { CustomInput, CustomButton } from '@/components/custom';
@@ -9,6 +9,11 @@ import { login } from '@/redux/reducers/auth';
 import Toast from 'react-native-toast-message';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
+import { styled } from "nativewind";
+
+const StyledTouchableOpacity = styled(TouchableOpacity);
+const StyledView = styled(View);
+const StyledText = styled(Text);
 
 const LoginForm = () => {
   const router = useRouter();
@@ -42,12 +47,16 @@ const LoginForm = () => {
     },
   });
 
-  function Working() {
+  function handleForgotPassword() {
     router.replace('/auth/forgot-password')
   }
   
+  function handleContinueWithTelegram() {
+    Alert.alert('Coming soon')
+  }
+
   return (
-    <View className="w-4/5">
+    <StyledView>
       {/* Telefon raqami */}
       <CustomInput
         type={'phone'}
@@ -71,7 +80,15 @@ const LoginForm = () => {
         error={formik.touched.password && formik.errors.password}
         divClass='mb-4'
       />
-
+      
+      <StyledView className="items-end mb-4"> 
+            <StyledTouchableOpacity
+              onPress={handleForgotPassword}
+            >
+              <StyledText className={`text-[15px] leading-[22.5px] font-semibold text-primary`}>{t ("forgot-password")}</StyledText>
+            </StyledTouchableOpacity>
+      </StyledView>
+      
       {/* Kirish tugmasi */}
       <CustomButton 
         loading={loading}
@@ -80,11 +97,21 @@ const LoginForm = () => {
         onPress={formik.handleSubmit} 
         buttonStyle={'bg-primary mt-2'} 
       />
-
-      {/* Parolni unutdingizmi */}
-      <CustomButton title={t ("forgot-password")} onPress={Working} />
       
-    </View>
+      <StyledView className="flex-row items-center justify-center my-8 space-x-4">
+        <View className="h-[1px] flex-1 bg-border-color" />
+        <StyledText className={`text-[15px] leading-[22.5px] font-semibold text-text-color`}>or continue with</StyledText>
+        <View className="h-[1px] flex-1 bg-border-color" />
+      </StyledView>
+      
+      <CustomButton 
+        title={t ('Continue with Telegram')} 
+        onPress={handleContinueWithTelegram} 
+        buttonStyle={'bg-primary-bg-light dark:bg-primary-bg-dark'}
+        textStyle={'text-primary-title-color dark:text-primary-light'}    
+      />
+      
+    </StyledView>
   );
 };
 
