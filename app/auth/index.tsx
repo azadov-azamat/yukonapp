@@ -1,7 +1,6 @@
 import { View, Alert, TouchableOpacity, Text } from "react-native";
 import React from "react";
 import { CustomLanguageSelector } from "@/components/custom";
-import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from '@/config/ThemeContext';

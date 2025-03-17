@@ -14,6 +14,7 @@
   "archive": "Nofaol",
   "expired": "Muddati o'tgan",
   "other": "boshqa",
+  "complete": "Tugatish",
   "unarchive": "Faollashtirish",
   "add-vehicle": "Yangi transport qo'shish",
   "edit-vehicle": "Transportni tahrirlash",
@@ -114,6 +115,8 @@
   "reset-password": "Parolni tiklash",
   "new-load-ads-notifier": "Yangi yuklar haqida xabar berishni yoqish",
   "latest-ads": "So'nggi e'lonlar",
+  "terms-of-use": "Foydalanuvchi shartlari bilan tanishdim",
+  "terms-of-use-link": "bu yerda",
   "payment-card": {
     "title": "To'lov shakli",
     "number": "Karta raqami",

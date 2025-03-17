@@ -11,15 +11,16 @@ import { useTranslation } from 'react-i18next';
 import { debounce } from 'lodash';
 import UserModel from '@/models/user';
 import { Checkbox } from 'react-native-paper';
+import { useTheme } from '@/config/ThemeContext';
 
 const Register = ({setView}: {setView: (view: string) => void}) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { loading, uniquePhoneExists, successSendSms } = useAppSelector(state => state.auth);
+  const { theme } = useTheme();
   
   const [phone, setPhone] = React.useState('');
-  const [isSmsSent, setIsSmsSent] = React.useState(false);
-  const [isVerifyPhone, setIsVerifyPhone] = React.useState(false);
+  const [isVerifyPhone, setIsVerifyPhone] = React.useState(true);
   const [smsCode, setSmsCode] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
@@ -28,16 +29,15 @@ const Register = ({setView}: {setView: (view: string) => void}) => {
   const [currentStep, setCurrentStep] = React.useState(1);
 
   const checkPhoneNumber = async (phone: string) => {
-    console.log("ishlayabdi");
-    
     const response = await dispatch(uniquePhone({ phone: phone }));
     if (response.payload?.exist) {
       Toast.show({
         type: 'error',
         text1: t('errors.phone-exist'),
       });
-    } else {
       setIsVerifyPhone(true);
+    } else {
+      setIsVerifyPhone(false);
     }
   };
 
@@ -66,11 +66,12 @@ const Register = ({setView}: {setView: (view: string) => void}) => {
         isAgreed: true,
       });
       dispatch(createUser(user)).then(unwrapResult).then((res) => {
-        setView('login');
         Toast.show({
           type: 'success',
-          text1: t('success.register'),
+          text1: t('success.create'),
+          text2: t('success.register'),
         }); 
+        setView('login');
       }).catch((err) => {
         console.log(err);
         Toast.show({
@@ -85,19 +86,22 @@ const Register = ({setView}: {setView: (view: string) => void}) => {
     dispatch(sendSmsCode({ phone: phone, action: 'register' })).then(unwrapResult).then((res) => {
       Toast.show({
         type: 'success',
-        text1: t('success.code-sent'),
+        text1: t('code-sent'),
       });
+      setCurrentStep(2);
     }).catch((err) => {
       console.log(err);
+      Toast.show({
+        type: 'error',
+        text1: t('errors.something-wrong'),
+      });
+      setCurrentStep(1);
     });
   };
 
   const handleNextStep = async () => {
     const stepActions: Record<number, () => Promise<void> | void> = {
-      1: async () => {
-        await sendCode();
-        setCurrentStep(2);
-      },
+      1: () => sendCode(),
       2: () => setCurrentStep(3),
       3: async () => {
         await handleSubmit();
@@ -169,16 +173,15 @@ const Register = ({setView}: {setView: (view: string) => void}) => {
           <View className='flex-row items-start mt-2'>
             <Checkbox
               status={isAgreed ? 'checked' : 'unchecked'}
-              onPress={() => {
-                setIsAgreed(!isAgreed);
-              }}
+              onPress={() => setIsAgreed(!isAgreed)}
+              uncheckedColor={theme.colors.primary}
             />
-            <Text className='text-sm leading-6 text-primary-title-color dark:text-primary-light' onPress={() => {
+            <Text className='mt-1 text-sm leading-6 text-text-color' onPress={() => {
               setIsAgreed(!isAgreed);
             }}>
-              Foydalanuvchi shartlari bilan tanishdim{' '}
-              <Text className='text-primary' onPress={() => Linking.openURL('https://drive.google.com/file/d/1XZx_fxz7ciU6vhM5knd5XTMb7TRKJqPn/view?pli=1')}>
-                bu yerda
+              {t ('terms-of-use')}{' '}
+              <Text className='text-sm leading-6 text-primary' onPress={() => Linking.openURL('https://drive.google.com/file/d/1XZx_fxz7ciU6vhM5knd5XTMb7TRKJqPn/view?pli=1')}>
+                {t ('terms-of-use-link')}
               </Text>
             </Text>
           </View>
@@ -192,9 +195,11 @@ const Register = ({setView}: {setView: (view: string) => void}) => {
             title={t('go-back')}
             onPress={handlePreviousStep}
             buttonStyle={'flex-1 bg-secondary mr-2'}
+            disabled={loading}
           />
         )}
         <CustomButton
+          loading={loading}
           title={
             currentStep === 1
               ? t('send-verification')
@@ -204,15 +209,11 @@ const Register = ({setView}: {setView: (view: string) => void}) => {
           }
           onPress={handleNextStep}
           disabled={
-            (currentStep === 1 && !phone) ||
+            (currentStep === 1 && (!phone || isVerifyPhone)) ||
             (currentStep === 2 && !smsCode) ||
-            (currentStep === 3 && (!password || !confirmPassword))
+            (currentStep === 3 && (!password || !confirmPassword || !isAgreed))
           }
-          buttonStyle={
-            currentStep === 1
-              ? 'flex-1 bg-primary'
-              : 'flex-1 bg-primary'
-          }
+          buttonStyle='flex-1 bg-primary'
         />
       </View>
     </View>
