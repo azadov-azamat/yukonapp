@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from '@/config/ThemeContext';
 import { styled } from "nativewind";
-import { RegisterForm, LoginForm, ResetPasswordForm } from "@/components/forms";
+import { LoginForm, AuthProcessForm } from "@/components/forms";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -26,7 +26,7 @@ export default function MainPage() {
         <StyledView className="ml-2"> 
             <StyledTouchableOpacity
               onPress={toggleTheme}
-              className={`w-10 h-10 items-center justify-center rounded-full shadow-md ${isDarkMode ? 'bg-primary-bg-dark' : 'bg-primary-bg-light'}`}
+              className={`w-10 h-10 items-center justify-center rounded-full ${isDarkMode ? 'bg-primary-bg-dark' : 'bg-primary-bg-light'}`}
             >
               <Ionicons
                 name={isDarkMode ? 'sunny-outline' : 'moon-outline'}
@@ -59,8 +59,8 @@ export default function MainPage() {
         </StyledView>
         
         {view === "login" ? <LoginForm setView={setView} /> : 
-            view === "register" ? <RegisterForm setView={setView} /> : 
-            <ResetPasswordForm setView={setView} />
+            view === "register" ? <AuthProcessForm processType="register" setView={setView} /> : 
+            <AuthProcessForm processType="reset-password" setView={setView} />
         }
       </StyledView>
     </StyledView>

@@ -15,7 +15,7 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
-const Login = () => {
+const Login = ({setView}) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const {t} = useTranslation();
@@ -48,7 +48,7 @@ const Login = () => {
   });
 
   function handleForgotPassword() {
-    router.replace('/auth/forgot-password')
+    setView('forgot-password')
   }
   
   function handleContinueWithTelegram() {
@@ -100,12 +100,12 @@ const Login = () => {
       
       <StyledView className="flex-row items-center justify-center my-8 space-x-4">
         <View className="h-[1px] flex-1 bg-border-color" />
-        <StyledText className={`text-[15px] leading-[22.5px] font-semibold text-text-color`}>or continue with</StyledText>
+        <StyledText className={`text-[15px] leading-[22.5px] font-semibold text-text-color`}>{t('or')}</StyledText>
         <View className="h-[1px] flex-1 bg-border-color" />
       </StyledView>
       
       <CustomButton 
-        title={t ('Continue with Telegram')} 
+        title={t ('auth-with-telegram')} 
         onPress={handleContinueWithTelegram} 
         buttonStyle={'bg-primary-bg-light dark:bg-primary-bg-dark'}
         textStyle={'text-primary-title-color dark:text-primary-light'}    

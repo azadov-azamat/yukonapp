@@ -1,10 +1,8 @@
 import React from 'react';
-import { View, Text, Linking } from 'react-native';
-import { useFormik } from 'formik';
-import { loginValidationSchema } from '@/validations/form';
+import { View, Text, Linking, TouchableOpacity } from 'react-native';
 import { CustomInput, CustomButton } from '@/components/custom';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { createUser, login, sendSmsCode, uniquePhone } from '@/redux/reducers/auth';
+import { createUser, sendSmsCode, uniquePhone, resetPassword } from '@/redux/reducers/auth';
 import Toast from 'react-native-toast-message';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
@@ -12,11 +10,16 @@ import { debounce } from 'lodash';
 import UserModel from '@/models/user';
 import { Checkbox } from 'react-native-paper';
 import { useTheme } from '@/config/ThemeContext';
+import { styled } from 'nativewind';
 
-const Register = ({setView}: {setView: (view: string) => void}) => {
+const StyledTouchableOpacity = styled(TouchableOpacity);
+const StyledView = styled(View);
+const StyledText = styled(Text);
+
+const AuthProcess = ({ processType, setView }: { processType: 'register' | 'reset-password', setView: (view: string) => void }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const { loading, uniquePhoneExists, successSendSms } = useAppSelector(state => state.auth);
+  const { loading, successSendSms } = useAppSelector(state => state.auth);
   const { theme } = useTheme();
   
   const [phone, setPhone] = React.useState('');
@@ -30,10 +33,11 @@ const Register = ({setView}: {setView: (view: string) => void}) => {
 
   const checkPhoneNumber = async (phone: string) => {
     const response = await dispatch(uniquePhone({ phone: phone }));
-    if (response.payload?.exist) {
+    const ifTrue = processType === 'register' ? response.payload?.exist : !response.payload?.exist; 
+    if (ifTrue) {
       Toast.show({
         type: 'error',
-        text1: t('errors.phone-exist'),
+        text1: processType === 'register' ? t('errors.phone-exist') : t('errors.phone-not-exist'),
       });
       setIsVerifyPhone(true);
     } else {
@@ -58,32 +62,54 @@ const Register = ({setView}: {setView: (view: string) => void}) => {
   };
 
   const handleSubmit = async () => {
-    if (validate() && isAgreed) {
-      const user = new UserModel({
+    if (validate()) {
+      const data = {
         phone: phone,
         password: password,
         smsToken: smsCode,
-        isAgreed: true,
-      });
-      dispatch(createUser(user)).then(unwrapResult).then((res) => {
-        Toast.show({
-          type: 'success',
-          text1: t('success.create'),
-          text2: t('success.register'),
-        }); 
-        setView('login');
-      }).catch((err) => {
-        console.log(err);
-        Toast.show({
-          type: 'error',
-          text1: t('errors.something-wrong'),
+      };
+      if (processType === 'reset-password') {
+        dispatch(resetPassword(data))
+          .then(unwrapResult)
+          .then((res) => {
+            setView('login');
+            Toast.show({
+              type: 'success',
+              text1: t('success.password-update'),
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+            Toast.show({
+              type: 'error',
+              text1: t('errors.something-wrong'),
+            });
+          });
+      } else {
+        const user = new UserModel({
+          ...data,
+          isAgreed: true,
         });
-      });
+        dispatch(createUser(user)).then(unwrapResult).then((res) => {
+          Toast.show({
+            type: 'success',
+            text1: t('success.create'),
+            text2: t('success.register'),
+          }); 
+          setView('login');
+        }).catch((err) => {
+          console.log(err);
+          Toast.show({
+            type: 'error',
+            text1: t('errors.something-wrong'),
+          });
+        });
+      }
     }
   };
 
   const sendCode = () => {
-    dispatch(sendSmsCode({ phone: phone, action: 'register' })).then(unwrapResult).then((res) => {
+    dispatch(sendSmsCode({ phone: phone, action: processType })).then(unwrapResult).then((res) => {
       Toast.show({
         type: 'success',
         text1: t('code-sent'),
@@ -121,7 +147,7 @@ const Register = ({setView}: {setView: (view: string) => void}) => {
   };
 
   return (
-    <View>
+    <StyledView>
       {/* Step 1: Phone Input */}
       {currentStep === 1 && (
         <CustomInput
@@ -170,26 +196,26 @@ const Register = ({setView}: {setView: (view: string) => void}) => {
             error={errors.confirmPassword}
             divClass='mb-4'
           />
-          <View className='flex-row items-start mt-2'>
+          <StyledView className='flex-row items-start mt-2'>
             <Checkbox
               status={isAgreed ? 'checked' : 'unchecked'}
               onPress={() => setIsAgreed(!isAgreed)}
               uncheckedColor={theme.colors.primary}
             />
-            <Text className='mt-1 text-sm leading-6 text-text-color' onPress={() => {
+            <StyledText className='mt-1 text-sm leading-6 text-text-color' onPress={() => {
               setIsAgreed(!isAgreed);
             }}>
               {t ('terms-of-use')}{' '}
-              <Text className='text-sm leading-6 text-primary' onPress={() => Linking.openURL('https://drive.google.com/file/d/1XZx_fxz7ciU6vhM5knd5XTMb7TRKJqPn/view?pli=1')}>
+              <StyledText className='text-sm leading-6 text-primary' onPress={() => Linking.openURL('https://drive.google.com/file/d/1XZx_fxz7ciU6vhM5knd5XTMb7TRKJqPn/view?pli=1')}>
                 {t ('terms-of-use-link')}
-              </Text>
-            </Text>
-          </View>
+              </StyledText>
+            </StyledText>
+          </StyledView>
         </>
       )}
 
       {/* Navigation Buttons */}
-      <View className='flex-row justify-between mt-4'>
+      <StyledView className='flex-row justify-between mt-4'>
         {currentStep > 1 && (
           <CustomButton
             title={t('go-back')}
@@ -215,9 +241,20 @@ const Register = ({setView}: {setView: (view: string) => void}) => {
           }
           buttonStyle='flex-1 bg-primary'
         />
-      </View>
-    </View>
+      </StyledView>
+
+      {/* Conditional rendering based on processType */}
+      {processType === 'reset-password' && (
+        <StyledView className="flex-row items-center justify-center my-8 space-x-4">
+          <View className="h-[1px] flex-1 bg-border-color" />
+          <StyledTouchableOpacity onPress={() => setView('login')}>
+            <StyledText className={`text-[15px] leading-[22.5px] font-semibold text-text-color`}>{t('login')}</StyledText>
+          </StyledTouchableOpacity>
+          <View className="h-[1px] flex-1 bg-border-color" />
+      </StyledView>
+      )}
+    </StyledView>
   );
 };
 
-export default Register;
+export default AuthProcess;
