@@ -15,7 +15,7 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
-const LoginForm = () => {
+const Login = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const {t} = useTranslation();
@@ -115,4 +115,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default Login;

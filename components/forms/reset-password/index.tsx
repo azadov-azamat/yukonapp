@@ -8,9 +8,8 @@ import Toast from 'react-native-toast-message';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 import { debounce } from 'lodash';
-import UserModel from '@/models/user';
 
-const ForgotPasswordForm = () => {
+const ResetPassword = ({setView}: {setView: (view: string) => void}) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
@@ -59,7 +58,7 @@ const ForgotPasswordForm = () => {
         smsToken: smsCode,
       };
       dispatch(resetPassword(data)).then(unwrapResult).then((res) => {
-        router.push('/auth');
+        setView('login');
         Toast.show({
           type: 'success',
           text1: t('success.password-update'),
@@ -90,7 +89,7 @@ const ForgotPasswordForm = () => {
   };
   
   return (  
-    <View className="w-4/5">
+    <View >
       {/* Telefon raqami */}
       <CustomInput
         type={'phone'}
@@ -161,4 +160,4 @@ const ForgotPasswordForm = () => {
   );
 };
 
-export default ForgotPasswordForm;
+export default ResetPassword;

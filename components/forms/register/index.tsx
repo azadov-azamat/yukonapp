@@ -3,7 +3,6 @@ import { View, Text, Linking } from 'react-native';
 import { useFormik } from 'formik';
 import { loginValidationSchema } from '@/validations/form';
 import { CustomInput, CustomButton } from '@/components/custom';
-import { useRouter } from "expo-router";
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { createUser, login, sendSmsCode, uniquePhone } from '@/redux/reducers/auth';
 import Toast from 'react-native-toast-message';
@@ -13,8 +12,7 @@ import { debounce } from 'lodash';
 import UserModel from '@/models/user';
 import { Checkbox } from 'react-native-paper';
 
-const RegisterForm = () => {
-  const router = useRouter();
+const Register = ({setView}: {setView: (view: string) => void}) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const { loading, uniquePhoneExists, successSendSms } = useAppSelector(state => state.auth);
@@ -30,6 +28,8 @@ const RegisterForm = () => {
   const [currentStep, setCurrentStep] = React.useState(1);
 
   const checkPhoneNumber = async (phone: string) => {
+    console.log("ishlayabdi");
+    
     const response = await dispatch(uniquePhone({ phone: phone }));
     if (response.payload?.exist) {
       Toast.show({
@@ -66,7 +66,7 @@ const RegisterForm = () => {
         isAgreed: true,
       });
       dispatch(createUser(user)).then(unwrapResult).then((res) => {
-        router.push('/auth');
+        setView('login');
         Toast.show({
           type: 'success',
           text1: t('success.register'),
@@ -92,9 +92,21 @@ const RegisterForm = () => {
     });
   };
 
-  const handleNextStep = () => {
-    if (currentStep < 3) {
-      setCurrentStep(currentStep + 1);
+  const handleNextStep = async () => {
+    const stepActions: Record<number, () => Promise<void> | void> = {
+      1: async () => {
+        await sendCode();
+        setCurrentStep(2);
+      },
+      2: () => setCurrentStep(3),
+      3: async () => {
+        await handleSubmit();
+      },
+    };
+
+    const action = stepActions[currentStep];
+    if (action) {
+      await action();
     }
   };
 
@@ -161,11 +173,11 @@ const RegisterForm = () => {
                 setIsAgreed(!isAgreed);
               }}
             />
-            <Text onPress={() => {
+            <Text className='text-sm leading-6 text-primary-title-color dark:text-primary-light' onPress={() => {
               setIsAgreed(!isAgreed);
             }}>
               Foydalanuvchi shartlari bilan tanishdim{' '}
-              <Text className='text-blue-500' onPress={() => Linking.openURL('https://drive.google.com/file/d/1XZx_fxz7ciU6vhM5knd5XTMb7TRKJqPn/view?pli=1')}>
+              <Text className='text-primary' onPress={() => Linking.openURL('https://drive.google.com/file/d/1XZx_fxz7ciU6vhM5knd5XTMb7TRKJqPn/view?pli=1')}>
                 bu yerda
               </Text>
             </Text>
@@ -207,4 +219,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default Register;

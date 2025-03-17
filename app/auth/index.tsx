@@ -1,20 +1,18 @@
 import { View, Alert, TouchableOpacity, Text } from "react-native";
-import LoginForm from '@/components/forms/login';
 import React from "react";
-import { CustomButton, CustomLanguageSelector } from "@/components/custom";
+import { CustomLanguageSelector } from "@/components/custom";
 import { useRouter } from "expo-router";
 import { useTranslation } from "react-i18next";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from '@/config/ThemeContext';
 import { styled } from "nativewind";
-import RegisterForm from "@/components/forms/register";
+import { RegisterForm, LoginForm, ResetPasswordForm } from "@/components/forms";
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTouchableOpacity = styled(TouchableOpacity);
 
 export default function MainPage() {
-  const router = useRouter();
   const {t} = useTranslation();
   const { isDarkMode, toggleTheme, theme } = useTheme();
   
@@ -41,20 +39,30 @@ export default function MainPage() {
       </StyledView>
 
       <StyledView className="mt-10">
-        <StyledView className="flex-row items-center justify-between mb-10">
+        <StyledView className={`${view === 'forgot-password' ? 'flex-col items-center justify-center' : 'flex-row items-center justify-between'} mb-10`}>
           <StyledText className="text-2xl font-bold text-primary-black dark:text-primary-light">
-            {t (view === "login" ? "login" : "register")}
+            {t(view === "login" ? "login" : view === "register" ? "register" : "forgot-password")}
           </StyledText>
-          <StyledTouchableOpacity
-            onPress={() => setView(view === "login" ? "register" : "login")}
+          {
+            view === "forgot-password" ? (
+              <StyledText className="mt-3 text-sm leading-6 text-center text-text-color">
+                {t("forgot-password-description")}
+              </StyledText>
+            ) : ( 
+              <StyledTouchableOpacity
+                onPress={() => setView(view === "login" ? "register" : "login")}
           >
             <StyledText className="font-medium text-primary">
-              {t (view === "login" ? "register" : "login")}
-            </StyledText>
-          </StyledTouchableOpacity>
+              {t(view === "login" ? "register" : "login" )}
+              </StyledText>
+            </StyledTouchableOpacity>
+          )}
         </StyledView>
         
-        {view === "login" ? <LoginForm /> : <RegisterForm />}
+        {view === "login" ? <LoginForm setView={setView} /> : 
+            view === "register" ? <RegisterForm setView={setView} /> : 
+            <ResetPasswordForm setView={setView} />
+        }
       </StyledView>
     </StyledView>
   );
