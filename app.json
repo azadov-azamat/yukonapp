@@ -10,14 +10,14 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.yukonapp"
+      "bundleIdentifier": "yukon.uz.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.yukonapp"
+      "package": "yukon.uz.app"
     },
     "web": {
       "bundler": "metro",
