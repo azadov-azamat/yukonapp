@@ -53,7 +53,6 @@ export default class LoadModel implements ILoadModel {
   updatedAt?: string;
   
   constructor(data: Partial<ILoadModel>) {
-    console.log("data", data);
     Object.assign(this, data);
   }
 

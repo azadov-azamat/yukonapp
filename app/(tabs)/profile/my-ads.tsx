@@ -31,7 +31,7 @@ export default function MyAdsPage() {
   const [refreshing, setRefreshing] = React.useState(false);
   const [combinedData, setCombinedData] = React.useState<any[]>([]);
 
-	const { openEditLoad } = useBottomSheet();
+	const { openEditForm } = useBottomSheet();
 
   async function getLocalstorageData() {
     try {
@@ -84,7 +84,7 @@ export default function MyAdsPage() {
     if (Platform.OS === 'android') {
       router.push('/android/ads/' + item.id);
     } else {  
-      openEditLoad(item.id);
+      openEditForm(item.id, item.cargoType ? 'load' : 'vehicle');
     }
   }
 

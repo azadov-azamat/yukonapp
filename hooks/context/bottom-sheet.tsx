@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useRef, useState, useCallback } from 'react';
 import SettingsBottomSheet, { SettingsBottomSheetRef } from "@/components/bottom-sheet/settings";
-import EditLoadBottomSheet, { EditLoadBottomSheetRef } from "@/components/bottom-sheet/edit-load";
+import EditFormBottomSheet, { EditFormBottomSheetRef } from "@/components/bottom-sheet/edit-form";
 import LoadViewBottomSheet, { LoadViewBottomSheetRef } from '@/components/bottom-sheet/load-view';
 import LanguageBottomSheet, { LanguageBottomSheetRef, languages } from '@/components/bottom-sheet/language';
 
 type AppContextType = {
   openSettings: () => void;
-  openEditLoad: (id: number) => void;
+  openEditForm: (id: number, model: 'load' | 'vehicle') => void;
   openLoadView: () => void;
   openLanguage: () => void;
   languages: Array<{ code: string; label: string; icon: any; short: string }>;
@@ -20,11 +20,13 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
   const openSettings = useCallback(() => settingsSheetRef.current?.open(), []);
 
   // Edit Load Bottom Sheet
-  const EditLoadSheetRef = useRef<EditLoadBottomSheetRef>(null);
+  const EditFormSheetRef = useRef<EditFormBottomSheetRef>(null);
   const [recordId, setRecordId] = useState<number | null>(null);
-  const openEditLoad = useCallback((id: number) => {
-    EditLoadSheetRef.current?.open();
+  const [model, setModel] = useState<'load' | 'vehicle'>('load');
+  const openEditForm = useCallback((id: number, model: 'load' | 'vehicle') => {
+    EditFormSheetRef.current?.open();
     setRecordId(id);
+    setModel(model);
   }, []);
 
   // Load Vehicle View Bottom Sheet
@@ -36,10 +38,10 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
   const openLanguage = useCallback(() => LanguageSheetRef.current?.open(), []);
   
   return (
-    <AppContext.Provider value={{ openSettings, openEditLoad, openLoadView, openLanguage, languages }}>
+    <AppContext.Provider value={{ openSettings, openEditForm, openLoadView, openLanguage, languages }}>
       {children}
       <MemoizedSettingsBottomSheet ref={settingsSheetRef} />
-      <MemoizedEditLoadBottomSheet ref={EditLoadSheetRef} recordId={recordId} />
+      <MemoizedEditFormBottomSheet ref={EditFormSheetRef} recordId={recordId} model={model} />
       <MemoizedLoadViewBottomSheet ref={LoadViewSheetRef} />
       <MemoizedLanguageBottomSheet ref={LanguageSheetRef} />
     </AppContext.Provider>
@@ -47,7 +49,7 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
 }
 
 const MemoizedSettingsBottomSheet = React.memo(SettingsBottomSheet);
-const MemoizedEditLoadBottomSheet = React.memo(EditLoadBottomSheet);
+const MemoizedEditFormBottomSheet = React.memo(EditFormBottomSheet);
 const MemoizedLoadViewBottomSheet = React.memo(LoadViewBottomSheet);
 const MemoizedLanguageBottomSheet = React.memo(LanguageBottomSheet);
 

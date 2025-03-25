@@ -20,7 +20,7 @@ const SCROLL_THRESHOLD = 30;
 
 const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
   const router = useRouter();
-	const { openEditLoad } = useBottomSheet();
+	const { openEditForm } = useBottomSheet();
 
 	const backgroundColor = scrollY.interpolate({
     inputRange: [0, SCROLL_THRESHOLD],
@@ -39,7 +39,7 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
     if (Platform.OS === 'android') {
       router.push('/android/ads/create');
     } else {
-      openEditLoad(0);
+      openEditForm(0, 'load');
     }
   };
   

@@ -5,18 +5,22 @@ import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/botto
 import { useTranslation } from 'react-i18next';
 import AdsFormComponent from '@/components/forms/ads-form';
 import { Ionicons } from '@expo/vector-icons';
+import { clearLoad } from '@/redux/reducers/load';
+import { clearVehicle } from '@/redux/reducers/vehicle';
+import { useAppDispatch } from '@/redux/hooks';
 
-
-export interface EditLoadBottomSheetRef {
+export interface EditFormBottomSheetRef {
   open: () => void;
   close: () => void;
 }
 
-type EditLoadBottomSheetProps = {
+type EditFormBottomSheetProps = {
   recordId: number | null;
+  model: 'load' | 'vehicle';
 };
 
-const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomSheetProps>(({ recordId }, ref) => {
+const EditFormBottomSheet = forwardRef<EditFormBottomSheetRef, EditFormBottomSheetProps>(({ recordId, model = 'load' }, ref) => {
+  const dispatch = useAppDispatch();
   const { isDarkMode, theme } = useTheme();
   const { t } = useTranslation();
   
@@ -74,7 +78,10 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
             >
-				      <AdsFormComponent recordId={recordId && recordId !== 0 ? recordId : 0} close={() => bottomSheetRef.current?.close()} />
+				      <AdsFormComponent recordId={recordId && recordId !== 0 ? recordId : 0} close={() => {
+                bottomSheetRef.current?.close()
+                dispatch(model === 'load' ? clearLoad() : clearVehicle());
+                }} />
             </ScrollView>
           </View>
         </KeyboardAvoidingView>
@@ -83,4 +90,4 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
   );
 });
 
-export default EditLoadBottomSheet;
+export default EditFormBottomSheet;

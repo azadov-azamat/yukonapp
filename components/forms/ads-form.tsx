@@ -19,35 +19,38 @@ import CityModel from '@/models/city';
 import DatePickerModal from 'react-native-paper-dates/src/Date/DatePickerModal';
 import CountryModel from '@/models/country';
 import { useTheme } from '@/config/ThemeContext';
+import { clearVehicle } from '@/redux/reducers/vehicle';
 // import { updateVehicle, createVehicle } from '@/redux/reducers/vehicle';
 
 const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 'load' | 'vehicle'}> = ({recordId, close, model = 'load'}) => {
     const dispatch = useAppDispatch();
     const { t, i18n } = useTranslation();
-    
+    const formikRef = React.useRef<any>(null);
+
     const { user } = useAppSelector((state) => state.auth);
     const { load } = useAppSelector((state) => state.load);
     const { vehicle } = useAppSelector((state) => state.vehicle);
     const { allCountries, loading: countryLoading } = useAppSelector((state) => state.country);
     const { countryCities } = useAppSelector((state) => state.city);
     const { theme } = useTheme();
-    
+
     const [originLoading, setOriginLoading] = React.useState(false);
     const [destinationLoading, setDestinationLoading] = React.useState(false);
     
-    const currentLanguage = i18n.language;
-    const textClass = 'text-sm text-primary-title-color dark:text-primary-light focus-visible:outline-0 focus:outline-0';
     const [record, setRecord] = React.useState(model === 'load' ? new LoadModel({}) : new VehicleModel({}));
-
     const [selectedAdType, setSelectedAdType] = React.useState(model);
-    const formikRef = React.useRef<any>(null);
-  
-    const [prepayment, setPrepayment] = React.useState(formikRef.current?.values.hasPrepayment || false);
+    const [prepayment, setPrepayment] = React.useState(false);
     const [prepaymentPercentage, setPrepaymentPercentage] = React.useState('');
-    console.log(formikRef.current?.values.hasPrepayment);
-    
     const [open, setOpen] = React.useState(false);
 
+    const currentLanguage = i18n.language;
+    const textClass = 'text-sm text-primary-title-color dark:text-primary-light focus-visible:outline-0 focus:outline-0';
+    
+    const adTypes = [
+        { value: 'load', label: t('bookmarks.load'), icon: 'cube-outline' as const},
+        { value: 'vehicle', label: t('bookmarks.vehicle'), icon: 'car-outline' as const},
+    ];
+    
     React.useEffect(() => {
         dispatch(fetchCountries());
 
@@ -57,11 +60,6 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
             dispatch(clearLoad());
         }
     }, [recordId]);
-    
-    const adTypes = [
-        { value: 'load', label: t('bookmarks.load'), icon: 'cube-outline' as const},
-        { value: 'vehicle', label: t('bookmarks.vehicle'), icon: 'car-outline' as const},
-      ];
     
     const handleCountryChange = async (
         item: ICountryModel,
@@ -109,8 +107,13 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
 
     const resetFormValues = () => formikRef.current?.resetForm();
     
+    const onClearField = React.useCallback((setFieldValue: (field: string, value: any) => void, field: string) => {
+        setFieldValue(field, null);
+    }, []);
+
     React.useEffect(() => {        
         formikRef.current?.setFieldValue('phone', user?.phone)
+        setPrepaymentPercentage(Math.round((record as LoadModel)?.prepaymentAmount / (record as LoadModel)?.price * 100).toString())
     }, [recordId, selectedAdType]);
     
     React.useEffect(() => {
@@ -155,11 +158,12 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
             formikRef.current?.setFieldValue('prepaymentAmount', '');    
         }
     }, [formikRef.current?.values.price, prepaymentPercentage]);
-
-    const onClearField = React.useCallback((setFieldValue: (field: string, value: any) => void, field: string) => {
-        setFieldValue(field, null);
-    }, []);
    
+    React.useEffect(() => {
+        setPrepayment(formikRef.current?.values.hasPrepayment || false);
+        
+    }, [formikRef.current?.values.hasPrepayment]);  
+
   return (
     <Formik
     innerRef={formikRef}
@@ -167,7 +171,6 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     // validationSchema={adsValidationSchema}
     enableReinitialize
     onSubmit={async (values, { resetForm }) => {
-    
 
      if (recordId === 0) {
         if (model === 'load') {
@@ -389,7 +392,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         </View>)}
         {(prepayment && selectedAdType === 'load') && (
             <>
-                {renderCustomInput('prepayment-percentage', prepaymentPercentage, (text) => setPrepaymentPercentage(text))}
+                {renderCustomInput('prepayment-percentage', prepaymentPercentage, (text: string) => setPrepaymentPercentage(text))}
                 {renderCustomInput('prepayment-amount', (values as LoadModel).prepaymentAmount?.toString(), handleChange('prepaymentAmount'), 'no-enter-value', false)}
             </>
         )}
