@@ -66,8 +66,7 @@ const SearchLoadScreen = () => {
 
     const toggleSetId = React.useCallback((item) => {
       // dispatch(getLoadById(viewId));
-      openLoadView(item.id);
-      // setViewId(item.id);
+      openLoadView();
       dispatch(setLoad(item));
     }, [dispatch]);
 

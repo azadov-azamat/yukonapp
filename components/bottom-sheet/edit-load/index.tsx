@@ -59,10 +59,10 @@ const EditLoadBottomSheet = forwardRef<EditLoadBottomSheetRef, EditLoadBottomShe
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={{ flex: 1 }}
         >
-          <View style={{ padding: 16, flex: 1 }}>
+          <View className='flex-1 px-4'>
             <View className='flex-row items-center justify-between'>
-              <Text style={{ paddingBottom: 8, fontSize: 24, fontWeight: 'bold', color: isDarkMode ? 'white' : 'black' }}>
-                {recordId === 0 ? t('pages.create-add') : t('pages.just-edit')}
+              <Text className='text-2xl font-bold text-primary-black dark:text-primary-light'>
+                {t(recordId === 0 ? 'pages.create-add' : 'pages.just-edit')}
               </Text>
               <TouchableOpacity onPress={() => bottomSheetRef.current?.close()}>
                 <Ionicons name='close-circle-outline' size={24} color={theme.colors.primary}/>

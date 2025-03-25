@@ -87,7 +87,6 @@ const LoadStatus: React.FC = React.memo(() => {
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const flatListRef = React.useRef<FlatList<any>>(null);
   const { load } = useAppSelector(state => state.load);
-  console.log("load-view-status rendering...");
   
   function handleDetermineTon(weight: number) {
     if (weight < 0.5) {

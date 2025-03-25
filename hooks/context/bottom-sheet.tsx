@@ -7,7 +7,7 @@ import LanguageBottomSheet, { LanguageBottomSheetRef, languages } from '@/compon
 type AppContextType = {
   openSettings: () => void;
   openEditLoad: (id: number) => void;
-  openLoadView: (id: number) => void;
+  openLoadView: () => void;
   openLanguage: () => void;
   languages: Array<{ code: string; label: string; icon: any; short: string }>;
 };
@@ -23,16 +23,13 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
   const EditLoadSheetRef = useRef<EditLoadBottomSheetRef>(null);
   const [recordId, setRecordId] = useState<number | null>(null);
   const openEditLoad = useCallback((id: number) => {
-    setRecordId(id);
     EditLoadSheetRef.current?.open();
+    setRecordId(id);
   }, []);
 
   // Load Vehicle View Bottom Sheet
   const LoadViewSheetRef = useRef<LoadViewBottomSheetRef>(null);
-  const openLoadView = useCallback((id: number) => {
-    LoadViewSheetRef.current?.open();
-    setRecordId(id);
-  }, []);
+  const openLoadView = useCallback(() => LoadViewSheetRef.current?.open(), []);
 
   // Language Bottom Sheet
   const LanguageSheetRef = useRef<LanguageBottomSheetRef>(null);

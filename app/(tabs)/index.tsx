@@ -30,7 +30,6 @@ export default function MainPage() {
 
   const { topSearches, latestLoads, loadingTopSearches, loadingLatestLoads, loadingLoadById } = useAppSelector(state => state.load);
 
-  const [viewId, setViewId] = React.useState(null);
   const [openModal, setOpenModal] = React.useState(false);
   const [searchText, setSearchText] = React.useState<string>('');
   const [refreshing, setRefreshing] = React.useState(false);
@@ -81,8 +80,7 @@ export default function MainPage() {
 
   // Memoize callbacks
   const toggleSetId = useCallback((item: any) => {
-    setViewId(item.id);
-    openLoadView(item.id);
+    openLoadView();
     dispatch(setLoad(item));
   }, [dispatch]);
 

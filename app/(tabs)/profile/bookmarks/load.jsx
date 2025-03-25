@@ -47,7 +47,7 @@ const BookmarksLoadScreen = React.memo(() => {
 
     const toggleSetId = (item) => {
       setViewId(item.id);
-      openLoadView(item.id); 
+      openLoadView(); 
       dispatch(setLoad(item))
     }
 

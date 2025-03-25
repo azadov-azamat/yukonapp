@@ -8,7 +8,7 @@ import { getCities, getCountryCities } from '@/redux/reducers/city';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { useTranslation } from 'react-i18next';
 import { fetchCountries } from '@/redux/reducers/country';
-import { updateLoad, getLoadById, createLoad } from '@/redux/reducers/load';
+import { updateLoad, getLoadById, createLoad, clearLoad } from '@/redux/reducers/load';
 import { getName } from '@/utils/general';
 import { CustomButton, CustomInput, CustomInputSelector } from '../custom';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -42,9 +42,10 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     const [selectedAdType, setSelectedAdType] = React.useState(model);
     const formikRef = React.useRef<any>(null);
   
-    const [prepayment, setPrepayment] = React.useState(false);
+    const [prepayment, setPrepayment] = React.useState(formikRef.current?.values.hasPrepayment || false);
     const [prepaymentPercentage, setPrepaymentPercentage] = React.useState('');
-
+    console.log(formikRef.current?.values.hasPrepayment);
+    
     const [open, setOpen] = React.useState(false);
 
     React.useEffect(() => {
@@ -52,6 +53,8 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
 
         if (recordId !== 0) {
             dispatch(getLoadById(recordId.toString()));
+        } else {
+            dispatch(clearLoad());
         }
     }, [recordId]);
     
@@ -142,7 +145,12 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     React.useEffect(() => {
         if (formikRef.current?.values.price && prepaymentPercentage) {
             const calculatedAmount = (parseFloat(formikRef.current?.values.price) * parseFloat(prepaymentPercentage) / 100).toFixed(2);
-            formikRef.current?.setFieldValue('prepaymentAmount', calculatedAmount);
+            formikRef.current?.setFieldValue('prepaymentAmount', Math.round(Number(calculatedAmount)));
+            if (Number(calculatedAmount) > 0) {
+                formikRef.current?.setFieldValue('hasPrepayment', true);
+            } else {
+                formikRef.current?.setFieldValue('hasPrepayment', false);
+            }
         } else {
             formikRef.current?.setFieldValue('prepaymentAmount', '');    
         }
@@ -170,8 +178,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         }
      } else {
        if (model === 'load') {
-        console.log(values);
-        // await dispatch(updateLoad({ id: recordId.toString(), data: values as LoadModel }));
+        await dispatch(updateLoad({ id: recordId.toString(), data: values as LoadModel }));
        } else {
         console.log(values);
         // await dispatch(updateVehicle({ id: recordId.toString(), data: values as VehicleModel }));
