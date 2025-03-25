@@ -42,7 +42,7 @@ export const OPTIONS = {
         { value: 'hasPrepayment', label: 'has-prepayment' }
     ],
     'currencies': [
-      {label: 'UZB', value: 'UZB'},
+      {label: 'UZS', value: 'UZS'},
       {label: 'USD', value: 'USD'},
       {label: 'RUB', value: 'RUB'},
     ]

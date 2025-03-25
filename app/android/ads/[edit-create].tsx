@@ -21,7 +21,7 @@ const AdsEditCreate = () => {
   }, []);  
   
   return (
-    <SafeAreaProvider className='flex-1 px-4 bg-primary-light/20 dark:bg-primary-dark/20'>
+    <SafeAreaProvider className='flex-1 px-4 bg-primary-light dark:bg-primary-dark'>
        <ScrollView
               contentContainerStyle={{ flexGrow: 1 }}
               keyboardShouldPersistTaps="handled"

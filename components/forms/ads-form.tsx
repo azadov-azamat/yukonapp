@@ -11,22 +11,20 @@ import { fetchCountries } from '@/redux/reducers/country';
 import { updateLoad, getLoadById } from '@/redux/reducers/load';
 import { getName } from '@/utils/general';
 import { CustomButton, CustomInput, CustomInputSelector } from '../custom';
-import { Ionicons } from '@expo/vector-icons';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { OPTIONS } from '@/utils/constants';
 import LoadModel from '@/models/load';
 import VehicleModel from '@/models/vehicle';
 import CityModel from '@/models/city';
-import { DatePickerModal } from 'react-native-paper-dates';
+import DatePickerModal from 'react-native-paper-dates/src/Date/DatePickerModal';
 import CountryModel from '@/models/country';
 import { useTheme } from '@/config/ThemeContext';
 import { updateVehicle } from '@/redux/reducers/vehicle';
-import { all } from 'axios';
 
 const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 'load' | 'vehicle'}> = ({recordId, close, model = 'load'}) => {
     const dispatch = useAppDispatch();
     const { t, i18n } = useTranslation();
     
-    console.log("ads-form componentrendering...");
     const { user } = useAppSelector((state) => state.auth);
     const { load } = useAppSelector((state) => state.load);
     const { vehicle } = useAppSelector((state) => state.vehicle);
@@ -40,7 +38,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     const [currency, setCurrency] = React.useState(OPTIONS['currencies'][0]);
     
     const currentLanguage = i18n.language;
-
+    const textClass = 'text-sm text-primary-title-color dark:text-primary-light focus-visible:outline-0 focus:outline-0';
     const [record, setRecord] = React.useState(model === 'load' ? new LoadModel({}) : new VehicleModel({}));
 
     const [selectedAdType, setSelectedAdType] = React.useState(model);
@@ -60,17 +58,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
             dispatch(getLoadById(recordId.toString()));
         }
     }, [recordId]);
-
-    React.useEffect(() => {
-        if (formikRef.current?.values.price && prepaymentPercentage) {
-            const calculatedAmount = (parseFloat(formikRef.current?.values.price) * parseFloat(prepaymentPercentage) / 100).toFixed(2);
-            setPrepaymentAmount(calculatedAmount);
-        } else {
-            setPrepaymentAmount('');    
-        }
-    }, [formikRef.current?.values.price, prepaymentPercentage]);
     
-    // console.log("countryCities", countryCities);
     const adTypes = [
         { value: 'load', label: t('bookmarks.load'), icon: 'cube-outline' as const},
         { value: 'vehicle', label: t('bookmarks.vehicle'), icon: 'car-outline' as const},
@@ -117,55 +105,18 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
 		setFieldValue('destinationCity', null);
 	}
     
-    const renderCustomInput = (label: string, value: string, onChangeText: (text: string) => void, editable: boolean = true) => (
+    const renderCustomInput = (label: string, value: string, onChangeText: (text: string) => void, placeholder: string = 'enter-value',editable: boolean = true) => (
         <CustomInput
           label={t(`loads.${label}`)}
           value={value}
+          placeholder={t(placeholder)}
           onChangeText={onChangeText}
           divClass='mt-4'
           editable={editable}
         />
       );
 
-      
-    const renderCustomInputSelector = (
-        label: string,
-        placeholder: string,
-        value: any,
-        onChange: any,
-        onClear: any,
-        items: any[],
-        loading: boolean,
-        disabled: boolean,
-        labelField: string,
-        valueField: string,
-        searchFunction?: (query: string, items: any[]) => any[],
-        rowItem?: (item: any) => JSX.Element,
-        search: boolean = true
-    ) => {
-        // Translate the selected value
-        const translatedValue = value ? t(value[labelField]) : '';
-
-        return (
-            <CustomInputSelector
-                label={label}
-                value={value}
-                onChange={onChange}
-                onSearch={searchFunction}
-                placeholder={placeholder}
-                loading={loading}
-                disabled={disabled}
-                items={items}
-                labelField={labelField}
-                valueField={valueField}
-                search={search}
-                onClear={onClear}
-                rowItem={rowItem || ((item) => <Text>{getName(item, 'name')}</Text>)}
-            />
-        )
-    };
-
-      const resetFormValues = () => {
+    const resetFormValues = () => {
         const newModel = new LoadModel({});
         // setLoadModel(newModel);
         formikRef.current?.resetForm();
@@ -207,7 +158,15 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     const onClearField = React.useCallback((setFieldValue: (field: string, value: any) => void, field: string) => {
         setFieldValue(field, null);
     }, []);
-    
+   
+    React.useEffect(() => {
+        if (formikRef.current?.values.price && prepaymentPercentage) {
+            const calculatedAmount = (parseFloat(formikRef.current?.values.price) * parseFloat(prepaymentPercentage) / 100).toFixed(2);
+            setPrepaymentAmount(calculatedAmount);
+        } else {
+            setPrepaymentAmount('');    
+        }
+    }, [formikRef.current?.values.price, prepaymentPercentage]);
 
   return (
     <Formik
@@ -239,8 +198,8 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
          {
             recordId === 0 &&  (
                 <>
-                 <Text className="pb-2 text-lg font-semibold text-gray-700 dark:text-white">
-                    Ad type
+                 <Text className="pb-2 text-[15px] leading-[22.5px] font-semibold text-primary-title-color dark:text-primary-light">
+                    {t('ad-type')}
                 </Text>
                 <View className="flex-row items-center w-full mb-4 space-x-4">
                 {adTypes.map((type) => (
@@ -273,12 +232,9 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
             )
          }
 
-          <Text className="mt-2 text-lg font-semibold text-gray-700 dark:text-white">
-            {t ("where-from")}
-          </Text>
           <View className="pt-4">
             <CustomInputSelector
-                label={t('country')}
+                label={t('where-from')}
                 value={values.originCountry}
                 onChange={(item: CountryModel) => handleCountryChange(item, setFieldValue, 'originCountry')}
                 onClear={() => onClearOriginCountry(setFieldValue)}
@@ -290,13 +246,12 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 valueField="id"
                 search={true}
                 searchFunction={(query: string, items: CountryModel[]) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))}
-                rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+                rowItem={(item) => <Text className={textClass}>{getName(item, 'name')}</Text>}
             />
           </View>
           <View className="pt-4">
             <CustomInputSelector
                 search
-                label={t('city')}
                 value={values.originCity}
                 onChange={(item: CityModel) => handleCityChange(item, setFieldValue, 'originCity')}
                 onClear={() => onClearOriginCity(setFieldValue)}
@@ -307,17 +262,15 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 labelField={'name' + capitalize(currentLanguage)}
                 valueField="id"
                 searchFunction={(query: string, items: CityModel[]) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))}
-                rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+                rowItem={(item) => <Text className={textClass}>{getName(item, 'name')}</Text>}
             />
           </View>
 
           {selectedAdType === 'load' && <>
-            <Text className="mt-4 text-lg font-semibold text-gray-700 dark:text-white">
-                {t ("where-to")}
-            </Text>
             <View className="pt-4">
                 <CustomInputSelector
-                    label={t('country')}
+                    search
+                    label={t('where-to')}
                     value={(values as LoadModel).destinationCountry}
                     onChange={(item: CountryModel) => handleCountryChange(item, setFieldValue, 'destinationCountry')}
                     onClear={() => onClearDestinationCountry(setFieldValue)}
@@ -328,12 +281,12 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                     labelField={'nameUz'}
                     valueField="id"
                     searchFunction={(query: string, items: CountryModel[]) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))}
-                    rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+                    rowItem={(item) => <Text className={textClass}>{getName(item, 'name')}</Text>}
                 />
             </View>
             <View className="pt-4">
                 <CustomInputSelector
-                    label={t('city')}
+                    search
                     value={(values as LoadModel).destinationCity}
                     onChange={(item: CityModel) => handleCityChange(item, setFieldValue, 'destinationCity')}
                     onClear={() => onClearDestinationCity(setFieldValue)}
@@ -344,7 +297,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                     labelField={'name' + capitalize(currentLanguage)}
                     valueField="id"
                     searchFunction={(query: string, items: CityModel[]) => items.filter(item => item.names.toLowerCase().includes(query.toLowerCase()))}
-                    rowItem={(item) => <Text>{getName(item, 'name')}</Text>}
+                    rowItem={(item) => <Text className={textClass}>{getName(item, 'name')}</Text>}
                 />
             </View>
           </>}
@@ -365,7 +318,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 items={OPTIONS['truck-types']}
                 labelField="label"
                 valueField="value"
-                rowItem={(item) => <Text>{t(item.label)}</Text>}
+                rowItem={(item) => <Text className={textClass}>{t(item.label)}</Text>}
             />
         </View>}
 
@@ -381,7 +334,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 items={OPTIONS['truck-types']}
                 labelField="label"
                 valueField="value"
-                rowItem={(item) => <Text>{t(item.label)}</Text>}
+                rowItem={(item) => <Text className={textClass}>{t(item.label)}</Text>}
             />
         </View>}
         
@@ -393,13 +346,13 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
           </View>
           <View className="w-24">
             <CustomInputSelector
-                value={OPTIONS['currencies'].find(item => item.value === values.currency) || 'UZS'}
+                value={OPTIONS['currencies'].find(item => item.value === values.currency)}
                 onChange={(item: any) => setFieldValue('currency', item.value)}
                 placeholder={t('loads.currency')}
                 items={OPTIONS['currencies']}
                 labelField="label"
                 valueField="value"
-                rowItem={(item) => <Text>{item.label}</Text>}
+                rowItem={(item) => <Text className={textClass}>{item.label}</Text>}
             />
           </View>
         </View>}
@@ -408,7 +361,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 <TouchableOpacity onPress={() => setOpen(true)}>
                     <CustomInput
                         label={t('loads.load-ready-date')}
-                        value={values.loadReadyDate || t('select-date')}
+                        value={values.loadReadyDate || 'yyyy-mm-dd'}
                         onChangeText={() => {}}
                         editable={false}
                         divClass='mt-4'
@@ -430,8 +383,8 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         )}
         {renderCustomInput('description', values.description, handleChange('description'))}
 
-        <View className="flex-row items-center space-x-2 p-2.5">
-            <Text className='text-lg font-semibold text-gray-700 capitalize dark:text-white'>
+        <View className="flex-row items-center space-x-2 py-2.5">
+            <Text className='text-[15px] leading-[22.5px] font-semibold text-primary-title-color dark:text-primary-light capitalize'>
                 {t('prepayment')}
             </Text>
             <Switch
@@ -444,13 +397,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         {prepayment && (
             <>
                 {renderCustomInput('prepaymentPercentage', prepaymentPercentage, (text) => setPrepaymentPercentage(text))}
-                <CustomInput
-                        label={t('prepaymentAmount')}
-                        value={prepaymentAmount}
-                        onChangeText={() => {}}
-                        editable={false}
-                        divClass='mt-4'
-                    />
+                {renderCustomInput('prepaymentAmount', prepaymentAmount, () => {}, 'no-enter-value', false)}
             </>
         )}
         <CustomButton onPress={handleSubmit} buttonStyle={'bg-primary my-4'} title={t('save')} />

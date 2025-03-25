@@ -44,6 +44,8 @@
   "apply-filters": "Qo'llash",
   "reset-all": "Tozalash",
   "more-filters": "Barcha filterler",
+  "enter-value": "Kiriting...",
+  "no-enter-value": "Kiritish mumkin emas",
   "code-sent": "Kod sizga SMS orqali yuborildi",
   "enter-code": "Olingan kodni kiriting",
   "send-again": "Qayta yuborish",

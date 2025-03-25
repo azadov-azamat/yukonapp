@@ -203,6 +203,6 @@ export default class LoadModel implements ILoadModel {
   }
 
   async save(dispatch: any) {
-    await dispatch(updateLoad(this))
+    await dispatch(updateLoad({id: String(this.id), data: this}))
   }
 }

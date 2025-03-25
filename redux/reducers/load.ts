@@ -83,9 +83,9 @@ export const getLoadById = createAsyncThunk('load/getLoadById', async (id: strin
 });
 
 // Patch Load by ID
-export const updateLoad = createAsyncThunk('load/updateLoad', async (data: LoadModel, { rejectWithValue }) => {
+export const updateLoad = createAsyncThunk('load/updateLoad', async ({id, data}: {id: string, data: LoadModel}, { rejectWithValue }) => {
     try {
-        const response = await http.patch(`/loads/${data.id}`, LoadSerializer.serialize(data));
+        const response = await http.patch(`/loads/${id}`, LoadSerializer.serialize(data));
         return deserializeLoad(await deserialize(response.data));
     } catch (error) {
         return rejectWithValue(error);
@@ -226,7 +226,6 @@ export const loadSlice = createSlice({
                 telegram: state.load?.telegram,
                 url: state.load?.url
             })
-            console.log('load', load);
             state.load = load;
         });
 

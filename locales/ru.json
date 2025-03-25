@@ -44,6 +44,8 @@
     "apply-filters": "Применить",
     "reset-all": "Сбросить",
     "more-filters": "Все фильтры",
+    "enter-value": "Введите значение",
+    "no-enter-value": "Ввод невозможен",
     "code-sent": "Код был отправлен вам по SMS",
     "enter-code": "Введите полученный код",
     "send-again": "Отправить снова",

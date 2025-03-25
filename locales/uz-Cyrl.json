@@ -44,6 +44,8 @@
     "apply-filters": "Қўллаш",
     "reset-all": "Барчасини тиклаш",
     "more-filters": "Барча фильтрлар",
+    "enter-value": "Киритинг...",
+    "no-enter-value": "Киритиш мумкин эмас",
     "code-sent": "Код сизга SMS орқали юборилди",
     "enter-code": "Олинган кодни киритинг",
     "send-again": "Яна юбориш",

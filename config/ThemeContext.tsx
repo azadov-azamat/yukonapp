@@ -37,6 +37,7 @@ const LightTheme = {
     light: "#ffffff",
     red: 'rgb(239, 68, 68)',
     inputColor: '#999999',
+    cardBackground: '#f5f5f5',
   },
   customStyles: {}
 };
@@ -54,6 +55,7 @@ const DarkTheme = {
     icon: 'rgb(156, 163, 175)',
     red: 'rgb(239, 68, 68)',
     inputColor: '#999999',
+    cardBackground: '#222222',
   },
   customStyles: {}
 };

@@ -80,7 +80,7 @@ const ProfilePage = React.memo(() => {
           }).start(() => {
             isExpanded.current = true;
             if (scrollViewRef.current) {
-              (scrollViewRef.current as any).setNativeProps({ scrollEnabled: true });
+              (scrollViewRef.current as any)?.setNativeProps({ scrollEnabled: true });
             }
           });
         } else if (gestureState.dy > 50 && isExpanded.current && scrollOffset.current <= 0) {
