@@ -9,15 +9,14 @@ import { Appearance } from "react-native";
 import { useColorScheme } from "nativewind";
 import { ColorSchemeSystem } from "nativewind/dist/style-sheet/color-scheme";
 
-const defaultTheme = PaperDefaultTheme || {
+const defaultTheme = {
   colors: {
+    ...PaperDefaultTheme.colors,
     primary: "#623BFF",
-    background: "#ffffff",
     text: "#333333",
-    dark: "#000000",
     purple: 'rgba(126,34,206,1.00)',
+    dark: "#000000",
     light: "#ffffff",
-    border: "#D1D5DB",
     icon: 'rgb(156, 163, 175)',
     red: 'rgb(239, 68, 68)',
     inputColor: '#999999',
@@ -28,34 +27,24 @@ const LightTheme = {
   ...defaultTheme,
   colors: {
     ...(defaultTheme.colors || {}),
-    primary: "#623BFF",
-    purple: 'rgba(126,34,206,1.00)',
     background: "#ffffff",
     border: "#000000",
-    icon: 'rgb(156, 163, 175)',
-    dark: "#000000",
-    light: "#ffffff",
-    red: 'rgb(239, 68, 68)',
     inputColor: '#999999',
     cardBackground: '#f5f5f5',
+    iconTheme: '#222222',
   },
   customStyles: {}
 };
 
 const DarkTheme = {
-  ...(MD3DarkTheme || defaultTheme),
+  ...defaultTheme,
   colors: {
-    ...(MD3DarkTheme?.colors || defaultTheme.colors),
-    primary: "#623BFF",
+    ...(defaultTheme?.colors || {}),
     background: "#121212",
-    purple: 'rgba(126,34,206,1.00)',
-    dark: "#000000",
-    light: "#ffffff",
     border: "#D1D5DB",
-    icon: 'rgb(156, 163, 175)',
-    red: 'rgb(239, 68, 68)',
     inputColor: '#999999',
     cardBackground: '#222222',
+    iconTheme: '#f5f5f5',
   },
   customStyles: {}
 };

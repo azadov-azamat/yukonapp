@@ -187,10 +187,9 @@
       "load-ready-date": "Юкланиш санаси",
       "is-archived": "Архивда",
       "customs-clearance": "Божхона",
-      "created-at": "Эълон санаси"
-    },
-    "truck": {
-      "load-capacity": "Грузоподъемность (тонна)"
+      "created-at": "Эълон санаси",
+      "load-capacity": "Юк қабул қилиш вазни (тонна)",
+      "prepayment-percentage": "Олдиндан тўлов фоизи"
     },
     "truck-type": {
       "isuzu": "Исузу",

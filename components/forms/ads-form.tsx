@@ -8,7 +8,7 @@ import { getCities, getCountryCities } from '@/redux/reducers/city';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { useTranslation } from 'react-i18next';
 import { fetchCountries } from '@/redux/reducers/country';
-import { updateLoad, getLoadById } from '@/redux/reducers/load';
+import { updateLoad, getLoadById, createLoad } from '@/redux/reducers/load';
 import { getName } from '@/utils/general';
 import { CustomButton, CustomInput, CustomInputSelector } from '../custom';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -19,7 +19,7 @@ import CityModel from '@/models/city';
 import DatePickerModal from 'react-native-paper-dates/src/Date/DatePickerModal';
 import CountryModel from '@/models/country';
 import { useTheme } from '@/config/ThemeContext';
-import { updateVehicle } from '@/redux/reducers/vehicle';
+// import { updateVehicle, createVehicle } from '@/redux/reducers/vehicle';
 
 const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 'load' | 'vehicle'}> = ({recordId, close, model = 'load'}) => {
     const dispatch = useAppDispatch();
@@ -28,14 +28,12 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     const { user } = useAppSelector((state) => state.auth);
     const { load } = useAppSelector((state) => state.load);
     const { vehicle } = useAppSelector((state) => state.vehicle);
-    const { allCountries, countries, loading: countryLoading } = useAppSelector((state) => state.country);
+    const { allCountries, loading: countryLoading } = useAppSelector((state) => state.country);
     const { countryCities } = useAppSelector((state) => state.city);
     const { theme } = useTheme();
     
     const [originLoading, setOriginLoading] = React.useState(false);
     const [destinationLoading, setDestinationLoading] = React.useState(false);
-    const [truckType, setTruckType] = React.useState(OPTIONS['truck-types'][0]);
-    const [currency, setCurrency] = React.useState(OPTIONS['currencies'][0]);
     
     const currentLanguage = i18n.language;
     const textClass = 'text-sm text-primary-title-color dark:text-primary-light focus-visible:outline-0 focus:outline-0';
@@ -46,8 +44,6 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
   
     const [prepayment, setPrepayment] = React.useState(false);
     const [prepaymentPercentage, setPrepaymentPercentage] = React.useState('');
-    const [price, setPrice] = React.useState('');
-    const [prepaymentAmount, setPrepaymentAmount] = React.useState('');
 
     const [open, setOpen] = React.useState(false);
 
@@ -96,14 +92,6 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
 		setFieldValue('destinationCountry', null);
 		setFieldValue('destinationCity', null);
 	}
-
-	function onClearOriginCity(setFieldValue: (field: string, value: any) => void) {
-		setFieldValue('originCity', null);
-	}
-
-	function onClearDestinationCity(setFieldValue: (field: string, value: any) => void) {
-		setFieldValue('destinationCity', null);
-	}
     
     const renderCustomInput = (label: string, value: string, onChangeText: (text: string) => void, placeholder: string = 'enter-value',editable: boolean = true) => (
         <CustomInput
@@ -114,17 +102,13 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
           divClass='mt-4'
           editable={editable}
         />
-      );
+    );
 
-    const resetFormValues = () => {
-        const newModel = new LoadModel({});
-        // setLoadModel(newModel);
-        formikRef.current?.resetForm();
-    };
+    const resetFormValues = () => formikRef.current?.resetForm();
     
     React.useEffect(() => {        
         formikRef.current?.setFieldValue('phone', user?.phone)
-    }, [recordId]);
+    }, [recordId, selectedAdType]);
     
     React.useEffect(() => {
         if (selectedAdType === 'load') {
@@ -155,38 +139,44 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         }
     }, [load, vehicle, selectedAdType]);
       
+    React.useEffect(() => {
+        if (formikRef.current?.values.price && prepaymentPercentage) {
+            const calculatedAmount = (parseFloat(formikRef.current?.values.price) * parseFloat(prepaymentPercentage) / 100).toFixed(2);
+            formikRef.current?.setFieldValue('prepaymentAmount', calculatedAmount);
+        } else {
+            formikRef.current?.setFieldValue('prepaymentAmount', '');    
+        }
+    }, [formikRef.current?.values.price, prepaymentPercentage]);
+
     const onClearField = React.useCallback((setFieldValue: (field: string, value: any) => void, field: string) => {
         setFieldValue(field, null);
     }, []);
    
-    React.useEffect(() => {
-        if (formikRef.current?.values.price && prepaymentPercentage) {
-            const calculatedAmount = (parseFloat(formikRef.current?.values.price) * parseFloat(prepaymentPercentage) / 100).toFixed(2);
-            setPrepaymentAmount(calculatedAmount);
-        } else {
-            setPrepaymentAmount('');    
-        }
-    }, [formikRef.current?.values.price, prepaymentPercentage]);
-
   return (
     <Formik
     innerRef={formikRef}
     initialValues={record}
     // validationSchema={adsValidationSchema}
     enableReinitialize
-     onSubmit={async (values, { resetForm }) => {
+    onSubmit={async (values, { resetForm }) => {
     
-    console.log(values  );
 
-    //  if (recordId === 0) {
-    //    await dispatch(createLoad(updatedModel));
-    //  } else {
-    //    if (model === 'load') {
-    //     await dispatch(updateLoad(values as LoadModel));
-    //    } else {
-    //     await dispatch(updateVehicle(values));
-    //    }
-    //  }
+     if (recordId === 0) {
+        if (model === 'load') {
+            await dispatch(createLoad(values as LoadModel));
+        } else {
+            console.log(values);
+            // await dispatch(createVehicle(values as VehicleModel));
+        }
+     } else {
+       if (model === 'load') {
+        console.log(values);
+        // await dispatch(updateLoad({ id: recordId.toString(), data: values as LoadModel }));
+       } else {
+        console.log(values);
+        // await dispatch(updateVehicle({ id: recordId.toString(), data: values as VehicleModel }));
+       }
+     }
 
     close?.();
     resetFormValues();
@@ -199,28 +189,28 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
             recordId === 0 &&  (
                 <>
                  <Text className="pb-2 text-[15px] leading-[22.5px] font-semibold text-primary-title-color dark:text-primary-light">
-                    {t('ad-type')}
+                    {t('table.ad-type')}
                 </Text>
-                <View className="flex-row items-center w-full mb-4 space-x-4">
+                <View className="flex-row items-center w-full space-x-4">
                 {adTypes.map((type) => (
                     <TouchableOpacity
                     key={type.value}
                     onPress={() => setSelectedAdType(type.value as 'load' | 'vehicle')}
-                    className={`flex-1 flex-row  justify-center items-center px-4 py-3 rounded-xl border ${
-                        selectedAdType === type.value ? 'bg-indigo-500 border-indigo-500' : 'bg-slate-100 border-transparent'
+                    className={`flex-1 flex-row  justify-center items-center px-4 h-12 rounded-xl  ${
+                        selectedAdType === type.value ? 'bg-primary ' : 'bg-primary-bg-light dark:bg-primary-bg-dark '
                     }`}
                     >
                     {type.icon && (
                         <Ionicons
                         name={type.icon}
                         size={24}
-                        color={selectedAdType === type.value ? '#fff' : '#94a3b8'}
+                        color={selectedAdType === type.value ? theme.colors.light : theme.colors.iconTheme}
                         style={{ marginRight: 8 }}
                         />
                     )}
                     <Text
-                        className={`text-base font-medium capitalize ${
-                        selectedAdType === type.value ? 'text-white' : 'text-slate-400'
+                        className={`text-sm font-medium capitalize ${
+                        selectedAdType === type.value ? 'text-primary-light' : 'text-primary-title-color dark:text-primary-bg-light'
                         }`}
                     >
                         {type.label}
@@ -254,7 +244,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 search
                 value={values.originCity}
                 onChange={(item: CityModel) => handleCityChange(item, setFieldValue, 'originCity')}
-                onClear={() => onClearOriginCity(setFieldValue)}
+                onClear={() => onClearField(setFieldValue, 'originCity')}
                 placeholder={t('select-city')}
                 loading={originLoading}
                 disabled={!values.originCountry}
@@ -289,7 +279,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                     search
                     value={(values as LoadModel).destinationCity}
                     onChange={(item: CityModel) => handleCityChange(item, setFieldValue, 'destinationCity')}
-                    onClear={() => onClearDestinationCity(setFieldValue)}
+                    onClear={() => onClearField(setFieldValue, 'destinationCity')}
                     placeholder={t('select-city')}
                     loading={destinationLoading}
                     disabled={!(values as LoadModel).destinationCountry}
@@ -307,11 +297,9 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         {renderCustomInput('phone', values.phone as string, handleChange('phone'))}
 
         {selectedAdType === 'load' && 'cargoType' in values && <View className="pt-4">
-            <Text className="mt-4 mb-1.5 text-lg font-semibold text-gray-700 dark:text-white">
-                {t ("loads.truck-type")}
-            </Text>
             <CustomInputSelector
                 translate
+                label={t('loads.truck-type')}
                 value={OPTIONS['truck-types'].find(item => item.value === values.cargoType)}
                 onChange={(item) => setFieldValue('cargoType', item.value)}
                 placeholder={t('loads.truck-type')}
@@ -323,11 +311,9 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
         </View>}
 
         {selectedAdType === 'vehicle' && 'truckType' in values && <View className="pt-4">
-            <Text className="mt-4 mb-1.5 text-lg font-semibold text-gray-700 dark:text-white">
-                {t ("loads.truck-type")}
-            </Text>
             <CustomInputSelector
                 translate
+                label={t('loads.truck-type')}
                 value={OPTIONS['truck-types'].find(item => item.value === values.truckType)}
                 onChange={(item) => setFieldValue('truckType', item.value)}
                 placeholder={t('loads.truck-type')}
@@ -338,7 +324,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
             />
         </View>}
         
-        {renderCustomInput('weight', values.weight?.toString(), handleChange('weight'))}
+        {renderCustomInput(selectedAdType === 'load' ?'weight' : 'load-capacity', values.weight?.toString(), handleChange('weight'))}
 
         {selectedAdType === 'load' && <View className="flex-row items-end space-x-2">
           <View className="flex-1">
@@ -357,7 +343,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
           </View>
         </View>}
         {selectedAdType === 'load' && 'loadReadyDate' in values && (
-            <View className="">
+            <>
                 <TouchableOpacity onPress={() => setOpen(true)}>
                     <CustomInput
                         label={t('loads.load-ready-date')}
@@ -379,11 +365,11 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                         setOpen(false);
                     }}
                 />
-            </View>
+            </>
         )}
         {renderCustomInput('description', values.description, handleChange('description'))}
 
-        <View className="flex-row items-center space-x-2 py-2.5">
+        {selectedAdType === 'load' && (<View className="flex-row items-center space-x-2 pt-2.5">
             <Text className='text-[15px] leading-[22.5px] font-semibold text-primary-title-color dark:text-primary-light capitalize'>
                 {t('prepayment')}
             </Text>
@@ -393,11 +379,11 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 trackColor={{ false: theme.colors.backdrop, true: theme.colors.primary }}
                 thumbColor={theme.colors.primary}
             />
-        </View>
-        {prepayment && (
+        </View>)}
+        {(prepayment && selectedAdType === 'load') && (
             <>
-                {renderCustomInput('prepaymentPercentage', prepaymentPercentage, (text) => setPrepaymentPercentage(text))}
-                {renderCustomInput('prepaymentAmount', prepaymentAmount, () => {}, 'no-enter-value', false)}
+                {renderCustomInput('prepayment-percentage', prepaymentPercentage, (text) => setPrepaymentPercentage(text))}
+                {renderCustomInput('prepayment-amount', (values as LoadModel).prepaymentAmount?.toString(), handleChange('prepaymentAmount'), 'no-enter-value', false)}
             </>
         )}
         <CustomButton onPress={handleSubmit} buttonStyle={'bg-primary my-4'} title={t('save')} />

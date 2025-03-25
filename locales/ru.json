@@ -187,10 +187,9 @@
       "load-ready-date": "Дата загрузки",
       "is-archived": "В архиве",
       "customs-clearance": "Таможня",
-      "created-at": "Дата объявления"
-    },
-    "truck": {
-      "load-capacity": "Грузоподъемность (тонна)"
+      "created-at": "Дата объявления",
+      "load-capacity": "Грузоподъемность (тонна)",
+      "prepayment-percentage": "Процент предоплаты"
     },
     "truck-type": {
       "isuzu": "Исузу",

@@ -187,10 +187,9 @@
     "load-ready-date": "Yuklanish sanasi",
     "is-archived": "Arxivda",
     "customs-clearance": "Bojxona",
-    "created-at": "E'lon sanasi"
-  },
-  "truck": {
-    "load-capacity": "Yuk ko'tarish vazni (tonna)"
+    "created-at": "E'lon sanasi",
+    "load-capacity": "Yuk ko'tarish vazni (tonna)",
+    "prepayment-percentage": "Oldindan to'lov foizi"
   },
   "truck-type": {
     "isuzu": "Isuzu",

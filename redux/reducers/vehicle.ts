@@ -36,11 +36,10 @@ export const getVehicleById = createAsyncThunk('vehicle/getVehicleById', async (
 });
 
 // Patch Vehicle by ID
-export const updateVehicle = createAsyncThunk('vehicle/updateVehicle', async (data: Partial<IVehicleModel>, { rejectWithValue }) => {
+export const updateVehicle = createAsyncThunk('vehicle/updateVehicle', async ({id, data}: {id: string, data: Partial<IVehicleModel>}, { rejectWithValue }) => {
     try {
-        const response = await http.patch(`/vehicles/${data.id}`, VehicleSerializer.serialize(data));
-        let vehicle = await deserialize(response.data)
-        return deserializeVehicle(vehicle);
+        const response = await http.patch(`/vehicles/${id}`, VehicleSerializer.serialize(data));
+        return deserializeVehicle(await deserialize(response.data));
     } catch (error) {
         return rejectWithValue(error);
     }
