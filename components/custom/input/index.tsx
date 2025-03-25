@@ -86,10 +86,10 @@ const Input: React.FC<InputProps> = ({
 
 const styles = StyleSheet.create({
   input: {
-    
-    // lineHeight: Platform.OS === 'ios' ? 21.5 : Platform.OS === 'web' ? 48 : undefined,
+
+    lineHeight: Platform.OS === 'ios' ? 17 : Platform.OS === 'web' ? 48 : undefined,
     textAlignVertical: Platform.OS === 'ios' ? 'center' : 'auto',
-    
+
   }
 });
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ImageBackground, StatusBar } from "react-native";
+import { View, ImageBackground, StatusBar, Platform } from "react-native";
 import ViewSelector from "@/components/view-selector";
 import { viewSelectorTabs } from "@/interface/components";
 import SearchLoadScreen from "./load.jsx";
@@ -16,22 +16,30 @@ export default function SearchPage() {
   const backgroundColor = isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(226,232,240,0.8)';
 
   React.useEffect(() => {
-    StatusBar.setBackgroundColor(backgroundColor);
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor(backgroundColor);
+    }
 
     return () => {
-      StatusBar.setBackgroundColor('transparent');
-      StatusBar.setTranslucent(true);
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor('transparent');
+        StatusBar.setTranslucent(true);
+      }
     };
   }, [isDarkMode]);
 
   useFocusEffect(
     React.useCallback(() => {
-      StatusBar.setBackgroundColor(backgroundColor);
-      StatusBar.setTranslucent(true);
+      if (Platform.OS === 'android') {
+        StatusBar.setBackgroundColor(backgroundColor);
+        StatusBar.setTranslucent(true);
+      }
 
       return () => {
-        StatusBar.setBackgroundColor('transparent');
-        StatusBar.setTranslucent(true);
+        if (Platform.OS === 'android') {
+          StatusBar.setBackgroundColor('transparent');
+          StatusBar.setTranslucent(true);
+        }
       };
     }, [isDarkMode])
   );
