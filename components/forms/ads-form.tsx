@@ -39,7 +39,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     
     const [record, setRecord] = React.useState(model === 'load' ? new LoadModel({}) : new VehicleModel({}));
     const [selectedAdType, setSelectedAdType] = React.useState(model);
-    const [prepayment, setPrepayment] = React.useState(false);
+    const [hasPrepayment, setHasPrepayment] = React.useState(false);
     const [prepaymentPercentage, setPrepaymentPercentage] = React.useState('');
     const [open, setOpen] = React.useState(false);
 
@@ -113,7 +113,6 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
 
     React.useEffect(() => {        
         formikRef.current?.setFieldValue('phone', user?.phone)
-        setPrepaymentPercentage(Math.round((record as LoadModel)?.prepaymentAmount / (record as LoadModel)?.price * 100).toString())
     }, [recordId, selectedAdType]);
     
     React.useEffect(() => {
@@ -160,9 +159,16 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
     }, [formikRef.current?.values.price, prepaymentPercentage]);
    
     React.useEffect(() => {
-        setPrepayment(formikRef.current?.values.hasPrepayment || false);
+        setHasPrepayment((record as LoadModel)?.hasPrepayment || false);
+    }, [(record as LoadModel)?.hasPrepayment]);  
+
+    React.useEffect(() => {
+        const price = (record as LoadModel)?.price;
         
-    }, [formikRef.current?.values.hasPrepayment]);  
+        if (price) {
+            setPrepaymentPercentage(Math.round((record as LoadModel)?.prepaymentAmount / (record as LoadModel)?.price * 100).toString())
+        }
+    }, [(record as LoadModel)?.price]);    
 
   return (
     <Formik
@@ -384,13 +390,13 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 {t('prepayment')}
             </Text>
             <Switch
-                value={prepayment}
-                onValueChange={setPrepayment}
+                value={hasPrepayment}
+                onValueChange={setHasPrepayment}
                 trackColor={{ false: theme.colors.backdrop, true: theme.colors.primary }}
                 thumbColor={theme.colors.primary}
             />
         </View>)}
-        {(prepayment && selectedAdType === 'load') && (
+        {(hasPrepayment && selectedAdType === 'load') && (
             <>
                 {renderCustomInput('prepayment-percentage', prepaymentPercentage, (text: string) => setPrepaymentPercentage(text))}
                 {renderCustomInput('prepayment-amount', (values as LoadModel).prepaymentAmount?.toString(), handleChange('prepaymentAmount'), 'no-enter-value', false)}
