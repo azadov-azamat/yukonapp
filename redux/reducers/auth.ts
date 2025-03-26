@@ -80,7 +80,8 @@ const initialState: AuthInitialProps = {
     auth: null,
     uniquePhoneExists: false,
     successSendSms: false,
-    loading: false
+    loading: false,
+    location: []
 }
 
 export const authSlice = createSlice({
@@ -99,6 +100,9 @@ export const authSlice = createSlice({
             state.user = null;
             state.auth = null;
             AsyncStorage.clear();
+        },
+        setLocation: (state, action) => {
+            state.location = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -194,5 +198,5 @@ export const authSlice = createSlice({
     }
 })
 
-export const { setUser, updateUserSubscriptionModal, logout } = authSlice.actions;
+export const { setUser, updateUserSubscriptionModal, logout, setLocation } = authSlice.actions;
 export default authSlice.reducer

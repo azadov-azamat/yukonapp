@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo } from "react";
-import { Keyboard, View, Text, StyleSheet, RefreshControl, TouchableOpacity, Animated, StatusBar, ActivityIndicator } from "react-native";
+import { Keyboard, View, Text, StyleSheet, RefreshControl, TouchableOpacity, Animated, StatusBar, ActivityIndicator, Platform, PermissionsAndroid, Button } from "react-native";
 import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,7 @@ import { debounce } from 'lodash';
 import { getExtractCity } from "@/redux/reducers/city";
 import { startLoading, stopLoading } from "@/redux/reducers/variable";
 import { useRouter } from "expo-router";
-import { getCityName } from "@/utils/general";
+import { getCityName, requestLocationPermission } from "@/utils/general";
 import { TextInput } from "react-native-paper"; // ✅ Import Appbar from Paper
 import { useTheme } from "@/config/ThemeContext";
 import StickyHeader from "@/components/sticky-header"; // Import the Sticky Header
@@ -46,6 +46,10 @@ export default function MainPage() {
 
 	const { theme, isDarkMode } = useTheme();
   const insets = useSafeAreaInsets();
+
+  React.useEffect(() => {
+    requestLocationPermission(dispatch);
+  }, []);
 
   // Combined focus effect for data fetching and cleanup
   useEffect(() => {
@@ -214,7 +218,6 @@ export default function MainPage() {
                   </TouchableOpacity>
                 </View>
               </View>
-
               <View className="mb-6">
                 <Text className="px-6 mb-4 text-lg font-bold uppercase text-primary-title-color dark:text-primary-light">
                   {t ("latest-ads")}

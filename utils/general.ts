@@ -9,10 +9,12 @@ import localizedFormat from 'dayjs/plugin/localizedFormat';
 import 'dayjs/locale/en';
 import 'dayjs/locale/ru';
 import 'dayjs/locale/uz';
-import { Linking, Alert } from "react-native";
+import { Linking, Alert, PermissionsAndroid, Platform } from "react-native";
+import { setLocation } from "@/redux/reducers/auth";
 
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
+import Geolocation from 'react-native-geolocation-service';
 
 export const dateFromNow = (value: string | Date): string => {
   let dayjsLocale = 'uz'; // Default locale
@@ -180,4 +182,30 @@ export async function openLink(url: string) {
     console.error('Failed to open Telegram:', error);
     Alert.alert('Error', 'Unable to open Telegram.');
   }
+};
+
+export const requestLocationPermission = async (dispatch: any) => {
+  if (Platform.OS === 'android') {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+    );
+
+    if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+      console.log('Location permission denied');
+      return;
+    }
+  }
+  getLocation(dispatch);
+};
+
+export const getLocation = (dispatch: any) => {
+  Geolocation.getCurrentPosition(
+    (position: any) => {
+      dispatch(setLocation([position.coords.latitude, position.coords.longitude]));
+    },
+    (error: any) => {
+      console.log(error.code, error.message);
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+  );
 };

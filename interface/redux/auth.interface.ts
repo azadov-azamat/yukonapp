@@ -6,6 +6,7 @@ export interface AuthInitialProps {
     uniquePhoneExists: boolean;
     successSendSms: boolean;
     loading: boolean;
+    location: [number, number] | [];
 }
 
 export interface AuthDataProps {

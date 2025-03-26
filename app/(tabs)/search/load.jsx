@@ -27,7 +27,8 @@ const SearchLoadScreen = () => {
     const navigation = useNavigation();
     const theme = useTheme();
     const {loads, pagination, stats, loading: cargoLoad} = useAppSelector(state => state.load);
-    const {user} = useAppSelector(state => state.auth)
+
+    const {user, location} = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
     const { openLoadView } = useBottomSheet();
 
@@ -55,7 +56,7 @@ const SearchLoadScreen = () => {
     const [isGridView, setIsGridView] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
-
+    
     const toggleView = () => {
       setIsGridView((prev) => !prev);
     };
