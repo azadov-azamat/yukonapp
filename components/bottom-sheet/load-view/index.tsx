@@ -59,7 +59,9 @@ const LoadViewBottomSheet = React.forwardRef<LoadViewBottomSheetRef>((_, ref) =>
         backgroundColor: isDarkMode ? '#9CA3AF' : '#6B7280',
       }}
     >
-      <BottomSheetView className="relative flex-1">
+      <BottomSheetView className="relative flex-1" style={{
+        height: '100%',
+      }}>
         {/* {loadingLoadById && <View className="items-center justify-center h-full px-4 ">
           <ActivityIndicator size={24} color={theme.colors.primary} />
         </View>} */}
@@ -76,7 +78,7 @@ const LoadViewBottomSheet = React.forwardRef<LoadViewBottomSheetRef>((_, ref) =>
           {/* Phone Call Button */}
           <LoadFooter />
           
-          </View>
+        </View>
       </BottomSheetView>
     </BottomSheet>
   );
