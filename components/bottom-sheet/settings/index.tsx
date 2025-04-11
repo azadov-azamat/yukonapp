@@ -31,7 +31,7 @@ const SettingItem = ({ icon, title, onPress, showToggle, isToggled, onToggle }: 
     const {t} = useTranslation();
 
     return (
-        <TouchableOpacity 
+        <TouchableOpacity
     onPress={onPress}
     className={`flex-row items-center px-4 py-3 border-b border-border-color dark:border-gray-700`}
   >
@@ -70,18 +70,18 @@ const SETTINGS_CONFIG: SettingConfig[] = [
     route: '/profile/subscriptions',
     value: 'subscriptions',
   },
-  {
-    icon: 'bookmark-outline',
-    title: 'profile.bookmarks',
-    route: '/profile/bookmarks',
-    value: 'bookmarks',
-  },
-  {
-    icon: 'megaphone-outline',
-    title: 'profile.my-ads',
-    route: '/profile/my-ads',
-    value: 'my-ads',
-  },
+  // {
+  //   icon: 'bookmark-outline',
+  //   title: 'profile.bookmarks',
+  //   route: '/profile/bookmarks',
+  //   value: 'bookmarks',
+  // },
+  // {
+  //   icon: 'megaphone-outline',
+  //   title: 'profile.my-ads',
+  //   route: '/profile/my-ads',
+  //   value: 'my-ads',
+  // },
   {
     icon: 'shield-outline',
     title: 'Privacy',
@@ -108,7 +108,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
   const { i18n, t } = useTranslation();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['50%'], []);
-  
+
   const languages = [
     { code: "ru", label: "Русский", icon: RuIcon },
     { code: "uz", label: "O'zbekcha", icon: UzIcon },
@@ -119,7 +119,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
     i18n.changeLanguage(code);
     bottomSheetRef.current?.close();
   };
-  
+
   useImperativeHandle(ref, () => ({
     open: () => {
       bottomSheetRef.current?.expand();
@@ -154,17 +154,17 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
     bottomSheetRef.current?.close();
     router.replace('/auth');
   }
-  
+
   const processedSettingsConfig = SETTINGS_CONFIG.map(setting => ({
     ...setting,
-    icon: setting.title === 'profile.dark-mode' 
-      ? (isDarkMode ? 'sunny' : 'moon-outline') 
+    icon: setting.title === 'profile.dark-mode'
+      ? (isDarkMode ? 'sunny' : 'moon-outline')
       : (isDarkMode ? setting.icon.replace('-outline', '') : setting.icon),
-    title: setting.title === 'profile.dark-mode' 
-      ? (isDarkMode ? 'profile.light-mode' : 'profile.dark-mode') 
+    title: setting.title === 'profile.dark-mode'
+      ? (isDarkMode ? 'profile.light-mode' : 'profile.dark-mode')
       : setting.title,
-    value: setting.title === 'profile.dark-mode' 
-      ? (isDarkMode ? 'light-mode' : 'dark-mode') 
+    value: setting.title === 'profile.dark-mode'
+      ? (isDarkMode ? 'light-mode' : 'dark-mode')
       : setting.value,
   }));
 
@@ -187,15 +187,15 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
           <Text className="px-4 pb-2 text-3xl font-bold text-black dark:text-white">
             {t('profile.settings')}
           </Text>
-          
+
           {processedSettingsConfig.map((setting) => (
             <SettingItem
               key={setting.title}
               icon={
-                <Ionicons 
-                  name={setting.icon as keyof typeof Ionicons.glyphMap} 
-                  size={24} 
-                  color={theme.colors.primary} 
+                <Ionicons
+                  name={setting.icon as keyof typeof Ionicons.glyphMap}
+                  size={24}
+                  color={theme.colors.primary}
                 />
               }
               title={setting.title}
@@ -211,9 +211,9 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
 
           <View className="flex-row justify-around px-4 my-2">
             {languages.map((item) => (
-              <TouchableOpacity 
-                key={item.code} 
-                onPress={() => handleLanguageChange(item.code)} 
+              <TouchableOpacity
+                key={item.code}
+                onPress={() => handleLanguageChange(item.code)}
                 className={`items-center p-3 rounded-lg ${
                   item.code === i18n.language ? 'bg-gray-100 dark:bg-gray-800' : ''
                 }`}
