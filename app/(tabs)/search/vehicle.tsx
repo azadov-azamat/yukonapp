@@ -2,7 +2,8 @@ import { StyleSheet, Text, View, ScrollView, Keyboard, FlatList, RefreshControl 
 import React from 'react'
 import { CustomBadgeSelector, CustomButton, CustomInput, CustomInputSelector } from "@/components/custom";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { clearVehicles, getVehicleCountries, getVehicleCountryCities, searchVehicles, setVehicle } from "@/redux/reducers/vehicle";
+import { clearVehicles, searchVehicles, setVehicle } from "@/redux/reducers/vehicle";
+import { getVehicleCountries, getVehicleCountryCities } from "@/redux/reducers/country";
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
 import { getName } from '@/utils/general';
@@ -19,7 +20,8 @@ const SearchVehicleScreen = () => {
 	const dispatch = useAppDispatch();
 	const { t, i18n } = useTranslation();
   const currentLanguage = i18n.language;
-  const {activeCountries, activeCities, vehicles, loading, pagination, stats} = useAppSelector(state => state.vehicle);
+  const { vehicles, loading, pagination, stats} = useAppSelector(state => state.vehicle);
+  const { activeCountries, activeCities } = useAppSelector(state => state.country);
   const {cities, loading: cityLoad} = useAppSelector(state => state.city);
 	const [selectedCountry, setSelectedCountry] = React.useState<vehicleCountriesProps | null>(null); // Initialize with "" to avoid null
 	const [selectedCity, setSelectedCity] = React.useState<vehicleCountriesProps | null>(null); // Initialize with "" to avoid null

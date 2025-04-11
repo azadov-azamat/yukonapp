@@ -12,6 +12,7 @@ import UzCyrlIcon from "@/assets/svg/uz-Cyrl.svg";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { logout } from '@/redux/reducers/auth';
 import { useAppDispatch } from '@/redux/hooks';
+import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 
 interface SettingItemProps {
   icon: React.ReactNode;
@@ -108,13 +109,7 @@ const SettingsBottomSheet = forwardRef<SettingsBottomSheetRef>((_, ref) => {
   const { i18n, t } = useTranslation();
   const bottomSheetRef = React.useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['50%'], []);
-
-  const languages = [
-    { code: "ru", label: "Русский", icon: RuIcon },
-    { code: "uz", label: "O'zbekcha", icon: UzIcon },
-    { code: "uz-Cyrl", label: "Ўзбекча", icon: UzCyrlIcon },
-  ];
-
+  const { languages } = useBottomSheet();
   const handleLanguageChange = (code: string) => {
     i18n.changeLanguage(code);
     bottomSheetRef.current?.close();

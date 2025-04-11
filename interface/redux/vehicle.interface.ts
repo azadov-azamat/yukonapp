@@ -5,8 +5,6 @@ export interface VehicleInitialProps {
     vehicle: VehicleModel | null;
     vehicles: VehicleModel[] | [];
     countries: ICountryModel[] | [];
-    activeCountries: vehicleCountriesProps[] | [];
-    activeCities: vehicleCountriesProps[] | [];
     loading: boolean;
     pagination: any;
     stats: any;

@@ -32,11 +32,33 @@ export const fetchCountries = createAsyncThunk('countries/fetchCountries', async
   }
 );
 
+// Fetch Vehicle Countries
+export const getVehicleCountries = createAsyncThunk('countries/getVehicleCountries', async (_, { rejectWithValue }) => {
+  try {
+      const response = await http.get('/countries/vehicle-countries');
+      return response.data;
+  } catch (error) {
+      return rejectWithValue(error);
+  }
+});
+
+// Fetch Vehicle Country cities
+export const getVehicleCountryCities = createAsyncThunk('countries/getVehicleCountryCities', async (id: number, { rejectWithValue }) => {
+  try {
+      const response = await http.get(`/countries/${id}/cities`);
+      return response.data;
+  } catch (error) {
+      return rejectWithValue(error);
+  }
+});
+
 // Initial state of the city reducer
 const initialState: CountryInitialProps = {
   countries: [],
   allCountries: [],
 	loading: false,
+  activeCountries: [],
+  activeCities: [],
 };
 
 const citySlice = createSlice({
@@ -67,6 +89,32 @@ const citySlice = createSlice({
 				state.loading = false;
 				state.countries = [];
     	});
+
+   // Get Vehicle Countries
+   builder.addCase(getVehicleCountries.fulfilled, (state, action) => {
+    state.activeCountries = action.payload;
+          state.loading = false;
+      });
+      builder.addCase(getVehicleCountries.pending, (state) => {
+          state.loading = true;
+      });
+      builder.addCase(getVehicleCountries.rejected, (state) => {
+          state.activeCountries = [];
+          state.loading = false;
+      });
+
+      // Get Vehicle Country cities
+      builder.addCase(getVehicleCountryCities.fulfilled, (state, action) => {
+    state.activeCities = action.payload;
+          state.loading = false;
+      });
+      builder.addCase(getVehicleCountryCities.pending, (state) => {
+          state.loading = true;
+      });
+      builder.addCase(getVehicleCountryCities.rejected, (state) => {
+          state.activeCities = [];
+          state.loading = false;
+      });
   },
 });
 

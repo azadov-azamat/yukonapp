@@ -3,14 +3,16 @@ import { Text, TouchableOpacity } from 'react-native';
 import { useTheme } from '@/config/ThemeContext';
 import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import i18n from '@/utils/i18n';
+import EnIcon from "@/assets/svg/en.svg";
 import RuIcon from "@/assets/svg/ru.svg";
 import UzIcon from "@/assets/svg/uz.svg";
 import UzCyrlIcon from "@/assets/svg/uz-Cyrl.svg";
 
 export const languages = [
-  { code: "ru", label: "Русский", icon: RuIcon, short: "ru" },
   { code: "uz", label: "O‘zbekcha", icon: UzIcon, short: "uz" },
   { code: "uz-Cyrl", label: "Ўзбекча", icon: UzCyrlIcon, short: "Ўз" },
+  { code: "ru", label: "Русский", icon: RuIcon, short: "ru" },
+  { code: "en", label: "English", icon: EnIcon, short: "en" },
 ];
 
 export interface LanguageBottomSheetRef {

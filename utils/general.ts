@@ -25,10 +25,15 @@ export const dateFromNow = (value: string | Date): string => {
       dayjsLocale = 'ru';
       break;
     case 'uz':
-      dayjsLocale = 'uz-latn';
+    case 'uz-Latn':
+      dayjsLocale = 'uz-latn'; // If you registered this locale
       break;
     case 'uz-Cyrl':
-      dayjsLocale = 'uz'; // `uz` in dayjs handles Cyrillic
+      dayjsLocale = 'uz'; // uz = Cyrillic
+      break;
+    case 'en':
+    default:
+      dayjsLocale = 'en';
       break;
   }
 
@@ -43,7 +48,6 @@ export const dateFromNow = (value: string | Date): string => {
     date
       .fromNow()
       .replace('bir necha ', '')
-
       .replace('soniya oldin', 'hozir')
   );
 };
@@ -60,35 +64,50 @@ export function getCityName(city: any): string {
     return currentLanguage === 'uz' ? uzKey || fallbackText : ruKey || fallbackText;
 }
 
-export function getCityCountryName(model: any, propName: string): string {
-	const currentLanguage = i18n.language;
+export function getCityCountryName(model: Record<string, any>, propName: string): string {
+  const currentLanguage: string = i18n.language;
 
-	const cityKey = model[`${propName}City`];
-	const uzKey = cityKey?.name_uz || cityKey?.nameUz;
-	const ruKey = cityKey?.name_ru || cityKey?.nameRu;
+  const cityKey = model[`${propName}City`];
+  const countryKey = model[`${propName}Country`];
 
+  const uzKey: string | undefined = cityKey?.name_uz || cityKey?.nameUz;
+  const ruKey: string | undefined = cityKey?.name_ru || cityKey?.nameRu;
+  const enKey: string | undefined = cityKey?.name_en || cityKey?.nameEn;
 
-	const countryKey = model[`${propName}Country`];
-	const countryUz = countryKey?.name_uz || countryKey?.nameUz;
-	const countryRu = countryKey?.name_ru || countryKey?.nameRu;
+  const countryUz: string | undefined = countryKey?.name_uz || countryKey?.nameUz;
+  const countryRu: string | undefined = countryKey?.name_ru || countryKey?.nameRu;
+  const countryEn: string | undefined = countryKey?.name_en || countryKey?.nameEn;
 
-	const fallbackText = i18n.t('truck-type.not_specified');
+  const fallbackText: string = i18n.t('truck-type.not_specified');
 
-	// Return the city name if it exists, otherwise return the country name
-	return cityKey ? currentLanguage === 'uz' ? uzKey : ruKey : countryUz ? (currentLanguage === 'uz') ? countryUz : countryRu : fallbackText;
+  if (cityKey) {
+    if (currentLanguage === 'uz') return uzKey || ruKey || enKey || fallbackText;
+    if (currentLanguage === 'ru') return ruKey || uzKey || enKey || fallbackText;
+    if (currentLanguage === 'en') return enKey || uzKey || ruKey || fallbackText;
+  } else {
+    if (currentLanguage === 'uz') return countryUz || countryRu || countryEn || fallbackText;
+    if (currentLanguage === 'ru') return countryRu || countryUz || countryEn || fallbackText;
+    if (currentLanguage === 'en') return countryEn || countryUz || countryRu || fallbackText;
+  }
+
+  return fallbackText;
 }
 
-export function getName(object: any, key: string): string {
-    const currentLanguage = i18n.language;
+export function getName(object: Record<string, any>, key: string): string {
+  const currentLanguage = i18n.language;
 
-    const uzKey = object[key + '_uz'] || object[key + 'Uz'];
-    const ruKey = object[key + '_ru'] || object[key + 'Ru'];
-    const cyrlKey = object[key + '_cyrl'] || object[key + 'Cyrl'];
+  const uzKey = object[key + '_uz'] || object[key + 'Uz'];
+  const ruKey = object[key + '_ru'] || object[key + 'Ru'];
+  const enKey = object[key + '_en'] || object[key + 'En'];
 
-    const fallbackText = i18n.t('truck-type.not_specified');
+  const fallbackText = i18n.t('truck-type.not_specified');
 
-    // Return the value based on the current language
-    return currentLanguage === 'uz' ? uzKey || fallbackText : ruKey || fallbackText;
+  if (currentLanguage === 'uz') return uzKey || ruKey || enKey || fallbackText;
+  if (currentLanguage === 'ru') return ruKey || uzKey || enKey || fallbackText;
+  if (currentLanguage === 'en') return enKey || uzKey || ruKey || fallbackText;
+
+  // Fallback for other languages
+  return uzKey || ruKey || enKey || fallbackText;
 }
 
 export const formatPrice = (x: number, hideSign?: boolean): string => {

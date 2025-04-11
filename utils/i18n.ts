@@ -4,6 +4,7 @@ import { initReactI18next } from 'react-i18next';
 import uz from '@/locales/uz.json';
 import uzCyrl from '@/locales/uz-Cyrl.json';
 import ru from '@/locales/ru.json';
+import en from '@/locales/en.json';
 
 i18n
   .use(initReactI18next)
@@ -14,6 +15,9 @@ i18n
     resources: {
       uz: {
         translation: uz,
+      },
+      en: {
+        translation: en,
       },
       ru: {
         translation: ru,

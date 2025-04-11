@@ -26,6 +26,8 @@ export interface CountryInitialProps {
 		countries: any;
 		allCountries: any;
 		loading: boolean;
+        activeCountries: vehicleCountriesProps[] | [];
+    activeCities: vehicleCountriesProps[] | [];
 }
 
 export interface extractCityProps {

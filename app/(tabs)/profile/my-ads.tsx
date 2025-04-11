@@ -1,21 +1,11 @@
 import React from "react";
 import { FlatList, Platform, RefreshControl, View } from "react-native";
-import ViewSelector from "@/components/view-selector";
-import { viewSelectorTabs } from "@/interface/components";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
 	clearLoads,
-	getLoadById,
-	searchLoads,
-	setLoad,
+	searchLoads
 } from '@/redux/reducers/load';
-import {
-clearVehicles,
-	getVehicleCountries,
-	getVehicleCountryCities,
-	searchVehicles,
-	setVehicle,
-} from '@/redux/reducers/vehicle';
+import { searchVehicles } from '@/redux/reducers/vehicle';
 import { EmptyStateCard } from "@/components/cards";
 import { ContentLoaderLoadList } from "@/components/content-loader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
