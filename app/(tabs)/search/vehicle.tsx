@@ -14,19 +14,24 @@ import { EmptyStateCard, VehicleGridCard, VehicleListCard } from '@/components/c
 import VehicleModel from '@/models/vehicle';
 import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/content-loader';
 import { OPTIONS } from '@/utils/constants';
-import { stopLoading } from '@/redux/reducers/variable';
+import { startLoading, stopLoading } from '@/redux/reducers/variable'
+import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 
 const SearchVehicleScreen = () => {
 	const dispatch = useAppDispatch();
 	const { t, i18n } = useTranslation();
   const currentLanguage = i18n.language;
-  const { vehicles, loading, pagination, stats} = useAppSelector(state => state.vehicle);
+
+  const { openVehicleView } = useBottomSheet();
+  
+  const { vehicles, pagination, stats} = useAppSelector(state => state.vehicle);
   const { activeCountries, activeCities } = useAppSelector(state => state.country);
   const {cities, loading: cityLoad} = useAppSelector(state => state.city);
-	const [selectedCountry, setSelectedCountry] = React.useState<vehicleCountriesProps | null>(null); // Initialize with "" to avoid null
+	const { loading } = useAppSelector(state => state.variable);
+  
+  const [selectedCountry, setSelectedCountry] = React.useState<vehicleCountriesProps | null>(null); // Initialize with "" to avoid null
 	const [selectedCity, setSelectedCity] = React.useState<vehicleCountriesProps | null>(null); // Initialize with "" to avoid null
-  const [error, setError] = React.useState<string>("");
-  // const [searchText, setSearchText] = React.useState<string>('');
+
   const [viewId, setViewId] = React.useState(null);
   const [isGridView, setIsGridView] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
@@ -40,20 +45,17 @@ const SearchVehicleScreen = () => {
       }, {})
     );
     
-    const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
-    const [selectedFitlers, setSelectedFilters] = React.useState<string[]>([]);
-    const [limit, setLimit] = React.useState(10);
-    const [page, setPage] = React.useState(1);
-    
-  const RenderLoadItem = React.memo(({ item }: {item: VehicleModel}) => isGridView ? <VehicleGridCard onPress={() => toggleSetId(item)} vehicle={item} close={toggleModal} /> : 
-    <VehicleListCard onPress={() => toggleSetId(item)} vehicle={item} close={toggleModal} />);
-  const RenderContentLoadItem = React.memo(() => !isGridView ? <ContentLoaderLoadList /> : <ContentLoaderLoadGrid />);
+  const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
+  const [selectedFitlers, setSelectedFilters] = React.useState<string[]>([]);
+  const [limit, setLimit] = React.useState(10);
+  const [page, setPage] = React.useState(1);
 
   const isLast = pagination?.totalPages === page;
 
   const debouncedFetchVehicles = React.useCallback(
     debounce(() => {
       fetchVehicles();
+      dispatch(stopLoading())
     }, 300), // 300ms ichida faqat bitta chaqiruv amalga oshiriladi
     [selectedCountry, selectedCity]
   )
@@ -69,10 +71,10 @@ const SearchVehicleScreen = () => {
     setOpenModal(!openModal)
   };
   
-  const toggleSetId = (item: VehicleModel) => {
-    setViewId(item.id);
-    dispatch(setVehicle(item))
-  }
+  const toggleSetId = React.useCallback((item: VehicleModel) => {
+    openVehicleView();
+    dispatch(setVehicle(item));
+  }, [dispatch]);
   
   
 	React.useEffect(()=> {
@@ -240,11 +242,25 @@ const SearchVehicleScreen = () => {
   
   const checkAndFetch =()=> {
     if (selectedCountry) {
+      dispatch(startLoading())
       setPage(1);
       dispatch(clearVehicles());
       debouncedFetchVehicles();
     }
   }
+  
+  const MemoizedVehicleListCard = React.memo(isGridView ? VehicleListCard : VehicleGridCard);
+  const MemoizedContentVehicleItem = React.memo(isGridView ? ContentLoaderLoadList : ContentLoaderLoadGrid);
+  
+  const renderVehicleItem = React.useCallback(({ item }: {item: VehicleModel}) => (
+    <MemoizedVehicleListCard
+      onPress={() => toggleSetId(item)} vehicle={item}
+    />
+  ), [toggleSetId, toggleModal]);
+
+  const renderContentVehicleItem = React.useCallback(() => (
+    <MemoizedContentVehicleItem />
+  ), []);
   
   return (
     <View className="flex-1">
@@ -313,7 +329,7 @@ const SearchVehicleScreen = () => {
               <FlatList
               data={[1, 2, 3, 4, 6, 7]} // Foydalanilmaydigan placeholder massiv
               keyExtractor={(item) => item.toString()}
-              renderItem={() => <RenderContentLoadItem />}
+              renderItem={renderContentVehicleItem}
             />
             ) : (
               <FlatList
@@ -347,7 +363,7 @@ const SearchVehicleScreen = () => {
                     />
                   </View>}
                   ListEmptyComponent={<EmptyStateCard type="vehicle"/>}
-                  renderItem={({ item }: {item: VehicleModel}) => <RenderLoadItem item={item} />}
+                  renderItem={renderVehicleItem}
                   refreshControl={ <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
               />
             )}

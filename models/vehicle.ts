@@ -47,7 +47,7 @@ export default class VehicleModel implements IVehicleModel {
   async phoneFunction(user: UserModel, dispatch: any, close?: () => void): Promise<void> {
     this.loading = true;
     await this.handleFunction({
-      endpoint: `loads/${this.id}/phone`,
+      endpoint: `vehicles/${this.id}/phone`,
       user,
       dispatch,
       successCallback: async (res) => {
@@ -82,7 +82,7 @@ export default class VehicleModel implements IVehicleModel {
   async urlFunction(user: UserModel, dispatch: any): Promise<void> {
     this.loading = true;
     await this.handleFunction({
-        endpoint: `loads/${this.id}/url`, 
+        endpoint: `vehicles/${this.id}/url`, 
         user, 
         dispatch,
         successCallback: async (response) => {
@@ -149,6 +149,6 @@ export default class VehicleModel implements IVehicleModel {
   }
 
   async save(dispatch: any) {
-    await dispatch(updateVehicle(this))
+    await dispatch(updateVehicle({id: String(this.id), data: this}))
   }
 }
