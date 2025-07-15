@@ -2,7 +2,7 @@
   "expo": {
     "name": "yukonapp",
     "slug": "yukonapp",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -13,11 +13,13 @@
       "bundleIdentifier": "yukon.uz.app"
     },
     "android": {
+      "package": "yukon.uz.app",
+      "versionCode": 2,
+      "permissions": [],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "yukon.uz.app"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -25,7 +27,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "splash": {
-         "image": "./assets/images/splash-icon.png"
+      "image": "./assets/images/splash-icon.png"
     },
     "plugins": [
       "expo-router",
@@ -37,7 +39,9 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
