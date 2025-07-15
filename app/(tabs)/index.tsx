@@ -218,7 +218,7 @@ export default function MainPage() {
                   </TouchableOpacity>
                 </View>
               </View>
-              <View className="mb-6">
+              {/* <View className="mb-6">
                 <Text className="px-6 mb-4 text-lg font-bold uppercase text-primary-title-color dark:text-primary-light">
                   {t ("latest-ads")}
                 </Text>
@@ -240,10 +240,9 @@ export default function MainPage() {
                     />
                   )
                 }
-              </View>
+              </View>*/}
 
-              <View className="pb-5">
-                {/* Header */}
+              {/* <View className="pb-5">
                 <Text className="px-6 mb-4 text-lg font-bold uppercase text-primary-title-color dark:text-primary-light">
                   {t ("top-searches")}
                 </Text>
@@ -266,7 +265,7 @@ export default function MainPage() {
                     />
                   )
                 }
-              </View>
+              </View> */}
             </View>
           </Animated.ScrollView>
         </View>
