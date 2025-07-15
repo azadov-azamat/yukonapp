@@ -10,6 +10,19 @@ dist/
 web-build/
 expo-env.d.ts
 
+#mobile
+android/build.*
+android/gradle.*
+android/settings.gradle
+android/upload_certificate.pem
+android/build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+.cxx/
+
 # Native
 *.orig.*
 *.jks
