@@ -412,12 +412,11 @@ function SearchInput({searchText, setSearchText, debouncedFetchExtract}) {
 
   return (
     <View className='relative justify-center w-full'>
-			<TextInput
-				mode="outlined"
+      <CustomInput
+        // mode="outlined"
 				placeholder={t ('search-by-destination')}
 				value={searchText}
 				onChangeText={(text) => setSearchText(text)}
-				className="w-full overflow-auto bg-primary-white dark:bg-primary-dark/30 pl-2.5"
 				returnKeyType="search" // Changes the keyboard button to "Search"
 				theme={{
 					roundness: 25,
@@ -429,7 +428,25 @@ function SearchInput({searchText, setSearchText, debouncedFetchExtract}) {
 					Keyboard.dismiss();
 					debouncedFetchExtract();
 				}}
-			/>
+      />
+			{/* <TextInput
+				mode="outlined"
+				placeholder={t ('search-by-destination')}
+				value={searchText}
+				onChangeText={(text) => setSearchText(text)}
+				className="w-full !dark:text-white overflow-auto bg-primary-white dark:bg-primary-dark/30 pl-2.5"
+				returnKeyType="search" // Changes the keyboard button to "Search"
+				theme={{
+					roundness: 25,
+					colors: {
+						outline: '#623bff', // Outline color
+					},
+				}}
+				onSubmitEditing={() => { // Triggered when Enter is pressed
+					Keyboard.dismiss();
+					debouncedFetchExtract();
+				}}
+			/> */}
 			<TouchableOpacity
 				className="absolute items-center justify-center transform translate-y-[-12] rounded-full right-4 top-4 w-9"
 				onPress={() => {

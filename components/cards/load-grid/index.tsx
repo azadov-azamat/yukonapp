@@ -81,29 +81,30 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
   return (
     <ParentComponent
       {...(!showElement && { onPress })} 
-      className={`mb-4 bg-primary-light dark:bg-primary-dark ${showElement ? 'overflow-visible' : 'p-4 shadow-md rounded-xl'}`}>
+      className={`mb-4 bg-primary-light dark:bg-primary-dark ${showElement ? 'overflow-visible' : 'px-4 py-2 shadow-md rounded-xl'}`}>
       {/* Top Row */}
-      {!showElement && <View className="flex-row items-center justify-between mb-4">
+      {!showElement && <View className="flex-row items-center justify-between">
         {/* Cargo Type and Weight */}
         <View className="flex-row items-center space-x-2">
           <Text className="font-bold underline text-primary-dark dark:text-border-color/40">{t ('truck-type.' + load.cargoType)}</Text>
           <Ionicons name="car" size={16} color={theme.colors.icon} />
-          <View className="px-3 py-1 rounded-full bg-primary">
+          {/* <View className="px-3 py-1 rounded-full bg-primary">
             <Text className="text-sm text-white">{handleDetermineTon(load.weight)}</Text>
-          </View>
+          </View> */}
         </View>
 
         {/* Telegram and Bookmark Buttons */}
         <View className="flex-row items-center space-x-3">
-          <View className="px-3 py-1 rounded-full bg-primary">
+          {/* <View className="px-3 py-1 rounded-full bg-primary">
             <Text className="text-sm text-white">{t (load.isWebAd ? 'site' : 'telegram')}</Text>
-          </View>
+          </View> */}
           <ButtonBookmark model={load} paramName='bookmarkedLoadIds'/>
         </View>
+    
       </View>}
 
       {/* Origin and Destination */}
-      <View className="flex-row items-center justify-between my-4">
+      <View className="flex-row items-center justify-between my-2">
         {/* Origin */}
         <View className="items-start flex-1">
           <Text className="text-lg font-bold text-primary-title-color dark:text-primary-light">{getCityName(load?.originCity)}</Text>
@@ -233,7 +234,7 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
       }
       
       {/* Bottom Row */}
-      {!showElement && <View className="flex-row items-center justify-between pt-3 border-t border-gray-200">
+      {!showElement && <View className="flex-row items-center justify-between pt-2 border-t border-gray-200">
         {/* Created At */}
         <View className="flex-row items-center space-x-2">
           <Ionicons name="calendar" size={16} color={theme.colors.icon} />
