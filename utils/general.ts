@@ -228,3 +228,44 @@ export const getLocation = (dispatch: any) => {
     { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
   );
 };
+
+export function getSubscriptionStatus(endDate: string) {
+  const today = new Date()
+  const expiration = new Date(endDate)
+  const diffTime = expiration.getTime() - today.getTime()
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+  let status = "active"
+  let color = "green"
+  let bgColor = "bg-green-100"
+  let textColor = "text-green-700"
+  let borderColor = "border-green-200"
+
+  if (diffDays <= 0) {
+    status = "expired"
+    color = "red"
+    bgColor = "bg-red-100"
+    textColor = "text-red-700"
+    borderColor = "border-red-200"
+  } else if (diffDays <= 3) {
+    status = "critical"
+    color = "red"
+    bgColor = "bg-red-100"
+    textColor = "text-red-700"
+    borderColor = "border-red-200"
+  } else if (diffDays <= 7) {
+    status = "warning"
+    color = "orange"
+    bgColor = "bg-orange-100"
+    textColor = "text-orange-700"
+    borderColor = "border-orange-200"
+  } else if (diffDays <= 14) {
+    status = "caution"
+    color = "yellow"
+    bgColor = "bg-yellow-100"
+    textColor = "text-yellow-700"
+    borderColor = "border-yellow-200"
+  }
+
+  return { diffDays, status, color, bgColor, textColor, borderColor }
+}

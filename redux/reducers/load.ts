@@ -37,6 +37,16 @@ export const getTopSearches = createAsyncThunk('load/getTopSearches', async (_, 
     }
 });
 
+// Fetch stats
+export const getLoadStats = createAsyncThunk('load/getLoadStats', async (_, { rejectWithValue }) => {
+    try {
+        const response = await http.get('/loads/stats');
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
 // Fetch Loads (Search)
 export const searchLoads = createAsyncThunk('load/searchLoads', async (query: any, { rejectWithValue }) => {
     try {
@@ -149,6 +159,11 @@ export const loadSlice = createSlice({
             state.loading = false;
             state.loadingTopSearches = false;
             state.topSearches = [];
+        });
+
+        // Stats Loads
+        builder.addCase(getLoadStats.fulfilled, (state, action) => {
+            state.stats = action.payload;
         });
 
         // Bookmarks

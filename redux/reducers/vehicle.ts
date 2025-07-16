@@ -35,6 +35,16 @@ export const createVehicle = createAsyncThunk('vehicle/createVehicle', async (da
     }
 });
 
+// Fetch stats
+export const getVehicleStats = createAsyncThunk('vehicle/getVehicleStats', async (_, { rejectWithValue }) => {
+    try {
+        const response = await http.get('/vehicles/stats');
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
 // Fetch Vehicles (Search)
 export const searchVehicles = createAsyncThunk('vehicle/searchVehicles', async (query: any, { rejectWithValue }) => {
     try {
@@ -94,6 +104,11 @@ export const vehicleSlice = createSlice({
             state.pagination = null;
             state.stats = null;
             state.loading = false;
+        });
+
+        // Stats Vehicles
+        builder.addCase(getVehicleStats.fulfilled, (state, action) => {
+            state.stats = action.payload;
         });
 
         // Get Vehicle by ID

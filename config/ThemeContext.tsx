@@ -28,7 +28,7 @@ const LightTheme = {
   colors: {
     ...(defaultTheme.colors || {}),
     background: "#ffffff",
-    border: "#000000",
+    border: "#e5e7eb",
     inputColor: '#999999',
     cardBackground: '#f5f5f5',
     iconTheme: '#222222',

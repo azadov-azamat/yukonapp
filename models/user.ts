@@ -1,6 +1,7 @@
 import { http } from '@/config/api';
 import { IUserModel } from '@/interface/redux/user.interface';
 import { updateUser } from '@/redux/reducers/auth';
+import SubscriptionModel from './subscription';
 
 export default class UserModel implements IUserModel {
   id: number | null = null;
@@ -40,10 +41,10 @@ export default class UserModel implements IUserModel {
   }
 
   // Foydalanuvchining obunasini tekshirish
-  async hasActiveSubscription(): Promise<boolean> {
+  async hasActiveSubscription(): Promise<{active: boolean; subscription?: SubscriptionModel}> {
     try {
       const response = await http.get<{ active: boolean }>(`users/has-subscription`);
-      return response.data.active;
+      return response.data;
     } catch (error) {
       console.error('Error checking subscription:', error);
       throw new Error('Unable to check subscription');

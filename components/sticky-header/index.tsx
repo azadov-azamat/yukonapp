@@ -62,7 +62,7 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
   return (
     <Animated.View style={[styles.header, { backgroundColor }]} className="px-4">
       <View className="flex-row items-center space-x-4">
-        <View className="flex items-center justify-center w-12 h-12 bg-purple-700 rounded-full shadow-lg ring-4 ring-purple-500/30">
+        <View className="flex items-center justify-center w-12 h-12 rounded-full shadow-lg bg-primary ring-4 ring-purple-500/30">
           <Text className="text-lg font-semibold text-white">{initials}</Text>
         </View>
         <View>

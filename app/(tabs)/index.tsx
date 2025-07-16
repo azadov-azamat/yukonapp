@@ -1,24 +1,27 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { Keyboard, View, Text, StyleSheet, RefreshControl, TouchableOpacity, Animated, StatusBar, ActivityIndicator, Platform, PermissionsAndroid, Button } from "react-native";
-import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
+// import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
-import { getTopSearches, setLoad, fetchLatestLoads } from "@/redux/reducers/load";
-import { ContentLoaderTopSearches } from "@/components/content-loader";
-import { debounce } from 'lodash';
-import { getExtractCity } from "@/redux/reducers/city";
-import { startLoading, stopLoading } from "@/redux/reducers/variable";
+import { getTopSearches, setLoad, fetchLatestLoads, getLoadStats } from "@/redux/reducers/load";
+// import { ContentLoaderTopSearches } from "@/components/content-loader";
+// import { debounce, get } from 'lodash';
+// import { getExtractCity } from "@/redux/reducers/city";
+// import { startLoading, stopLoading } from "@/redux/reducers/variable";
 import { useRouter } from "expo-router";
-import { getCityName, requestLocationPermission } from "@/utils/general";
-import { TextInput } from "react-native-paper"; // ✅ Import Appbar from Paper
+import { getCityName, getSubscriptionStatus, requestLocationPermission } from "@/utils/general";
+// import { TextInput } from "react-native-paper"; // ✅ Import Appbar from Paper
 import { useTheme } from "@/config/ThemeContext";
 import StickyHeader from "@/components/sticky-header"; // Import the Sticky Header
-import { FlashList } from "@shopify/flash-list";
+// import { FlashList } from "@shopify/flash-list";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+// import { Ionicons } from '@expo/vector-icons';
 import { LoadModal } from '@/components/modal'
-import { useBottomSheet } from '@/hooks/context/bottom-sheet';
+import { MainPageCards, SubscriptionCard } from "@/components/cards";
+import { getVehicleStats } from "@/redux/reducers/vehicle";
+// import SubscriptionModel from "@/models/subscription";
+// import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 
 const HEADER_HEIGHT = 50;
 const SCROLL_THRESHOLD = 30;
@@ -28,13 +31,17 @@ export default function MainPage() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const { topSearches, latestLoads, loadingTopSearches, loadingLatestLoads, loadingLoadById } = useAppSelector(state => state.load);
+  const { stats: loadStats } = useAppSelector(state => state.load);
+  const { stats: vehicleStats } = useAppSelector(state => state.vehicle);
+  
+  // const { topSearches, latestLoads, loadingTopSearches, loadingLatestLoads, loadingLoadById } = useAppSelector(state => state.load);
 
   const [openModal, setOpenModal] = React.useState(false);
-  const [searchText, setSearchText] = React.useState<string>('');
+  // const [searchText, setSearchText] = React.useState<string>('');
   const [refreshing, setRefreshing] = React.useState(false);
-  const openLoadView = useBottomSheet().openLoadView;
-
+  // const [subscription, setSubscription] = React.useState<SubscriptionModel | null>(null);
+  // const openLoadView = useBottomSheet().openLoadView;
+  
 	const scrollY = React.useRef(new Animated.Value(0)).current;
 	const statusBarBackgroundColor = useMemo(() =>
 		scrollY.interpolate({
@@ -51,8 +58,20 @@ export default function MainPage() {
     requestLocationPermission(dispatch);
   }, []);
 
+  // React.useEffect(() => {
+  //   async function checkSubscription() {
+  //     if (!user) return;
+  //     const { active, subscription } = await user.hasActiveSubscription();
+  //     if (active) {
+  //       setSubscription(subscription || null);
+  //     }
+  //   } 
+    
+  //   checkSubscription();
+  // }, [user])
+
   // Combined focus effect for data fetching and cleanup
-  useEffect(() => {
+  React.useEffect(() => {
     const abortController = new AbortController();
     let isSubscribed = true;
 
@@ -77,16 +96,21 @@ export default function MainPage() {
     };
   }, []);
 
+  React.useEffect(() => {
+    dispatch(getLoadStats());
+    dispatch(getVehicleStats());
+  }, []);
+  
   // Memoize child components
-  const MemoizedLatestLoadCard = React.memo(LatestLoadCard);
-  const MemoizedPopularDirectionCard = React.memo(PopularDirectionCard);
-  const MemoizedContentLoader = React.memo(ContentLoaderTopSearches);
+  // const MemoizedLatestLoadCard = React.memo(LatestLoadCard);
+  // const MemoizedPopularDirectionCard = React.memo(PopularDirectionCard);
+  // const MemoizedContentLoader = React.memo(ContentLoaderTopSearches);
 
   // Memoize callbacks
-  const toggleSetId = useCallback((item: any) => {
-    openLoadView();
-    dispatch(setLoad(item));
-  }, [dispatch]);
+  // const toggleSetId = useCallback((item: any) => {
+  //   openLoadView();
+  //   dispatch(setLoad(item));
+  // }, [dispatch]);
 
   const toggleModal = useCallback(() => {
     setOpenModal(prev => !prev);
@@ -101,18 +125,18 @@ export default function MainPage() {
     setRefreshing(false);
   }, [dispatch]);
 
-  const debouncedFetchExtract = React.useCallback(
-    debounce(() => {
-      fetchExtractCity(searchText);
-    }, 300), [searchText]
-  )
+  // const debouncedFetchExtract = React.useCallback(
+  //   debounce(() => {
+  //     fetchExtractCity(searchText);
+  //   }, 300), [searchText]
+  // )
 
   // Cleanup for debounced function
-  React.useEffect(() => {
-    return () => {
-      debouncedFetchExtract.cancel();
-    };
-  }, [debouncedFetchExtract]);
+  // React.useEffect(() => {
+  //   return () => {
+  //     debouncedFetchExtract.cancel();
+  //   };
+  // }, [debouncedFetchExtract]);
 
   // Cleanup for animated value
   React.useEffect(() => {
@@ -121,96 +145,30 @@ export default function MainPage() {
     };
   }, [scrollY]);
 
-  const fetchExtractCity = async (search: string) => {
-    if (!search) return;
-    dispatch(startLoading());
-    const cityResponse = await dispatch(getExtractCity({ search })).unwrap();
-    const { origin: fetchedOrigin, destination: fetchedDestination } = cityResponse;
-    if (!fetchedOrigin) {
-      return;
-    }
+  // const fetchExtractCity = async (search: string) => {
+  //   if (!search) return;
+  //   dispatch(startLoading());
+  //   const cityResponse = await dispatch(getExtractCity({ search })).unwrap();
+  //   const { origin: fetchedOrigin, destination: fetchedDestination } = cityResponse;
+  //   if (!fetchedOrigin) {
+  //     return;
+  //   }
 
-    dispatch(stopLoading());
-    router.push(`/(tabs)/search?arrival=${getCityName(fetchedOrigin)}&departure=${getCityName(fetchedDestination)}`)
-  }
+  //   dispatch(stopLoading());
+  //   router.push(`/(tabs)/search?arrival=${getCityName(fetchedOrigin)}&departure=${getCityName(fetchedDestination)}`)
+  // }
 
-  const getItemKey = useCallback((item: any, index: number) =>
-    `${item.id}-${index}`, []);
+  // const getItemKey = useCallback((item: any, index: number) =>
+  //   `${item.id}-${index}`, []);
 
-  const renderLatestLoad = useCallback(({ item }: { item: any }) => (
-    <MemoizedLatestLoadCard
-      onPress={() => toggleSetId(item)}
-      load={item}
-      close={toggleModal}
-    />
-  ), [toggleSetId, toggleModal]);
+  // const renderLatestLoad = useCallback(({ item }: { item: any }) => (
+  //   <MemoizedLatestLoadCard
+  //     onPress={() => toggleSetId(item)}
+  //     load={item}
+  //     close={toggleModal}
+  //   />
+  // ), [toggleSetId, toggleModal]);
 
-  const CardButton = React.memo(({ iconName, title, subtitle, onPress }: {
-    iconName: keyof typeof Ionicons.glyphMap,
-    title: string,
-    subtitle: string,
-    onPress?: () => void
-  }) => (
-    <TouchableOpacity
-      onPress={onPress}
-      className="relative flex flex-col items-center w-full py-4 space-y-4 text-white bg-purple-700 hover:bg-purple-800 rounded-2xl"
-    >
-      <View className="absolute flex items-center justify-center w-12 h-12 bg-purple-600 shadow-lg -top-6 rounded-2xl">
-        <Ionicons name={iconName} size={24} color="#FFF" />
-      </View>
-      <View className="text-center">
-        <Text className="block text-base font-bold text-white">{title}</Text>
-        <Text className="text-xs text-white opacity-80">{subtitle}</Text>
-      </View>
-    </TouchableOpacity>
-  ));
-
-  const StatsCard = React.memo(({
-      title,
-      count,
-      icon,
-      delta,
-      deltaText,
-    }: {
-      title: string;
-      count: number;
-      icon: keyof typeof Ionicons.glyphMap;
-      delta: string;
-      deltaText: string;
-    }) => (
-      <View className="flex-col p-4 space-y-2 bg-white shadow-md rounded-2xl dark:bg-primary-dark">
-        <View className="flex-row justify-between">
-          <View className="flex-1">
-            <Text className="text-sm font-medium text-gray-500">{title}</Text>
-            <Text className="mt-1 text-3xl font-bold text-purple-700">{count}</Text>
-          </View>
-          <View className="items-center justify-center w-10 h-10 bg-purple-100 rounded-xl">
-            <Ionicons name={icon} size={20} color="#8b5cf6" />
-          </View>
-        </View>
-        <Text className="mt-1 text-xs text-green-600">↑ {delta} vs {deltaText}</Text>
-      </View>
-    ));
-
-    const TotalStatsCard = React.memo(({ icon, count, label, growth }: {
-      icon: keyof typeof Ionicons.glyphMap;
-      count: number;
-      label: string;
-      growth: string;
-    }) => {
-      return (
-        <View className="items-center flex-1 space-y-2">
-          <View className="items-center justify-center w-12 h-12 bg-purple-600 shadow rounded-2xl">
-            <Ionicons name={icon} size={24} color="white" />
-          </View>
-          <Text className="text-2xl font-extrabold text-gray-900">{count.toLocaleString()}</Text>
-          <Text className="text-sm text-gray-500">{label}</Text>
-          <View className="px-3 py-1 bg-green-100 rounded-full">
-            <Text className="text-xs font-medium text-green-700">↑ {growth} this week</Text>
-          </View>
-        </View>
-      );
-    });
     
   return (
     <View style={{ flex: 1 }}>      
@@ -256,7 +214,7 @@ export default function MainPage() {
             <View className="flex-1 px-4 pt-4 bg-card-background dark:bg-primary-dark/90 rounded-2xl">
               <View className="flex-row items-center my-4 space-x-2">
                 <View className="flex-1">
-                  <CardButton
+                  <MainPageCards.CardButton
                     iconName="search"
                     title="Search Load"
                     subtitle="Find available loads"
@@ -266,7 +224,7 @@ export default function MainPage() {
                   />
                 </View>
                 <View className="flex-1">
-                  <CardButton
+                  <MainPageCards.CardButton
                     iconName="car-outline"
                     title="Search Vehicle"
                     subtitle="Find transport vehicles"
@@ -288,24 +246,25 @@ export default function MainPage() {
                 </View>
                 
                 <View className="flex-row space-x-4">
-                  <View className="flex-1">
-                      <StatsCard
+                  {loadStats && <View className="flex-1">
+                      <MainPageCards.StatsCard
                         title="Load Ads"
-                        count={24}
-                        delta="+15%"
+                        count={loadStats.today}
+                        delta={loadStats.growth + "%"}
                         deltaText="yesterday"
                         icon="cube-outline"
                       />
-                  </View>
-                <View className="flex-1">
-                    <StatsCard
+                  </View>}
+                  
+                  {vehicleStats && <View className="flex-1">
+                    <MainPageCards.StatsCard
                       title="Vehicle Ads"
-                      count={18}
-                      delta="+8%"
+                      count={vehicleStats.today}
+                      delta={vehicleStats.growth + "%"}
                       deltaText="yesterday"
                       icon="bus-outline"
                     />
-                    </View>
+                  </View>}
                 </View>
 
                 <View className="flex-row items-center justify-between">
@@ -313,38 +272,30 @@ export default function MainPage() {
                 </View>
                 
                 <View className="flex-row justify-between space-x-4">
-                  <TotalStatsCard
+                  {loadStats && <MainPageCards.TotalStatsCard
                     icon="cube-outline"
-                    count={1247}
+                    count={loadStats.total}
                     label="Total Loads"
                     growth="+12%"
-                  />
-                  <TotalStatsCard
+                  />}
+                  {vehicleStats && <MainPageCards.TotalStatsCard
                     icon="bus-outline"
-                    count={892}
+                    count={vehicleStats.total}
                     label="Total Vehicles"
                     growth="+8%"
-                  />
+                  />}
                 </View>
 
-                  <View className="flex-row items-center justify-between">
-                  <Text className="text-lg font-bold text-gray-900">Total statistics</Text>
-                </View>
+                {/* <View className="flex-row items-center justify-between">
+                  <Text className="text-lg font-bold text-gray-900">Subscription Status</Text>
+                  <Text className="flex items-center text-sm text-gray-500">
+                    <View className="w-2 h-2 mr-2 bg-green-500 rounded-full"></View>
+                    Live updates
+                  </Text>
+                </View> */}
                 
-                <View className="flex-row justify-between space-x-4">
-                  <TotalStatsCard
-                    icon="cube-outline"
-                    count={1247}
-                    label="Total Loads"
-                    growth="+12%"
-                  />
-                  <TotalStatsCard
-                    icon="bus-outline"
-                    count={892}
-                    label="Total Vehicles"
-                    growth="+8%"
-                  />
-                </View>
+                {/* {subscription && <SubscriptionCard subscription={subscription} />} */}
+                {/* <MainPageCards.SubscriptionStatusCard subscription={subscription} /> */}
                 
                 <View/>
             </View>

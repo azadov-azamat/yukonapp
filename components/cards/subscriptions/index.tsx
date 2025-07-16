@@ -13,6 +13,7 @@ interface SubscriptionProps {
 const Subscriptions: React.FC<SubscriptionProps> = ({subscription}) => {
     const { t } = useTranslation();
 
+    console.log(subscription);
     if (!subscription || !subscription.plan) {
         return <ContentSubscriptionLoader/>    
     }
@@ -21,7 +22,7 @@ const Subscriptions: React.FC<SubscriptionProps> = ({subscription}) => {
         return (
             <View className="w-full max-w-md p-6 mb-4 border rounded-lg border-border-color">
                 <View className="flex-row items-center justify-between mb-6">
-                    <Text className="text-xl font-bold text-gray-700 dark:text-border-color">{getName(subscription.plan, 'name')}</Text>
+                    <Text className="text-xl font-bold text-gray-200 dark:text-border-color">{getName(subscription.plan, 'name')}</Text>
                     <View className="px-3 py-1 bg-red-100 rounded-full">
                         <Text className="text-sm font-medium text-red-600">{t('expired')}</Text>
                     </View>

@@ -195,7 +195,8 @@ export default class LoadModel implements ILoadModel {
 
   async checkSubscription(user: UserModel) {
     try {
-        return await user?.hasActiveSubscription();
+        const { active } = await user?.hasActiveSubscription();
+        return active
     } catch (err) {
         console.log(err)
         return false;
