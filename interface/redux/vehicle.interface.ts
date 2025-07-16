@@ -8,6 +8,7 @@ export interface VehicleInitialProps {
     loading: boolean;
     pagination: any;
     stats: any;
+    dashboardStats: any;
 }
 
 

@@ -68,6 +68,7 @@ const initialState: VehicleInitialProps = {
     vehicle: null,
     pagination: null,
     stats: null,
+    dashboardStats: null,
     loading: false,
 };
 
@@ -108,7 +109,7 @@ export const vehicleSlice = createSlice({
 
         // Stats Vehicles
         builder.addCase(getVehicleStats.fulfilled, (state, action) => {
-            state.stats = action.payload;
+            state.dashboardStats = action.payload;
         });
 
         // Get Vehicle by ID

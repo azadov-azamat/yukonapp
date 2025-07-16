@@ -1,15 +1,15 @@
-import React, { useCallback, useEffect, useMemo } from "react";
-import { Keyboard, View, Text, StyleSheet, RefreshControl, TouchableOpacity, Animated, StatusBar, ActivityIndicator, Platform, PermissionsAndroid, Button } from "react-native";
+import React, { useCallback, useMemo } from "react";
+import { View, Text, StyleSheet, RefreshControl, Animated, StatusBar } from "react-native";
 // import { EmptyStateCard, PopularDirectionCard, LatestLoadCard } from "@/components/cards";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
-import { getTopSearches, setLoad, fetchLatestLoads, getLoadStats } from "@/redux/reducers/load";
+import { getTopSearches, fetchLatestLoads, getLoadStats } from "@/redux/reducers/load";
 // import { ContentLoaderTopSearches } from "@/components/content-loader";
 // import { debounce, get } from 'lodash';
 // import { getExtractCity } from "@/redux/reducers/city";
 // import { startLoading, stopLoading } from "@/redux/reducers/variable";
 import { useRouter } from "expo-router";
-import { getCityName, getSubscriptionStatus, requestLocationPermission } from "@/utils/general";
+import { requestLocationPermission } from "@/utils/general";
 // import { TextInput } from "react-native-paper"; // ✅ Import Appbar from Paper
 import { useTheme } from "@/config/ThemeContext";
 import StickyHeader from "@/components/sticky-header"; // Import the Sticky Header
@@ -18,7 +18,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from 'expo-linear-gradient';
 // import { Ionicons } from '@expo/vector-icons';
 import { LoadModal } from '@/components/modal'
-import { MainPageCards, SubscriptionCard } from "@/components/cards";
+import { MainPageCards } from "@/components/cards";
 import { getVehicleStats } from "@/redux/reducers/vehicle";
 // import SubscriptionModel from "@/models/subscription";
 // import { useBottomSheet } from '@/hooks/context/bottom-sheet';
@@ -31,8 +31,8 @@ export default function MainPage() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  const { stats: loadStats } = useAppSelector(state => state.load);
-  const { stats: vehicleStats } = useAppSelector(state => state.vehicle);
+  const { dashboardStats: loadStats } = useAppSelector(state => state.load);
+  const { dashboardStats: vehicleStats } = useAppSelector(state => state.vehicle);
   
   // const { topSearches, latestLoads, loadingTopSearches, loadingLatestLoads, loadingLoadById } = useAppSelector(state => state.load);
 

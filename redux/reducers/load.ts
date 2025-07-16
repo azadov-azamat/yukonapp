@@ -120,6 +120,7 @@ const initialState: LoadInitialProps = {
     topSearches: [],
     pagination: null,
     stats: null,
+    dashboardStats: null,
     loading: false,
     loadingTopSearches: false,
     loadingSearchLoads: false,
@@ -163,7 +164,7 @@ export const loadSlice = createSlice({
 
         // Stats Loads
         builder.addCase(getLoadStats.fulfilled, (state, action) => {
-            state.stats = action.payload;
+            state.dashboardStats = action.payload;
         });
 
         // Bookmarks

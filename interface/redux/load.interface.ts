@@ -11,6 +11,7 @@ export interface LoadInitialProps {
     topSearches: DirectionItemProps[] | [];
     pagination: any;
     stats: any;
+    dashboardStats: any;
     loading: boolean;
     loadingTopSearches: boolean;
     loadingSearchLoads: boolean;
