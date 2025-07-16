@@ -145,6 +145,73 @@ export default function MainPage() {
     />
   ), [toggleSetId, toggleModal]);
 
+  const CardButton = React.memo(({ iconName, title, subtitle, onPress }: {
+    iconName: keyof typeof Ionicons.glyphMap,
+    title: string,
+    subtitle: string,
+    onPress?: () => void
+  }) => (
+    <TouchableOpacity
+      onPress={onPress}
+      className="relative flex flex-col items-center w-full py-4 space-y-4 text-white bg-purple-700 hover:bg-purple-800 rounded-2xl"
+    >
+      <View className="absolute flex items-center justify-center w-12 h-12 bg-purple-600 shadow-lg -top-6 rounded-2xl">
+        <Ionicons name={iconName} size={24} color="#FFF" />
+      </View>
+      <View className="text-center">
+        <Text className="block text-base font-bold text-white">{title}</Text>
+        <Text className="text-xs text-white opacity-80">{subtitle}</Text>
+      </View>
+    </TouchableOpacity>
+  ));
+
+  const StatsCard = React.memo(({
+      title,
+      count,
+      icon,
+      delta,
+      deltaText,
+    }: {
+      title: string;
+      count: number;
+      icon: keyof typeof Ionicons.glyphMap;
+      delta: string;
+      deltaText: string;
+    }) => (
+      <View className="flex-col p-4 space-y-2 bg-white shadow-md rounded-2xl dark:bg-primary-dark">
+        <View className="flex-row justify-between">
+          <View className="flex-1">
+            <Text className="text-sm font-medium text-gray-500">{title}</Text>
+            <Text className="mt-1 text-3xl font-bold text-purple-700">{count}</Text>
+          </View>
+          <View className="items-center justify-center w-10 h-10 bg-purple-100 rounded-xl">
+            <Ionicons name={icon} size={20} color="#8b5cf6" />
+          </View>
+        </View>
+        <Text className="mt-1 text-xs text-green-600">↑ {delta} vs {deltaText}</Text>
+      </View>
+    ));
+
+    const TotalStatsCard = React.memo(({ icon, count, label, growth }: {
+      icon: keyof typeof Ionicons.glyphMap;
+      count: number;
+      label: string;
+      growth: string;
+    }) => {
+      return (
+        <View className="items-center flex-1 space-y-2">
+          <View className="items-center justify-center w-12 h-12 bg-purple-600 shadow rounded-2xl">
+            <Ionicons name={icon} size={24} color="white" />
+          </View>
+          <Text className="text-2xl font-extrabold text-gray-900">{count.toLocaleString()}</Text>
+          <Text className="text-sm text-gray-500">{label}</Text>
+          <View className="px-3 py-1 bg-green-100 rounded-full">
+            <Text className="text-xs font-medium text-green-700">↑ {growth} this week</Text>
+          </View>
+        </View>
+      );
+    });
+    
   return (
     <View style={{ flex: 1 }}>      
       <Animated.View style={{ backgroundColor: statusBarBackgroundColor, height: insets.top, padding: 0, margin: 0 }}>
@@ -186,38 +253,102 @@ export default function MainPage() {
 							{ useNativeDriver: false }
 						)}
           >
-            <View className="flex-1 mt-5 bg-card-background dark:bg-primary-dark/90 pt-7 rounded-2xl">
-              <View className="flex-row items-center mx-4 mb-8">
-                {/* <View className="relative justify-center w-full">
-                  <TextInput
-                    mode="outlined"
-                    placeholder={t ('search-by-destination')}
-                    value={searchText}
-                    onChangeText={(text) => setSearchText(text)}
-                    className="w-full overflow-auto shadow bg-transparent dark:bg-primary-dark-sm pl-2.5"
-                    returnKeyType="search" // Changes the keyboard button to "Search"
-                    theme={{
-                      roundness: 25,
-                      colors: {
-                        outline: '#623bff', // Outline color
-                      },
-                    }}
-                    onSubmitEditing={() => { // Triggered when Enter is pressed
-                      Keyboard.dismiss();
-                      debouncedFetchExtract();
+            <View className="flex-1 px-4 pt-4 bg-card-background dark:bg-primary-dark/90 rounded-2xl">
+              <View className="flex-row items-center my-4 space-x-2">
+                <View className="flex-1">
+                  <CardButton
+                    iconName="search"
+                    title="Search Load"
+                    subtitle="Find available loads"
+                    onPress={() => {
+                      router.push('/search');
                     }}
                   />
-                  <TouchableOpacity
-                    // style={styles.iconButton}
-                    className="absolute items-center justify-center transform translate-y-[-12] rounded-full right-4 top-4 w-9"
+                </View>
+                <View className="flex-1">
+                  <CardButton
+                    iconName="car-outline"
+                    title="Search Vehicle"
+                    subtitle="Find transport vehicles"
                     onPress={() => {
-                      Keyboard.dismiss();
-                      debouncedFetchExtract();
-                    }}>
-                    <Ionicons name="search" size={24} color="#623bff" />
-                  </TouchableOpacity>
-                </View> */}
+                      router.push('/search');
+                    }}
+                  />
+                </View>
               </View>
+
+
+              <View className="space-y-4">
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-lg font-bold text-gray-900">Today's Statistics</Text>
+                  <Text className="flex items-center text-sm text-gray-500">
+                    <View className="w-2 h-2 mr-2 bg-green-500 rounded-full"></View>
+                    Live updates
+                  </Text>
+                </View>
+                
+                <View className="flex-row space-x-4">
+                  <View className="flex-1">
+                      <StatsCard
+                        title="Load Ads"
+                        count={24}
+                        delta="+15%"
+                        deltaText="yesterday"
+                        icon="cube-outline"
+                      />
+                  </View>
+                <View className="flex-1">
+                    <StatsCard
+                      title="Vehicle Ads"
+                      count={18}
+                      delta="+8%"
+                      deltaText="yesterday"
+                      icon="bus-outline"
+                    />
+                    </View>
+                </View>
+
+                <View className="flex-row items-center justify-between">
+                  <Text className="text-lg font-bold text-gray-900">Total statistics</Text>
+                </View>
+                
+                <View className="flex-row justify-between space-x-4">
+                  <TotalStatsCard
+                    icon="cube-outline"
+                    count={1247}
+                    label="Total Loads"
+                    growth="+12%"
+                  />
+                  <TotalStatsCard
+                    icon="bus-outline"
+                    count={892}
+                    label="Total Vehicles"
+                    growth="+8%"
+                  />
+                </View>
+
+                  <View className="flex-row items-center justify-between">
+                  <Text className="text-lg font-bold text-gray-900">Total statistics</Text>
+                </View>
+                
+                <View className="flex-row justify-between space-x-4">
+                  <TotalStatsCard
+                    icon="cube-outline"
+                    count={1247}
+                    label="Total Loads"
+                    growth="+12%"
+                  />
+                  <TotalStatsCard
+                    icon="bus-outline"
+                    count={892}
+                    label="Total Vehicles"
+                    growth="+8%"
+                  />
+                </View>
+                
+                <View/>
+            </View>
+           
               {/* <View className="mb-6">
                 <Text className="px-6 mb-4 text-lg font-bold uppercase text-primary-title-color dark:text-primary-light">
                   {t ("latest-ads")}
