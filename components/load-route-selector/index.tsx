@@ -22,10 +22,15 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
   const {t} = useTranslation();
   const {theme} = useTheme();
   return (
-    <View className="relative flex-row items-center justify-between p-4 mt-2 overflow-visible bg-primary-light dark:bg-primary-dark shadow-lg rounded-xl dark:border border-border-color/20">
+    <View className="relative flex-row items-center justify-between px-4 py-2 overflow-visible shadow-lg bg-primary-light dark:bg-primary-dark rounded-xl dark:border border-border-color/20">
       {/* Origin */}
-      <View className="items-start flex-1">
-        <Text className="text-gray-500">{t ('table.origin-city')}</Text>
+      <TouchableOpacity
+        onPress={onClear}
+      >
+        <Ionicons name="chevron-back-outline" size={24} color={theme.colors.primary} />
+      </TouchableOpacity>
+      <View className="items-start ">
+        {/* <Text className="text-gray-500">{t ('table.origin-city')}</Text> */}
         <Text className="text-lg font-bold text-primary-dark dark:text-primary-light">{getCityName(origin)}</Text>
       </View>
 
@@ -36,25 +41,23 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
       <TouchableOpacity
         onPress={onSwapCities}
         disabled={!destination}
-        className="z-10 items-center justify-center w-10 h-10 mx-4 bg-primary-light dark:bg-primary-dark border border-border-color/20 rounded-full"
+        className="z-10 items-center justify-center w-10 h-10 mx-2 border rounded-full bg-primary-light dark:bg-primary-dark border-border-color/20"
       >
         <Ionicons name="swap-horizontal" size={24} color={theme.colors.primary} />
       </TouchableOpacity>
 
       {/* Destination */}
-      <View className="items-end flex-1">
-        <Text className="text-gray-500">{t ('table.destination-city')}</Text>
+      <View className="items-end ">
+        {/* <Text className="text-gray-500">{t ('table.destination-city')}</Text> */}
         <Text className="text-lg font-bold text-primary-dark dark:text-primary-light">
           {getCityName(destination)}
         </Text>
       </View>
 
       {/* Clear Button */}
-      <TouchableOpacity
-        onPress={onClear}
-        className="absolute right-0 items-center justify-center w-6 h-6 bg-red-500 rounded-full -top-2"
-      >
-        <Ionicons name="close" size={14} color="white" />
+      <TouchableOpacity>
+        <Ionicons name="create-outline" size={24} color={theme.colors.primary} />
+        {/* <Ionicons name="close" size={14} color="white" /> */}
       </TouchableOpacity>
     </View>
   );

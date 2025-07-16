@@ -32,6 +32,10 @@ export function BottomSheetProvider({ children }: { children: React.ReactNode })
   }, []);
 
   // Load View Bottom Sheet
+  const DirectionChangeSheetRef = useRef<LoadViewBottomSheetRef>(null);
+  const openDirectionChange = useCallback(() => LoadViewSheetRef.current?.open(), []);
+
+  // Load View Bottom Sheet
   const LoadViewSheetRef = useRef<LoadViewBottomSheetRef>(null);
   const openLoadView = useCallback(() => LoadViewSheetRef.current?.open(), []);
 

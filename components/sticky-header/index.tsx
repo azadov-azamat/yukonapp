@@ -48,13 +48,13 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
       style={[styles.header, { backgroundColor }]}
       className="px-4"
     >
-      <View style={styles.leftIcons}>
+      {/* <View style={styles.leftIcons}>
 				<TouchableOpacity onPress={() => console.log("Icon clicked")} style={[styles.iconButton]}>
 					<Animated.Text style={{ color: iconColor }}>
 						<MaterialCommunityIcons name="menu" size={24} />
 					</Animated.Text>
 				</TouchableOpacity>
-      </View>
+      </View> */}
 
       <View style={styles.rightIcons}>
 				<TouchableOpacity onPress={handleIconPress} style={[styles.iconButton, {marginRight: 14}]}>
@@ -62,11 +62,11 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
 						<MaterialCommunityIcons name="plus-circle-outline" size={24} />
 					</Animated.Text>
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => router.push("/notifications")} style={[styles.iconButton]}>
+				{/* <TouchableOpacity onPress={() => router.push("/notifications")} style={[styles.iconButton]}>
 					<Animated.Text style={{ color: iconColor }}>
 						<MaterialCommunityIcons name="bell" size={24} />
 					</Animated.Text>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
       </View>
     </Animated.View>
   );
