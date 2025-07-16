@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "yukon.uz.app",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+		"newArchEnabled": true,
     "runtimeVersion": "2.1.2",
     "ios": {
       "supportsTablet": true,
@@ -19,9 +19,9 @@
     },
     "android": {
       "package": "yukon.uz.app",
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": [],
-			"targetSdkVersion": 35,
+      "targetSdkVersion": 35,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -46,13 +46,14 @@
           "backgroundColor": "#ffffff"
         }
       ],
-			[
+      [
         "expo-build-properties",
         {
           "android": {
             "compileSdkVersion": 35,
             "targetSdkVersion": 35,
-            "buildToolsVersion": "35.0.0"
+            "buildToolsVersion": "35.0.0",
+            "minSdkVersion": 24
           }
         }
       ],
