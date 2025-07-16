@@ -7,14 +7,25 @@ import SearchVehicleScreen from "./vehicle";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from "@/config/ThemeContext";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 export default function SearchPage() {
-  const [selectedTab, setSelectedTab] = React.useState('load');
+
   const insets = useSafeAreaInsets();
   const { isDarkMode } = useTheme();
+  const params = useLocalSearchParams();
+  const router = useRouter();
+  
+  const [selectedTab, setSelectedTab] = React.useState<string>('load');
 
   const backgroundColor = isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(226,232,240,0.8)';
 
+  React.useEffect(() => {
+    if (params.tab) {
+      setSelectedTab(params.tab as string);
+    }
+  }, [params.tab]);
+  
   React.useEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(backgroundColor);
@@ -49,7 +60,11 @@ export default function SearchPage() {
     { label: 'bookmarks.vehicle', value: 'vehicle', icon: 'car' },
   ];
 
-
+  const handleTabChange = (value: string) => {
+    setSelectedTab(value);
+     router.replace(`/search?tab=${value}`);
+  };
+  
   return (
     <SafeAreaProvider>
       <ImageBackground
@@ -62,7 +77,7 @@ export default function SearchPage() {
             <ViewSelector
               tabs={tabs}
               selectedTab={selectedTab}
-              onTabSelect={(value: string) => setSelectedTab(value)}
+              onTabSelect={(value: string) => handleTabChange(value)}
             />
             <View className="flex-1 w-full mt-2">
               {selectedTab === 'load' && <SearchLoadScreen />}

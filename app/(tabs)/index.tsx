@@ -219,7 +219,7 @@ export default function MainPage() {
                     title="Search Load"
                     subtitle="Find available loads"
                     onPress={() => {
-                      router.push('/search');
+                      router.push('/search?tab=load');
                     }}
                   />
                 </View>
@@ -229,7 +229,7 @@ export default function MainPage() {
                     title="Search Vehicle"
                     subtitle="Find transport vehicles"
                     onPress={() => {
-                      router.push('/search');
+                      router.push('/search?tab=vehicle');
                     }}
                   />
                 </View>
