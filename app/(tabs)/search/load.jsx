@@ -5,7 +5,7 @@ import { CustomBadgeSelector, CustomButton, CustomInput } from '@/components/cus
 import LoadRouteSelector from '@/components/load-route-selector'
 import { EmptyStateCard, LoadGridCard, LoadListCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import { clearLoad, clearLoads, searchLoads, setLoad } from '@/redux/reducers/load'
+import { clearLoads, searchLoads, setLoad } from '@/redux/reducers/load'
 import { useRoute } from '@react-navigation/native';
 import { getExtractCity } from '@/redux/reducers/city'
 import { useNavigation } from '@react-navigation/native';
@@ -23,12 +23,12 @@ import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 const SearchLoadScreen = () => {
     const route = useRoute();
     const dispatch = useAppDispatch();
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const navigation = useNavigation();
-    const theme = useTheme();
-    const {loads, pagination, stats, loading: cargoLoad} = useAppSelector(state => state.load);
+    const { loads, pagination, stats, loading: cargoLoad } = useAppSelector(state => state.load);
+    // const theme = useTheme();
 
-    const {user, location} = useAppSelector(state => state.auth)
+    const { user } = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
     const { openLoadView } = useBottomSheet();
 
@@ -56,7 +56,7 @@ const SearchLoadScreen = () => {
     const [isGridView, setIsGridView] = React.useState(false);
     const [openModal, setOpenModal] = React.useState(false);
     const [refreshing, setRefreshing] = React.useState(false);
-    
+
     const toggleView = () => {
       setIsGridView((prev) => !prev);
     };
@@ -310,7 +310,7 @@ const SearchLoadScreen = () => {
 
     const MemoizedLoadListCard = React.memo(isGridView ? LoadListCard : LoadGridCard);
     const MemoizedContentLoadItem = React.memo(isGridView ? ContentLoaderLoadList : ContentLoaderLoadGrid);
-    
+
     const renderLoadItem = React.useCallback(({ item }) => (
       <MemoizedLoadListCard
         changes={true} onPress={() => toggleSetId(item)} load={item}
@@ -320,7 +320,7 @@ const SearchLoadScreen = () => {
     const renderContentLoadItem = React.useCallback(() => (
       <MemoizedContentLoadItem />
     ), []);
-    
+
     return (
       <View className="flex-1">
         {origin ?

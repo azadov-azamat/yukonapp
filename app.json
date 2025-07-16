@@ -14,7 +14,8 @@
       "bundleIdentifier": "yukon.uz.app",
       "buildNumber": "1.1.0",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+				"NSLocationWhenInUseUsageDescription": "This app uses your location to show relevant info nearby."
       }
     },
     "android": {

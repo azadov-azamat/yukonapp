@@ -5,6 +5,7 @@ import i18n from 'i18next';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import * as Location from 'expo-location';
 
 import 'dayjs/locale/en';
 import 'dayjs/locale/ru';
@@ -213,7 +214,14 @@ export const requestLocationPermission = async (dispatch: any) => {
       console.log('Location permission denied');
       return;
     }
+  } else {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Location permission denied');
+      return;
+    }
   }
+
   getLocation(dispatch);
 };
 
