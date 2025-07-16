@@ -188,7 +188,7 @@ export default function MainPage() {
           >
             <View className="flex-1 mt-5 bg-card-background dark:bg-primary-dark/90 pt-7 rounded-2xl">
               <View className="flex-row items-center mx-4 mb-8">
-                <View className="relative justify-center w-full">
+                {/* <View className="relative justify-center w-full">
                   <TextInput
                     mode="outlined"
                     placeholder={t ('search-by-destination')}
@@ -216,7 +216,7 @@ export default function MainPage() {
                     }}>
                     <Ionicons name="search" size={24} color="#623bff" />
                   </TouchableOpacity>
-                </View>
+                </View> */}
               </View>
               {/* <View className="mb-6">
                 <Text className="px-6 mb-4 text-lg font-bold uppercase text-primary-title-color dark:text-primary-light">
