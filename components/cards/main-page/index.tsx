@@ -14,13 +14,16 @@ const CardButton = React.memo(({ iconName, title, subtitle, onPress }: {
       onPress={onPress}
       className="relative flex flex-col items-center w-full py-4 space-y-4 text-white bg-primary rounded-2xl"
     >
-      <View className="absolute flex items-center justify-center w-12 h-12 shadow-lg bg-primary -top-6 rounded-2xl">
-        <Ionicons name={iconName} size={24} color="#FFF" />
+      <View className="flex flex-row gap-4 items-center w-full px-3">
+				<View className="flex items-center justify-center w-10 h-10 shadow-lg bg-primary rounded-xl border border-white ">
+					<Ionicons name={iconName} size={18} color="#FFF" />
+				</View>
+				<View className="flex flex-auto items-center">
+        	<Text className="block text-base font-bold text-white leading-[21px] tracking-wider">{title}</Text>
+        	{/* <Text className="text-xs text-white opacity-80">{subtitle}</Text> */}
+				</View>
       </View>
-      <View className="text-center">
-        <Text className="block text-base font-bold text-white">{title}</Text>
-        <Text className="text-xs text-white opacity-80">{subtitle}</Text>
-      </View>
+
     </TouchableOpacity>
 ));
 
@@ -45,7 +48,7 @@ const StatsCard = React.memo(({
       const deltaIconColor = isNegative ? "#dc2626" : "#16a34a"; // icon uchun HEX
 
       return (
-            <View className="flex-col p-4 space-y-2 bg-white shadow-md rounded-2xl dark:bg-primary-dark">
+            <View className="flex-col p-4 bg-white shadow-md rounded-2xl dark:bg-primary-dark">
               <View className="flex-row justify-between">
                 <View className="flex-1">
                   <Text className="text-sm font-medium text-gray-500">{title}</Text>
@@ -55,16 +58,19 @@ const StatsCard = React.memo(({
                   <Ionicons name={icon} size={20} color="#8b5cf6" />
                 </View>
               </View>
-              <View className="flex-row items-center space-x-1">
+              <View className="flex-row items-center space-x-1 mt-2">
                 <Ionicons
                   name={isNegative ? "arrow-down" : "arrow-up"}
                   size={12}
                   color={deltaIconColor}
                 />
                 <Text className={`text-xs font-medium ${deltaColor}`}>
-                  {delta} vs {deltaText}
+                  {delta}
                 </Text>
               </View>
+							<Text className={`text-xs font-medium ${deltaColor}`}>
+                {deltaText}
+              </Text>
             </View>
       );
     });

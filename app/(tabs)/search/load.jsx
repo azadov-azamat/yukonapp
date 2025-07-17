@@ -107,7 +107,6 @@ const SearchLoadScreen = () => {
       }
     }, [origin, destination]);
 
-    // 4. Origin va destination o'zgarganda loadlarni fetch qilish
     React.useEffect(() => {
       fetchLoads();
     }, [page]);
@@ -128,7 +127,7 @@ const SearchLoadScreen = () => {
         dispatch(clearLoads());
         // Ma'lumotlarni yangilash
         setTimeout(() => {
-          if( arrival) {
+          if(arrival) {
             debouncedFetchExtract();
           } else {
             debouncedFetchLoads();
@@ -251,18 +250,18 @@ const SearchLoadScreen = () => {
 			}
     };
 
-    const onChange = (value) => {
-      setBooleanFilters((prevFilters) => ({
-        ...prevFilters,
-        [value]: !prevFilters[value],
-      }));
-      setSelectedFilters((prevSelected) =>
-        prevSelected.includes(value)
-          ? prevSelected.filter((itemValue) => itemValue !== value)
-          : [...prevSelected, value]
-      );
-      checkAndFetch();
-    };
+    // const onChange = (value) => {
+    //   setBooleanFilters((prevFilters) => ({
+    //     ...prevFilters,
+    //     [value]: !prevFilters[value],
+    //   }));
+    //   setSelectedFilters((prevSelected) =>
+    //     prevSelected.includes(value)
+    //       ? prevSelected.filter((itemValue) => itemValue !== value)
+    //       : [...prevSelected, value]
+    //   );
+    //   checkAndFetch();
+    // };
 
     const checkAndFetch =()=> {
       if (origin) {

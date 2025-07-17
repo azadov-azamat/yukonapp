@@ -464,10 +464,11 @@
     "find-vehicles": "Find available Vehicles",
     "today-stats": "Today’s Statistics",
     "live-updates": "Live updates",
-    "load-ads": "Load Ads",
-    "vehicle-ads": "Vehicle Ads",
+    "load-ads": "Load\nAds",
+    "vehicle-ads": "Vehicle\nAds",
     "total-stats": "Total Statistics",
     "total-loads": "Total Loads",
-    "total-vehicles": "Total Vehicles"
+    "total-vehicles": "Total Vehicles",
+		"compared-to-yesterday": "Compared to yesterday"
   }
 }

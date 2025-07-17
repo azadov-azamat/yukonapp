@@ -15,7 +15,7 @@ export default function SearchPage() {
   const { isDarkMode } = useTheme();
   const params = useLocalSearchParams();
   const router = useRouter();
-  
+
   const [selectedTab, setSelectedTab] = React.useState<string>('load');
 
   const backgroundColor = isDarkMode ? 'rgba(0,0,0,0.7)' : 'rgba(226,232,240,0.8)';
@@ -25,7 +25,7 @@ export default function SearchPage() {
       setSelectedTab(params.tab as string);
     }
   }, [params.tab]);
-  
+
   React.useEffect(() => {
     if (Platform.OS === 'android') {
       StatusBar.setBackgroundColor(backgroundColor);
@@ -64,7 +64,7 @@ export default function SearchPage() {
     setSelectedTab(value);
      router.replace(`/search?tab=${value}`);
   };
-  
+
   return (
     <SafeAreaProvider>
       <ImageBackground

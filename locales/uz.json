@@ -457,18 +457,19 @@
 		"pushNotifications": "Push xabarlari",
 		"emailNotifications": "Elektron pochta xabarlari"
 	},
-    "dashboard": {
-    "search-loads": "Yuklarni qidirish",
-    "search-vehicles": "Transportlarni qidirish",
+  "dashboard": {
+    "search-loads": "Yuklar topish",
+    "search-vehicles": "Transport topish",
     "find-loads": "Mavjud yuklarni topish",
     "find-vehicles": "Mavjud transportlarni topish",
     "today-stats": "Bugungi statistika",
     "live-updates": "Jonli yangilanishlar",
-    "load-ads": "Yuk eʼlonlari",
-    "vehicle-ads": "Transport eʼlonlari",
+    "load-ads": "Yuk\ne'lonlari",
+    "vehicle-ads": "Transport\ne'lonlari",
     "total-stats": "Umumiy statistika",
     "total-loads": "Umumiy yuklar",
-    "total-vehicles": "Umumiy transportlar"
+    "total-vehicles": "Umumiy transportlar",
+		"compared-to-yesterday": "Kechagiga nisbatan"
   }
 }
 

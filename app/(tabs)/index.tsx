@@ -23,7 +23,7 @@ export default function MainPage() {
 
   const { dashboardStats: loadStats } = useAppSelector(state => state.load);
   const { dashboardStats: vehicleStats } = useAppSelector(state => state.vehicle);
-  
+
   const [openModal, setOpenModal] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -73,7 +73,7 @@ export default function MainPage() {
     dispatch(getLoadStats());
     dispatch(getVehicleStats());
   }, []);
-  
+
   const toggleModal = useCallback(() => {
     setOpenModal(prev => !prev);
   }, []);
@@ -93,9 +93,9 @@ export default function MainPage() {
       scrollY.removeAllListeners();
     };
   }, [scrollY]);
-    
+
   return (
-    <View style={{ flex: 1 }}>      
+    <View style={{ flex: 1 }}>
       <Animated.View style={{ backgroundColor: statusBarBackgroundColor, height: insets.top, padding: 0, margin: 0 }}>
         <StatusBar
           translucent
@@ -142,7 +142,7 @@ export default function MainPage() {
                     title={t("dashboard.search-loads")}
                     subtitle={t('dashboard.find-loads')}
                     onPress={() => {
-                      router.push('/search?tab=load');
+											router.push('/search?tab=load');
                     }}
                   />
                 </View>
@@ -152,7 +152,7 @@ export default function MainPage() {
                     title={t("dashboard.search-vehicles")}
                     subtitle={t('dashboard.find-vehicles')}
                     onPress={() => {
-                      router.push('/search?tab=vehicle');
+											router.push('/search?tab=vehicle');
                     }}
                   />
                 </View>
@@ -167,24 +167,24 @@ export default function MainPage() {
                     {t('dashboard.live-updates')}
                   </Text>
                 </View>
-                
+
                 <View className="flex-row space-x-4">
                   {loadStats && <View className="flex-1">
                       <MainPageCards.StatsCard
                         title={t('dashboard.load-ads')}
                         count={loadStats.today}
                         delta={loadStats.growth + "%"}
-                        deltaText={t('date-range.yesterday')}
+                        deltaText={t('dashboard.compared-to-yesterday')}
                         icon="cube-outline"
                       />
                   </View>}
-                  
+
                   {vehicleStats && <View className="flex-1">
                     <MainPageCards.StatsCard
                       title={t('dashboard.vehicle-ads')}
                       count={vehicleStats.today}
                       delta={vehicleStats.growth + "%"}
-                      deltaText={t('date-range.yesterday')}
+                      deltaText={t('dashboard.compared-to-yesterday')}
                       icon="bus-outline"
                     />
                   </View>}
@@ -193,7 +193,7 @@ export default function MainPage() {
                 <View className="flex-row items-center justify-between">
                   <Text className="text-lg font-bold text-gray-900">{t('dashboard.total-stats')}</Text>
                 </View>
-                
+
                 <View className="flex-row justify-between space-x-4">
                   {loadStats && <MainPageCards.TotalStatsCard
                     icon="cube-outline"
