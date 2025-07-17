@@ -27,7 +27,7 @@ const CardButton = React.memo(({ iconName, title, subtitle, onPress }: {
     </TouchableOpacity>
 ));
 
-React.memo(CardButton)
+// React.memo(CardButton)
 
 const StatsCard = React.memo(({
       title,
