@@ -32,7 +32,7 @@ const SearchLoadScreen = () => {
     const { loading } = useAppSelector(state => state.variable);
     const { openLoadView } = useBottomSheet();
 
-    // const truckTypes = OPTIONS['truck-types'].filter(item => item.value !== 'not_specified');
+    const truckTypes = OPTIONS['truck-types'].filter(item => item.value !== 'not_specified');
     const booleanFiltersData = OPTIONS['boolean-filters'];
     const [booleanFilters, setBooleanFilters] = React.useState(() =>
       booleanFiltersData.reduce((acc, filter) => {
@@ -376,16 +376,16 @@ const SearchLoadScreen = () => {
 							// onScrollEndDrag={handleScrollEndDrag}
 							ListHeaderComponent={
 								<View>
-									<CustomBadgeSelector
+									{/* <CustomBadgeSelector
 									items={booleanFiltersData}
 									selectedItems={selectedFitlers}
 									onChange={onChange}
-								/>
-									{/* <CustomBadgeSelector
+								/> */}
+									<CustomBadgeSelector
 									items={truckTypes}
 									selectedItems={selectedItems}
 									onChange={handleBadgeChange}
-								/> */}
+								/>
 								</View>
 							}
 							ListFooterComponent={cargoLoad ? (
