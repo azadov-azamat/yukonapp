@@ -14,11 +14,11 @@ const CardButton = React.memo(({ iconName, title, subtitle, onPress }: {
       onPress={onPress}
       className="relative flex flex-col items-center w-full py-4 space-y-4 text-white bg-primary rounded-2xl"
     >
-      <View className="flex flex-row gap-4 items-center w-full px-3">
-				<View className="flex items-center justify-center w-10 h-10 shadow-lg bg-primary rounded-xl border border-white ">
+      <View className="flex flex-row items-center w-full gap-4 px-3">
+				<View className="flex items-center justify-center w-10 h-10 border border-white shadow-lg bg-primary rounded-xl ">
 					<Ionicons name={iconName} size={18} color="#FFF" />
 				</View>
-				<View className="flex flex-auto items-center">
+				<View className="flex items-center flex-auto">
         	<Text className="block text-base font-bold text-white leading-[21px] tracking-wider">{title}</Text>
         	{/* <Text className="text-xs text-white opacity-80">{subtitle}</Text> */}
 				</View>
@@ -58,7 +58,7 @@ const StatsCard = React.memo(({
                   <Ionicons name={icon} size={20} color="#8b5cf6" />
                 </View>
               </View>
-              <View className="flex-row items-center space-x-1 mt-2">
+              <View className="flex-row items-center mt-2 space-x-1">
                 <Ionicons
                   name={isNegative ? "arrow-down" : "arrow-up"}
                   size={12}
