@@ -20,7 +20,7 @@
     },
     "android": {
       "package": "yukon.uz.app",
-      "versionCode": 4,
+      "versionCode": 5,
       "permissions": [],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
