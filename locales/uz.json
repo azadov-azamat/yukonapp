@@ -1,4 +1,5 @@
 {
+  "good-morning": "Hayirli tong",
   "logo-text": "YukOn",
   "telegram": "Telegram",
   "go-back": "Orqaga",
@@ -455,6 +456,19 @@
 		"textMessages": "Matn xabarlari",
 		"pushNotifications": "Push xabarlari",
 		"emailNotifications": "Elektron pochta xabarlari"
-	}
+	},
+    "dashboard": {
+    "search-loads": "Yuklarni qidirish",
+    "search-vehicles": "Transportlarni qidirish",
+    "find-loads": "Mavjud yuklarni topish",
+    "find-vehicles": "Mavjud transportlarni topish",
+    "today-stats": "Bugungi statistika",
+    "live-updates": "Jonli yangilanishlar",
+    "load-ads": "Yuk eʼlonlari",
+    "vehicle-ads": "Transport eʼlonlari",
+    "total-stats": "Umumiy statistika",
+    "total-loads": "Umumiy yuklar",
+    "total-vehicles": "Umumiy transportlar"
+  }
 }
 

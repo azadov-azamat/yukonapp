@@ -1,4 +1,5 @@
 {
+  "good-morning": "Good morning",
   "logo-text": "YukOn",
   "telegram": "Telegram",
   "go-back": "Back",
@@ -455,5 +456,18 @@
     "textMessages": "Text Messages",
     "pushNotifications": "Push Notifications",
     "emailNotifications": "Email Notifications"
+  },
+  "dashboard": {
+    "search-loads": "Search Loads",
+    "search-vehicles": "Search Vehicles",
+    "find-loads": "Find available loads",
+    "find-vehicles": "Find available Vehicles",
+    "today-stats": "Today’s Statistics",
+    "live-updates": "Live updates",
+    "load-ads": "Load Ads",
+    "vehicle-ads": "Vehicle Ads",
+    "total-stats": "Total Statistics",
+    "total-loads": "Total Loads",
+    "total-vehicles": "Total Vehicles"
   }
 }

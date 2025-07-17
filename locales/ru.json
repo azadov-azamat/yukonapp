@@ -1,4 +1,5 @@
 {
+  "good-morning": "Хайрли тонг",
     "logo-text": "Логотип",
     "telegram": "Телеграм",
     "go-back": "Назад",
@@ -455,5 +456,18 @@
       "textMessages": "Текстовые сообщения",
       "pushNotifications": "Push-уведомления",
       "emailNotifications": "Email-уведомления"
-    }
+    },
+      "dashboard": {
+    "search-loads": "Поиск грузов",
+    "search-vehicles": "Поиск транспортных средств",
+    "find-loads": "Найти доступные грузы",
+    "find-vehicles": "Найти доступные транспортные средства",
+    "today-stats": "Сегодняшняя статистика",
+    "live-updates": "Обновления в реальном времени",
+    "load-ads": "Объявления о грузах",
+    "vehicle-ads": "Объявления о транспорте",
+    "total-stats": "Общая статистика",
+    "total-loads": "Всего грузов",
+    "total-vehicles": "Всего транспортных средств"
+  }
 }

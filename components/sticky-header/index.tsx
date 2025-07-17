@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { use, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useAppSelector } from "@/redux/hooks";
+import { useTranslation } from "react-i18next";
 
 interface StickyHeaderProps {
   scrollY: Animated.Value;
@@ -20,6 +21,7 @@ const HEADER_HEIGHT = 65;
 const SCROLL_THRESHOLD = 30;
 
 const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
+  const {t} = useTranslation();
   const router = useRouter();
   const { user } = useAppSelector(state => state.auth);
   const { openEditForm } = useBottomSheet();
@@ -70,7 +72,7 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
             style={{ color: textColor }}
             className="text-sm"
             >
-            Good morning
+            {t('good-morning')}
             </Animated.Text>
 
             <Animated.Text

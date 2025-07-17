@@ -1,4 +1,5 @@
 {
+  "good-morning": "Хайрли тонг",
     "logo-text": "Логотип",
     "telegram": "Телеграм",
     "go-back": "Назад",
@@ -455,5 +456,18 @@
       "textMessages": "Матнли хабарлар",
       "pushNotifications": "Push-хабарномалар",
       "emailNotifications": "Email-хабарномалар"
-    }
+    },
+     "dashboard": {
+    "search-loads": "Юкларни қидириш",
+    "search-vehicles": "Транспортларни қидириш",
+    "find-loads": "Мавжуд юкларни топиш",
+    "find-vehicles": "Мавжуд транспортларни топиш",
+    "today-stats": "Бугунги статистика",
+    "live-updates": "Жонли янгиланишлар",
+    "load-ads": "Юк эълонлари",
+    "vehicle-ads": "Транспорт эълонлари",
+    "total-stats": "Умумий статистика",
+    "total-loads": "Умумий юклар",
+    "total-vehicles": "Умумий транспортлар"
+  }
 }
