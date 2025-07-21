@@ -73,7 +73,7 @@ export default function MyAdsPage() {
   const loadPreview = (item: any) => {
     if (Platform.OS === 'android') {
       router.push('/android/ads/' + item.id);
-    } else {  
+    } else {
       openEditForm(item.id, item.cargoType ? 'load' : 'vehicle');
     }
   }

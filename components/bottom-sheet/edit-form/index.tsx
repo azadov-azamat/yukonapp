@@ -23,9 +23,9 @@ const EditFormBottomSheet = forwardRef<EditFormBottomSheetRef, EditFormBottomShe
   const dispatch = useAppDispatch();
   const { isDarkMode, theme } = useTheme();
   const { t } = useTranslation();
-  
+
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['100%'], []);
+  const snapPoints = useMemo(() => ['90%'], []);
 
   useImperativeHandle(ref, () => ({
     open: () => bottomSheetRef.current?.expand(),
@@ -45,7 +45,6 @@ const EditFormBottomSheet = forwardRef<EditFormBottomSheetRef, EditFormBottomShe
 
   return (
     <BottomSheet
-			style={{ flex: 1 }}
       ref={bottomSheetRef}
       index={-1}
       snapPoints={snapPoints}
