@@ -39,9 +39,9 @@ export default function MainPage() {
 	const { theme, isDarkMode } = useTheme();
   const insets = useSafeAreaInsets();
 
-  React.useEffect(() => {
-    requestLocationPermission(dispatch);
-  }, []);
+  // React.useEffect(() => {
+  //   requestLocationPermission(dispatch);
+  // }, []);
 
   // Combined focus effect for data fetching and cleanup
   React.useEffect(() => {
