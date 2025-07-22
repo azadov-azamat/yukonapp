@@ -6,9 +6,9 @@ import LoadRouteSelector from '@/components/load-route-selector'
 import { EmptyStateCard, LoadGridCard, LoadListCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { clearLoads, searchLoads, setLoad } from '@/redux/reducers/load'
-import { useRoute } from '@react-navigation/native';
+// import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getExtractCity } from '@/redux/reducers/city'
-import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next'
 import { debounce } from 'lodash';
 import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/content-loader'
@@ -19,17 +19,17 @@ import { TextInput, ActivityIndicator } from "react-native-paper";
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from "@/config/ThemeContext";
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
-import { useLocalSearchParams, useRouter } from "expo-router";
 
 const SearchLoadScreen = () => {
-    const route = useRoute();
+		const router = useRouter();
     const dispatch = useAppDispatch();
     const { t } = useTranslation();
-    const navigation = useNavigation();
+    // const navigation = useNavigation();
+		const params = useLocalSearchParams();
     const { loads, pagination, stats, loading: loadsFetching } = useAppSelector(state => state.load);
 		const [dataList, setDataList] = useState([]);
 
-		const params = useLocalSearchParams();
+		// const params = useLocalSearchParams();
 
     const { user } = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
@@ -48,8 +48,7 @@ const SearchLoadScreen = () => {
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
 
-    const arrival = route.params?.arrival;
-    const departure = route.params?.departure;
+    const { tab, arrival, departure } = params;
 
     const [searchText, setSearchText] = useState(arrival ? `${arrival} ${departure}` : '');
 
@@ -92,7 +91,7 @@ const SearchLoadScreen = () => {
 
     const debouncedFetchLoads = useCallback(
 			debounce(() => {
-				if (params.tab === 'load') {
+				if (tab === 'load') {
 					setPage(1);
 					setDataList([]);
 					dispatch(clearLoads());
@@ -123,18 +122,14 @@ const SearchLoadScreen = () => {
 		}, [page]);
 
     useEffect(()=> {
-			if (params.tab === 'vehicle') {
+			if (tab === 'vehicle') {
 				setPage(1);
 			}
 
       return () => {
-        navigation.setParams({
-          arrival: undefined,
-          departure: undefined
-        });
-        handleClear();
-      }
-    }, []);
+				handleClear();
+			};
+    }, [tab]);
 
     const onRefresh = () => {
 			setRefreshing(true);
@@ -165,10 +160,7 @@ const SearchLoadScreen = () => {
       setDestination(null);
       setSearchText('');
       setLimit(10);
-      navigation.setParams({
-        arrival: undefined, // Parametrni tozalash uchun undefined qilib o'rnating
-        departure: undefined
-      });
+      router.setParams({ arrival: undefined, departure: undefined });
       dispatch(clearLoads());
       dispatch(stopLoading());
     };
@@ -247,7 +239,7 @@ const SearchLoadScreen = () => {
     }
 
 		useEffect(() => {
-			if (params.tab === 'load') {
+			if (tab === 'load') {
 				if (page === 1) {
 					// On refresh, replace dataList
 					setDataList(loads);
