@@ -19,6 +19,7 @@ import { TextInput, ActivityIndicator } from "react-native-paper";
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from "@/config/ThemeContext";
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 const SearchLoadScreen = () => {
     const route = useRoute();
@@ -27,6 +28,8 @@ const SearchLoadScreen = () => {
     const navigation = useNavigation();
     const { loads, pagination, stats, loading: loadsFetching } = useAppSelector(state => state.load);
 		const [dataList, setDataList] = useState([]);
+
+		const params = useLocalSearchParams();
 
     const { user } = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
@@ -76,13 +79,28 @@ const SearchLoadScreen = () => {
       }, 300),
     )
 
+		const fetchLoads = async () => {
+			try {
+				const params = requestParams();
+				await dispatch(searchLoads(params));
+			} catch (error) {
+				console.error('Error fetching loads:', error);
+			} finally {
+				dispatch(stopLoading());
+			}
+    };
+
     const debouncedFetchLoads = useCallback(
-      debounce(() => {
-				setPage(1);
-        dispatch(clearLoads());
-        fetchLoads();
-      }, 300),
-    )
+			debounce(() => {
+				if (params.tab === 'load') {
+					setPage(1);
+					setDataList([]);
+					dispatch(clearLoads());
+					fetchLoads();
+				}
+			}, 300),
+			[dispatch, fetchLoads]
+		);
 
     useEffect(() => {
       if (arrival) {
@@ -105,6 +123,10 @@ const SearchLoadScreen = () => {
 		}, [page]);
 
     useEffect(()=> {
+			if (params.tab === 'vehicle') {
+				setPage(1);
+			}
+
       return () => {
         navigation.setParams({
           arrival: undefined,
@@ -220,33 +242,24 @@ const SearchLoadScreen = () => {
       // if (getCityName(fetchedOrigin) !== arrival || getCityName(fetchedDestination) !== departure) {
       //   updateQueryParams(getCityName(fetchedOrigin), getCityName(fetchedDestination) || '');
       // }
-      setOrigin(fetchedOrigin);
-      setDestination(fetchedDestination || null);
+      // setOrigin(fetchedOrigin);
+      // setDestination(fetchedDestination || null);
     }
 
-    const fetchLoads = async () => {
-			try {
-				const params = requestParams();
-				await dispatch(searchLoads(params));
-			} catch (error) {
-				console.error('Error fetching loads:', error);
-			} finally {
-				dispatch(stopLoading());
-			}
-    };
-
 		useEffect(() => {
-			if (page === 1) {
-				// On refresh, replace dataList
-				setDataList(loads);
-			} else {
-				// On load more, append new loads from Redux to existing dataList
-				setDataList(prev => {
-					// Avoid duplicate entries (optional)
-					const ids = new Set(prev.map(item => item.id)); // Assuming `id` uniquely identifies a load
-					const newLoads = loads.filter(item => !ids.has(item.id));
-					return [...prev, ...newLoads];
-				});
+			if (params.tab === 'load') {
+				if (page === 1) {
+					// On refresh, replace dataList
+					setDataList(loads);
+				} else {
+					// On load more, append new loads from Redux to existing dataList
+					setDataList(prev => {
+						// Avoid duplicate entries (optional)
+						const ids = new Set(prev.map(item => item.id)); // Assuming `id` uniquely identifies a load
+						const newLoads = loads.filter(item => !ids.has(item.id));
+						return [...prev, ...newLoads];
+					});
+				}
 			}
 		}, [loads, page]);
 
@@ -291,9 +304,7 @@ const SearchLoadScreen = () => {
 		const handleScroll = (event) => {
 			// const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
 			// const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height + 50; // 50px past bottom
-			// console.log('###########: ', isAtBottom, isPastBottom)
 			// if (isAtBottom && !isPastBottom) {
-			// 	console.log('!!!!!!!: ', isAtBottom, isPastBottom)
 			// 	setIsPastBottom(true);
 			// 	loadMoreData();
 			// } else if (!isAtBottom) {
