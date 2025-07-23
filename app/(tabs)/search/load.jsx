@@ -391,7 +391,7 @@ const SearchLoadScreen = () => {
 								</View>
 							}
 							ListFooterComponent={(
-								<View style={{ padding: 10, alignItems: 'center' }} className={`mb-3 ${( dataList.length || dataList.length < limit) && 'hidden'}`}>
+								<View style={{ padding: 10, alignItems: 'center' }} className={`mb-3 ${(loadsFetching && dataList.length > 0) ? 'hidden' : ''}`}>
 									<ActivityIndicator size={20} color="#623bff" />
 								</View>
 							)}
@@ -401,7 +401,7 @@ const SearchLoadScreen = () => {
 									handleViewMore();
 								}
 							}}
-							onEndReachedThreshold={0.3}
+							onEndReachedThreshold={0.1}
 							renderItem={renderLoadItem}
 							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 						/>
