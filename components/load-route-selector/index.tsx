@@ -11,6 +11,7 @@ interface LoadRouteSelectorProps {
   destination: itemCityProps | null;
   onClear: () => void; // Yonalishlarni o'chirish uchun
   onSwapCities: () => void; // Shaharlarni almashtirish uchun
+  openLoadFilter: () => void; // Shaharlarni almashtirish uchun
 }
 
 const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
@@ -18,6 +19,7 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
   destination,
   onClear,
   onSwapCities,
+  openLoadFilter
 }) => {
   const {t} = useTranslation();
   const {theme} = useTheme();
@@ -55,7 +57,7 @@ const LoadRouteSelector: React.FC<LoadRouteSelectorProps> = ({
       </View>
 
       {/* Clear Button */}
-      <TouchableOpacity>
+      <TouchableOpacity onPress={openLoadFilter}>
         <Ionicons name="create-outline" size={24} color={theme.colors.primary} />
         {/* <Ionicons name="close" size={14} color="white" /> */}
       </TouchableOpacity>

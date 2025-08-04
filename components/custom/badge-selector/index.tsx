@@ -35,7 +35,7 @@ function FlatItem(
   ) 
 }
 
-const BadgeSelector: React.FC<BadgeSelectorProps> = ({ items, selectedItems, onChange, className }) => {
+const BadgeSelector: React.FC<BadgeSelectorProps> = ({ items, selectedItems, onChange, className, isStatic = false }) => {
   const {t} = useTranslation();
   const isSelected = (value: string) => selectedItems.includes(value); // Badge tanlanganligini tekshirish
 
@@ -46,32 +46,46 @@ const BadgeSelector: React.FC<BadgeSelectorProps> = ({ items, selectedItems, onC
     return aSelected === bSelected ? 0 : aSelected ? -1 : 1;
   });
 
-  return (
-    <View className={`flex w-full ${className}`}>
+return (
+  <View className={`flex w-full ${className}`}>
+    {isStatic ? (
+      <View className='flex-row flex-wrap p-2' style={{gap: 8}}>
+        {sortedItems.map(item => (
+          <FlatItem
+            key={item.value}
+            item={item}
+            isSelected={isSelected}
+            onChange={onChange}
+            translate={t}
+          />
+        ))}
+      </View>
+    ) : (
       <FlatList
-        data={sortedItems} // Badge elementlari
-        horizontal // Gorizontal scrollni yoqish
-        showsHorizontalScrollIndicator={false} // Scroll indikatorini yashirish
+        data={sortedItems}
+        horizontal
+        showsHorizontalScrollIndicator={false}
         contentContainerStyle={{
           flexDirection: 'row',
           gap: 8,
           padding: 8,
           paddingLeft: 0,
           paddingRight: 0,
-          alignContent: 'center'
+          alignContent: 'center',
         }}
-        keyExtractor={(item) => item.value} // Har bir element uchun unikal kalit
+        keyExtractor={(item) => item.value}
         renderItem={({ item }) => (
-          <FlatItem 
-            item={item} 
-            isSelected={isSelected} 
+          <FlatItem
+            item={item}
+            isSelected={isSelected}
             onChange={onChange}
             translate={t}
           />
         )}
       />
-    </View>
-  );
-};
+    )}
+  </View>
+);
+}
 
 export default BadgeSelector;

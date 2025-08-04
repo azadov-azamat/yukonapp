@@ -44,6 +44,7 @@ export interface BadgeSelectorProps {
     selectedItems: string[]; // Tanlangan badge'lar ID ro'yxati
     onChange: (value: string) => void; // Badge tanlanganida chaqiriladigan callback
     className?: string;
+    isStatic?: boolean;
 }
 
 export interface DirectionItemProps {

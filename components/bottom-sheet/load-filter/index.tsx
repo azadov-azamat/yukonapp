@@ -1,34 +1,27 @@
 import React, { useCallback, useMemo, forwardRef, useImperativeHandle } from 'react';
-import { View, Text, Switch, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import { useTheme } from '@/config/ThemeContext';
-import { Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import { RelativePathString, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { logout } from '@/redux/reducers/auth';
-import { useAppDispatch } from '@/redux/hooks';
-import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 import { CustomBadgeSelector } from '@/components/custom';
 import { OPTIONS } from '@/utils/constants';
+import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 
-export interface DirectionChangeBottomSheetRef {
+export interface LoadFilterBottomSheetRef {
   open: () => void;
   close: () => void;
 }
 
-const DirectionChangeBottomSheet = forwardRef<DirectionChangeBottomSheetRef>((_, ref) => {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-  const { isDarkMode, toggleTheme, themeName, theme } = useTheme();
-  const { i18n, t } = useTranslation();
+const LoadFilterBottomSheet = forwardRef<LoadFilterBottomSheetRef>((_, ref) => {
+  
+  const { selectedFilters, onFilterChange, closeLoadFilter } = useBottomSheet();
+
+  const { isDarkMode, theme } = useTheme();
+  const { t } = useTranslation();
+  
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['50%'], []);
-  const { languages } = useBottomSheet();
-  const handleLanguageChange = (code: string) => {
-    i18n.changeLanguage(code);
-    bottomSheetRef.current?.close();
-  };
+  const snapPoints = useMemo(() => ['25%'], []);
+  const booleanFiltersData = OPTIONS['boolean-filters'];
 
   useImperativeHandle(ref, () => ({
     open: () => {
@@ -38,14 +31,6 @@ const DirectionChangeBottomSheet = forwardRef<DirectionChangeBottomSheetRef>((_,
       bottomSheetRef.current?.close();
     },
   }));
-
-  const handleThemeToggle = () => {
-    toggleTheme();
-    // Reload the app after theme change
-    setTimeout(() => {
-      router.replace('/');
-    }, 100);
-  };
 
   const renderBackdrop = useCallback(
     (props: any) => (
@@ -57,8 +42,6 @@ const DirectionChangeBottomSheet = forwardRef<DirectionChangeBottomSheetRef>((_,
     ),
     []
   );
-
-  const truckTypes = OPTIONS['truck-types'].filter(item => item.value !== 'not_specified');
   
   return (
     <BottomSheet
@@ -77,18 +60,22 @@ const DirectionChangeBottomSheet = forwardRef<DirectionChangeBottomSheetRef>((_,
       <BottomSheetView className="flex-1 dark">
         <View className="pt-4">
           <Text className="px-4 pb-2 text-3xl font-bold text-black dark:text-white">
-            {t('profile.settings')}
+            {t('more-filters')}
           </Text>
 
-         {/* <CustomBadgeSelector
-            items={truckTypes}
-            selectedItems={selectedItems}
-            onChange={handleBadgeChange}
-          /> */}
+        <CustomBadgeSelector
+						items={booleanFiltersData}
+						selectedItems={Object.keys(selectedFilters).filter(key => selectedFilters[key as any])}
+            isStatic
+						onChange={(value) => {
+              onFilterChange(value)
+              closeLoadFilter()
+            }}
+					/>
         </View>
       </BottomSheetView>
     </BottomSheet>
   );
 });
 
-export default DirectionChangeBottomSheet;
+export default LoadFilterBottomSheet;
