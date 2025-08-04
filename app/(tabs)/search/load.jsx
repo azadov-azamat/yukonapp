@@ -234,8 +234,8 @@ const SearchLoadScreen = () => {
       // if (getCityName(fetchedOrigin) !== arrival || getCityName(fetchedDestination) !== departure) {
       //   updateQueryParams(getCityName(fetchedOrigin), getCityName(fetchedDestination) || '');
       // }
-      // setOrigin(fetchedOrigin);
-      // setDestination(fetchedDestination || null);
+      setOrigin(fetchedOrigin);
+      setDestination(fetchedDestination || null);
     }
 
 		useEffect(() => {

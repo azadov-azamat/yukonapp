@@ -109,10 +109,12 @@ function App() {
 
 export default function RootLayout() {
   return (
-    <ReduxProvider store={store}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </ReduxProvider>
+    // <View className="w-auto h-auto max-w-[400px] flex justify-center">
+      <ReduxProvider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </ReduxProvider>
+    // </View>
   );
 }
