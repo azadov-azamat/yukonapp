@@ -6,16 +6,16 @@ import LoadRouteSelector from '@/components/load-route-selector'
 import { EmptyStateCard, LoadGridCard, LoadListCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { clearLoads, searchLoads, setLoad } from '@/redux/reducers/load'
-// import { useRoute, useNavigation } from '@react-navigation/native';
+
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getExtractCity } from '@/redux/reducers/city'
 import { useTranslation } from 'react-i18next'
 import { debounce } from 'lodash';
 import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/content-loader'
 import { startLoading, stopLoading } from '@/redux/reducers/variable'
-import { LoadModal, SubscriptionModal } from '@/components/modal'
+import { SubscriptionModal } from '@/components/modal'
 import { updateUserSubscriptionModal } from '@/redux/reducers/auth'
-import { TextInput, ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from "@/config/ThemeContext";
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
@@ -91,7 +91,7 @@ const SearchLoadScreen = () => {
 
     const debouncedFetchLoads = useCallback(
 			debounce(() => {
-				if (tab === 'load') {
+				if (tab === 'load' || tab === undefined) {
 					setPage(1);
 					setDataList([]);
 					dispatch(clearLoads());
@@ -239,7 +239,7 @@ const SearchLoadScreen = () => {
     }
 
 		useEffect(() => {
-			if (tab === 'load') {
+			if (tab === 'load' || tab === undefined) {
 				if (page === 1) {
 					// On refresh, replace dataList
 					setDataList(loads);
@@ -384,9 +384,9 @@ const SearchLoadScreen = () => {
 									onChange={onChange}
 								/> */}
 									<CustomBadgeSelector
-									items={truckTypes}
-									selectedItems={selectedItems}
-									onChange={handleBadgeChange}
+                    items={truckTypes}
+                    selectedItems={selectedItems}
+                    onChange={handleBadgeChange}
 								/>
 								</View>
 							}

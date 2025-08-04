@@ -46,7 +46,7 @@ function App() {
           const res = await dispatch(getUserMe(userId));
           if (res.type === "auth/getUserMe/fulfilled") {
             setIsAuthenticated(true);
-            // router.push("/(tabs)"); //causes Error with navigation
+            router.push("/(tabs)"); //causes Error with navigation
           } else {
             setIsAuthenticated(false);
           }
