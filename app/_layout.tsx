@@ -46,7 +46,7 @@ function App() {
           const res = await dispatch(getUserMe(userId));
           if (res.type === "auth/getUserMe/fulfilled") {
             setIsAuthenticated(true);
-            // router.push("/(tabs)"); //causes Error with navigation
+            router.push("/(tabs)"); //causes Error with navigation
           } else {
             setIsAuthenticated(false);
           }
@@ -109,10 +109,12 @@ function App() {
 
 export default function RootLayout() {
   return (
-    <ReduxProvider store={store}>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
-    </ReduxProvider>
+    // <View className="w-auto h-auto max-w-[400px] flex justify-center">
+      <ReduxProvider store={store}>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </ReduxProvider>
+    // </View>
   );
 }

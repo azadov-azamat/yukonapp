@@ -1,32 +1,35 @@
 import { Text, View, FlatList, Keyboard, RefreshControl, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState, useCallback, memo } from "react";
 import { OPTIONS } from '@/utils/constants'
 import { CustomBadgeSelector, CustomButton, CustomInput } from '@/components/custom'
 import LoadRouteSelector from '@/components/load-route-selector'
 import { EmptyStateCard, LoadGridCard, LoadListCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
 import { clearLoads, searchLoads, setLoad } from '@/redux/reducers/load'
-import { useRoute } from '@react-navigation/native';
+
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { getExtractCity } from '@/redux/reducers/city'
-import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next'
 import { debounce } from 'lodash';
 import { ContentLoaderLoadGrid, ContentLoaderLoadList } from '@/components/content-loader'
 import { startLoading, stopLoading } from '@/redux/reducers/variable'
-import { LoadModal, SubscriptionModal } from '@/components/modal'
+import { SubscriptionModal } from '@/components/modal'
 import { updateUserSubscriptionModal } from '@/redux/reducers/auth'
-import { TextInput, ActivityIndicator } from "react-native-paper";
+import { ActivityIndicator } from "react-native-paper";
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from "@/config/ThemeContext";
 import { useBottomSheet } from '@/hooks/context/bottom-sheet';
 
 const SearchLoadScreen = () => {
-    const route = useRoute();
+		const router = useRouter();
     const dispatch = useAppDispatch();
     const { t } = useTranslation();
-    const navigation = useNavigation();
-    const { loads, pagination, stats, loading: cargoLoad } = useAppSelector(state => state.load);
-    // const theme = useTheme();
+    // const navigation = useNavigation();
+		const params = useLocalSearchParams();
+    const { loads, pagination, stats, loading: loadsFetching } = useAppSelector(state => state.load);
+		const [dataList, setDataList] = useState([]);
+
+		// const params = useLocalSearchParams();
 
     const { user } = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
@@ -34,28 +37,26 @@ const SearchLoadScreen = () => {
 
     const truckTypes = OPTIONS['truck-types'].filter(item => item.value !== 'not_specified');
     const booleanFiltersData = OPTIONS['boolean-filters'];
-    const [booleanFilters, setBooleanFilters] = React.useState(() =>
+    const [booleanFilters, setBooleanFilters] = useState(() =>
       booleanFiltersData.reduce((acc, filter) => {
         acc[filter.value] = false; // Har bir filterni default qiymatini false qilib boshlash
         return acc;
       }, {})
     );
-    const [selectedItems, setSelectedItems] = React.useState([]);
-    const [selectedFitlers, setSelectedFilters] = React.useState([]);
-    const [limit, setLimit] = React.useState(10);
-    const [page, setPage] = React.useState(1);
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedFitlers, setSelectedFilters] = useState([]);
+    const [limit, setLimit] = useState(10);
+    const [page, setPage] = useState(1);
 
-    const arrival = route.params?.arrival;
-    const departure = route.params?.departure;
+    const { tab, arrival, departure } = params;
 
-    const [searchText, setSearchText] = React.useState(arrival ? `${arrival} ${departure}` : '');
+    const [searchText, setSearchText] = useState(arrival ? `${arrival} ${departure}` : '');
 
-    const [origin, setOrigin] = React.useState(null);
-    const [destination, setDestination] = React.useState(null);
-    const [viewId, setViewId] = React.useState(null);
-    const [isGridView, setIsGridView] = React.useState(false);
-    const [openModal, setOpenModal] = React.useState(false);
-    const [refreshing, setRefreshing] = React.useState(false);
+    const [origin, setOrigin] = useState(null);
+    const [destination, setDestination] = useState(null);
+    const [isGridView, setIsGridView] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     const toggleView = () => {
       setIsGridView((prev) => !prev);
@@ -65,32 +66,42 @@ const SearchLoadScreen = () => {
       setOpenModal(!openModal)
     };
 
-    const toggleSetId = React.useCallback((item) => {
-      // dispatch(getLoadById(viewId));
+    const toggleSetId = useCallback((item) => {
       openLoadView();
       dispatch(setLoad(item));
     }, [dispatch]);
 
-    const debouncedFetchExtract = React.useCallback(
+    const debouncedFetchExtract = useCallback(
       debounce(() => {
+				dispatch(clearLoads());
         fetchExtractCity();
-      }, 300), // 300ms ichida faqat bitta chaqiruv amalga oshiriladi
-    )
-
-    const debouncedFetchLoads = React.useCallback(
-      debounce(() => {
-        fetchLoads();
       }, 300),
     )
 
-    // React.useEffect(() => {
-    //   if (viewId) {
-    //     dispatch(getLoadById(viewId));
-    //   }
-    // }, [viewId])
+		const fetchLoads = async () => {
+			try {
+				const params = requestParams();
+				await dispatch(searchLoads(params));
+			} catch (error) {
+				console.error('Error fetching loads:', error);
+			} finally {
+				dispatch(stopLoading());
+			}
+    };
 
-    // 3. Arrival va departure page yuklanganda o'rnatiladi
-    React.useEffect(() => {
+    const debouncedFetchLoads = useCallback(
+			debounce(() => {
+				if (tab === 'load' || tab === undefined) {
+					setPage(1);
+					setDataList([]);
+					dispatch(clearLoads());
+					fetchLoads();
+				}
+			}, 300),
+			[dispatch, fetchLoads]
+		);
+
+    useEffect(() => {
       if (arrival) {
         setSearchText(`${arrival || ''} ${departure || ''}`);
         debouncedFetchExtract();
@@ -99,42 +110,38 @@ const SearchLoadScreen = () => {
       }
     }, [arrival, departure]);
 
-    // 4. Origin va destination o'zgarganda loadlarni fetch qilish
-    React.useEffect(() => {
-      if (origin) {
-        dispatch(startLoading());
-        debouncedFetchLoads();
-      }
+    useEffect(() => {
+			dispatch(startLoading());
+			debouncedFetchLoads();
     }, [origin, destination]);
 
-    React.useEffect(() => {
-      fetchLoads();
-    }, [page]);
+    useEffect(() => {
+			if (page !== 1) {
+				fetchLoads();
+			}
+		}, [page]);
 
-    React.useEffect(()=> {
+    useEffect(()=> {
+			if (tab === 'vehicle') {
+				setPage(1);
+			}
+
       return () => {
-        navigation.setParams({
-          arrival: undefined, // Parametrni tozalash uchun undefined qilib o'rnating
-          departure: undefined
-        });
-        handleClear();
-      }
-    }, []);
+				handleClear();
+			};
+    }, [tab]);
 
     const onRefresh = () => {
-      if (arrival || origin) {
-        setRefreshing(true);
-        dispatch(clearLoads());
-        // Ma'lumotlarni yangilash
-        setTimeout(() => {
-          if(arrival) {
-            debouncedFetchExtract();
-          } else {
-            debouncedFetchLoads();
-          }
-          setRefreshing(false); // Yangilashni tugatish
-        }, 2000); // 2 soniyalik kechikish
-      }
+			setRefreshing(true);
+
+			setTimeout(() => {
+				if(arrival) {
+					debouncedFetchExtract();
+				} else {
+					debouncedFetchLoads();
+				}
+				setRefreshing(false);
+			}, 2000);
     };
 
     const handleSwapCities = () => {
@@ -153,10 +160,7 @@ const SearchLoadScreen = () => {
       setDestination(null);
       setSearchText('');
       setLimit(10);
-      navigation.setParams({
-        arrival: undefined, // Parametrni tozalash uchun undefined qilib o'rnating
-        departure: undefined
-      });
+      router.setParams({ arrival: undefined, departure: undefined });
       dispatch(clearLoads());
       dispatch(stopLoading());
     };
@@ -234,21 +238,22 @@ const SearchLoadScreen = () => {
       setDestination(fetchedDestination || null);
     }
 
-    const fetchLoads = async () => {
-			try {
-				if (!origin) {
-					dispatch(clearLoads());
-					return;
+		useEffect(() => {
+			if (tab === 'load' || tab === undefined) {
+				if (page === 1) {
+					// On refresh, replace dataList
+					setDataList(loads);
+				} else {
+					// On load more, append new loads from Redux to existing dataList
+					setDataList(prev => {
+						// Avoid duplicate entries (optional)
+						const ids = new Set(prev.map(item => item.id)); // Assuming `id` uniquely identifies a load
+						const newLoads = loads.filter(item => !ids.has(item.id));
+						return [...prev, ...newLoads];
+					});
 				}
-
-				const params = requestParams();
-				await dispatch(searchLoads(params));
-			} catch (error) {
-				console.error('Error fetching loads:', error);
-			} finally {
-				dispatch(stopLoading());
 			}
-    };
+		}, [loads, page]);
 
     // const onChange = (value) => {
     //   setBooleanFilters((prevFilters) => ({
@@ -278,26 +283,25 @@ const SearchLoadScreen = () => {
 			setPage(previous => previous + 1);
 		}
 
-		const [isPastBottom, setIsPastBottom] = React.useState(false);
+		// const [isPastBottom, setIsPastBottom] = useState(false);
 
-		const loadMoreData = () => {
-			if (cargoLoad) return;
+		// const loadMoreData = () => {
+		// 	if (loadsFetching) return;
 
-			setTimeout(() => {
-				handleViewMore();
-			}, 1000);
-		};
+		// 	setTimeout(() => {
+		// 		handleViewMore();
+		// 	}, 1000);
+		// };
 
 		const handleScroll = (event) => {
-			const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
-			const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height + 50; // 50px past bottom
-
-			if (isAtBottom && !isPastBottom) {
-				setIsPastBottom(true);
-				loadMoreData();
-			} else if (!isAtBottom) {
-				setIsPastBottom(false);
-			}
+			// const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+			// const isAtBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height + 50; // 50px past bottom
+			// if (isAtBottom && !isPastBottom) {
+			// 	setIsPastBottom(true);
+			// 	loadMoreData();
+			// } else if (!isAtBottom) {
+			// 	setIsPastBottom(false);
+			// }
 		};
 
     const toggleSubscriptionModal = (fetch = true) => {
@@ -307,16 +311,16 @@ const SearchLoadScreen = () => {
       }
     }
 
-    const MemoizedLoadListCard = React.memo(isGridView ? LoadListCard : LoadGridCard);
-    const MemoizedContentLoadItem = React.memo(isGridView ? ContentLoaderLoadList : ContentLoaderLoadGrid);
+    const MemoizedLoadListCard = memo(isGridView ? LoadListCard : LoadGridCard);
+    const MemoizedContentLoadItem = memo(isGridView ? ContentLoaderLoadList : ContentLoaderLoadGrid);
 
-    const renderLoadItem = React.useCallback(({ item }) => (
+    const renderLoadItem = useCallback(({ item }) => (
       <MemoizedLoadListCard
         changes={true} onPress={() => toggleSetId(item)} load={item}
       />
     ), [toggleSetId, toggleModal]);
 
-    const renderContentLoadItem = React.useCallback(() => (
+    const renderContentLoadItem = useCallback(() => (
       <MemoizedContentLoadItem />
     ), []);
 
@@ -367,12 +371,11 @@ const SearchLoadScreen = () => {
 				/>
 					) : (
 						<FlatList
-							data={loads}
+							data={dataList}
 							keyExtractor={(item) => item?.id?.toString()}
 							showsVerticalScrollIndicator={false}
 							onScroll={handleScroll}
-							// onMomentumScrollEnd={handleMomentumScrollEnd}
-							// onScrollEndDrag={handleScrollEndDrag}
+							scrollEventThrottle={16}
 							ListHeaderComponent={
 								<View>
 									{/* <CustomBadgeSelector
@@ -381,18 +384,24 @@ const SearchLoadScreen = () => {
 									onChange={onChange}
 								/> */}
 									<CustomBadgeSelector
-									items={truckTypes}
-									selectedItems={selectedItems}
-									onChange={handleBadgeChange}
+                    items={truckTypes}
+                    selectedItems={selectedItems}
+                    onChange={handleBadgeChange}
 								/>
 								</View>
 							}
-							ListFooterComponent={cargoLoad ? (
-								<View style={{ padding: 10, alignItems: 'center' }} className={`mb-3 ${(!loads.length || loads.length < limit) && 'hidden'}`}>
+							ListFooterComponent={(
+								<View style={{ padding: 10, alignItems: 'center' }} className={`mb-3 ${(loadsFetching && dataList.length > 0) ? 'hidden' : ''}`}>
 									<ActivityIndicator size={20} color="#623bff" />
 								</View>
-							) : null}
+							)}
 							ListEmptyComponent={<EmptyStateCard type="load"/>}
+							onEndReached={() => {
+								if (!loadsFetching && !isLast) {
+									handleViewMore();
+								}
+							}}
+							onEndReachedThreshold={0.1}
 							renderItem={renderLoadItem}
 							refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 						/>

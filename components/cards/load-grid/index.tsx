@@ -17,7 +17,7 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
   const { user } = useAppSelector(state => state.auth);
   const { phoneLoading } = useAppSelector(state => state.variable);
   const {theme} = useTheme();
-  
+
   React.useEffect(() => {
     if (isUpdate) {
         load.openMessageCounter++;
@@ -32,26 +32,26 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
       return t('post.weight', { weight });
     }
   }
-  
+
   function formatPaymentType(type: string) {
     return t ('post.payment-type', {
       type: t ('payment-type.' + type),
     });
   }
-  
+
   React.useEffect(() => {
-    
+
   }, [load.telegram, load.phone, load.loading]);
-  
+
   if (!user) {
     return null;
   }
-  
+
   function formatLoadReadyDate(loadReadyDate: string | Date): string {
     const date = dayjs(loadReadyDate);
     const today = dayjs();
     const tomorrow = dayjs().add(1, 'day');
-  
+
     if (date.isSame(today, 'day')) {
       return `${t('today')}, ${date.format('D MMMM')}`; // "Bugun, 23 Yanvar"
     } else if (date.isSame(tomorrow, 'day')) {
@@ -60,7 +60,7 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
       return date.format('D MMMM'); // "25 Yanvar"
     }
   }
-  
+
   function formatPriceAndPrepayment(
     price: number,
     hasPrepayment: boolean,
@@ -75,12 +75,12 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
       : '';
     return `${(price ? formatPrice(price, originId === 1 && destinationId === 1) : '') + prepayment}`;
   }
-  
-  const ParentComponent = showElement ? View : TouchableOpacity; 
-  
+
+  const ParentComponent = showElement ? View : TouchableOpacity;
+
   return (
     <ParentComponent
-      {...(!showElement && { onPress })} 
+      {...(!showElement && { onPress })}
       className={`mb-4 bg-primary-light dark:bg-primary-dark ${showElement ? 'overflow-visible' : 'px-4 py-2 shadow-md rounded-xl'}`}>
       {/* Top Row */}
       {!showElement && <View className="flex-row items-center justify-between">
@@ -100,7 +100,7 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
           </View> */}
           <ButtonBookmark model={load} paramName='bookmarkedLoadIds'/>
         </View>
-    
+
       </View>}
 
       {/* Origin and Destination */}
@@ -137,7 +137,7 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
           <View className="space-y-2">
             {!load.phone && <TouchableOpacity disabled={phoneLoading} onPress={() => load.phoneFunction(user, dispatch, close)} className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                {phoneLoading ? <ActivityIndicator size={18} color={theme.colors.primary} /> : 
+                {phoneLoading ? <ActivityIndicator size={18} color={theme.colors.primary} /> :
                 <Ionicons name="call" size={18} color={theme.colors.primary} /> }
               </View>
               <Text className="text-base text-primary-dark dark:text-border-color">
@@ -146,34 +146,34 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
             </TouchableOpacity>}
 
             {load.phone && <View><CustomPhoneCall phoneNumber={load.phone} loading={phoneLoading} /></View>}
-            
+
             {load.telegram && <View><CustomOpenLink url={load.telegram} /> </View>}
-            
+
             {(load.telegram || load.phone) && load.url ? <View><CustomOpenLink url={load.url} text='message-link' /></View> : ''}
-            
+
             {load.goods && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="cube" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="cube" size={18} color={theme.colors.primary} />
               </View>
               <Text className="text-base text-primary-dark dark:text-border-color">{load.goods}</Text>
             </View>}
 
             {load.weight && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="scale" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="scale" size={18} color={theme.colors.primary} />
               </View>
               <Text className="text-base text-primary-dark dark:text-border-color">{handleDetermineTon(load.weight)}</Text>
             </View>}
 
             {(load.price || load.hasPrepayment || load.prepaymentAmount) && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="cash" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="cash" size={18} color={theme.colors.primary} />
               </View>
-              <Text className="text-base font-semibold text-blue-500">{showElement ? 
+              <Text className="text-base font-semibold text-blue-500">{showElement ?
                 formatPriceAndPrepayment(
-                  load.price, 
-                  load.hasPrepayment, 
-                  load.prepaymentAmount, 
+                  load.price,
+                  load.hasPrepayment,
+                  load.prepaymentAmount,
                   load.originCountry?.id || 1,
                   load.destinationCountry?.id || 1
                 ) : formatPrice(load.price)
@@ -182,63 +182,63 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
 
             {load.isDagruz && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="cube" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="cube" size={18} color={theme.colors.primary} />
               </View>
               <Text className="text-base text-primary-dark dark:text-border-color">{t ('dagruz')}</Text>
             </View>}
-            
+
             {load.paymentType && (load.paymentType !== 'not_specified') && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="card" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="card" size={18} color={theme.colors.primary} />
               </View>
               <Text className="text-base text-primary-dark dark:text-border-color">{formatPaymentType(load.paymentType)}</Text>
             </View>}
-            
+
             {load.loadReadyDate && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="calendar" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="calendar" size={18} color={theme.colors.primary} />
               </View>
               <Text className="text-base text-primary-dark dark:text-border-color">{t ('loads.load-ready-date')} - {formatLoadReadyDate(load.loadReadyDate)}</Text>
             </View>}
-            
+
             {load.isLikelyOwner && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="person" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="person" size={18} color={theme.colors.primary} />
               </View>
               <Text className="text-base text-primary-dark dark:text-border-color">{t ('is-likely-owner')}</Text>
             </View>}
-            
+
             { load.customsClearanceLocation && (load.customsClearanceLocation !== null) && <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="person" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="person" size={18} color={theme.colors.primary} />
               </View>
               <Text className="text-base text-primary-dark dark:text-border-color">{t ('customs-clearance', {customClearance: load.customsClearanceLocation})}</Text>
             </View>}
-            
+
             <View className='flex-row items-center space-x-2'>
               <View className="flex items-center justify-center w-8 h-8 rounded-full bg-primary/20">
-                <Ionicons name="time" size={18} color={theme.colors.primary} /> 
+                <Ionicons name="time" size={18} color={theme.colors.primary} />
               </View>
-              <Text className="text-base text-primary-dark dark:text-border-color">{dateFromNow(load?.publishedDate || load?.createdAt || '')}</Text>
+              <Text className="text-base text-primary-dark dark:text-border-color">{dateFromNow(load?.createdAt || '')}</Text>
             </View>
           </View>
 
           {/* Separator */}
           <View className="my-2 border-t border-gray-300"></View>
 
-          
+
           <View className=''>
             <Text className='text-sm text-primary-dark dark:text-border-color'>{load.phone ? load.description : removePhoneNumbers(load.description).text}</Text>
           </View>
         </>
       }
-      
+
       {/* Bottom Row */}
       {!showElement && <View className="flex-row items-center justify-between pt-2 border-t border-gray-200">
         {/* Created At */}
         <View className="flex-row items-center space-x-2">
           <Ionicons name="calendar" size={16} color={theme.colors.icon} />
-          <Text className="text-sm text-primary-dark dark:text-border-color">{dateFromNow(load.publishedDate || load.createdAt || '')}</Text>
+          <Text className="text-sm text-primary-dark dark:text-border-color">{dateFromNow(load.createdAt || '')}</Text>
         </View>
 
         {/* Price */}

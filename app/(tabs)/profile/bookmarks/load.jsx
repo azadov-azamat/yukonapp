@@ -3,7 +3,7 @@ import React from 'react'
 import { CustomBadgeSelector, CustomButton, CustomInput } from '@/components/custom'
 import { EmptyStateCard, LoadGridCard } from '@/components/cards'
 import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import { clearLoad, clearLoads, getBookmarks, getLoadById, searchLoads, setLoad } from '@/redux/reducers/load'
+import { clearLoad, clearLoads, getBookmarks, getLoadById, setLoad } from '@/redux/reducers/load'
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next'
@@ -20,7 +20,7 @@ const BookmarksLoadScreen = React.memo(() => {
     const {bookmarks, pagination, stats, loading: cargoLoad} = useAppSelector(state => state.load);
     const {user} = useAppSelector(state => state.auth)
     const { loading } = useAppSelector(state => state.variable);
-    
+
     const { openLoadView } = useBottomSheet();
 
     const [limit, setLimit] = React.useState(10);
@@ -40,14 +40,14 @@ const BookmarksLoadScreen = React.memo(() => {
         // dispatch(clearLoad())
       }
     }, [viewId])
-    
+
     const toggleModal = () => {
       setOpenModal(!openModal)
     };
 
     const toggleSetId = (item) => {
       setViewId(item.id);
-      openLoadView(); 
+      openLoadView();
       dispatch(setLoad(item))
     }
 
@@ -60,7 +60,7 @@ const BookmarksLoadScreen = React.memo(() => {
     React.useEffect(() => {
       if (!openModal) {
         setViewId(null);
-        
+
       }
     }, [openModal])
 
