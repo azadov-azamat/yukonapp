@@ -155,6 +155,8 @@ const SearchLoadScreen = () => {
       setDestination(null);
       setSearchText('');
       setLimit(10);
+      setBooleanFilters([])
+      setSelectedItems([])
       router.setParams({ arrival: undefined, departure: undefined });
       dispatch(clearLoads());
       dispatch(stopLoading());

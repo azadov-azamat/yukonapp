@@ -62,7 +62,8 @@ export default function SearchPage() {
 
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
-     router.replace(`/search?tab=${value}`);
+    router.setParams({tab: value})
+    //  router.replace(`/search?tab=${value}`);
   };
 
   return (

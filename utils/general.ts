@@ -192,15 +192,15 @@ export async function openLink(url: string) {
   }
 
   try {
-    const canOpen = await Linking.canOpenURL(url);
-    if (canOpen) {
+    // const canOpen = await Linking.canOpenURL(url);
+    // if (canOpen) {
       await Linking.openURL(url);
-    } else {
-      Alert.alert('Error', 'Telegram app not installed!');
-    }
+    // } else {
+    //   Alert.alert('Error', 'Telegram app not installed!');
+    // }
   } catch (error) {
     console.error('Failed to open Telegram:', error);
-    Alert.alert('Error', 'Unable to open Telegram.');
+    Alert.alert('Error, Unable to open Telegram', String(error));
   }
 };
 

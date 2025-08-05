@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { View, Text, StyleSheet, RefreshControl, Animated, StatusBar } from "react-native";
+import { View, Text, RefreshControl, Animated, StatusBar } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
 import { getTopSearches, fetchLatestLoads, getLoadStats } from "@/redux/reducers/load";
