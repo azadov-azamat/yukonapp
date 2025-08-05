@@ -472,6 +472,7 @@
 		"compared-to-yesterday": "Compared to yesterday",
     "location-permission-needed": "Location permission is required to proceed",
     "enable-location": "Enable Location",
-    "tap-to-enable-location": "Tap to request location access again"
+    "tap-to-enable-location": "Tap to request location access again",
+    "nearby-ads": "Nearby ads"
   }
 }

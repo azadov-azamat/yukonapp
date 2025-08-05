@@ -254,7 +254,7 @@ export default function MainPage() {
                 </View>
 
                 <View className="relative flex-row items-center justify-between flex-1">
-                  <Text className="text-base font-bold text-gray-900">Eng yaqin shaharlar </Text>
+                  <Text className="text-base font-bold text-gray-900">{t("dashboard.nearby-ads")}</Text>
                     <CustomInputSelector
                         divClass="m-0 p-0"
                         value={nearbyRadius}

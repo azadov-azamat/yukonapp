@@ -472,6 +472,7 @@
 		"compared-to-yesterday": "Вчера",
 		"location-permission-needed": "Требуется разрешение для определения местоположения",
 		"enable-location": "Включить геолокацию",
-		"tap-to-enable-location": "Нажмите, чтобы повторно запросить доступ"
+		"tap-to-enable-location": "Нажмите, чтобы повторно запросить доступ",
+		"nearby-ads": "Объявления рядом"
 	}
 }
