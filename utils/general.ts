@@ -214,13 +214,14 @@ export const requestLocationPermission = async (dispatch: any) => {
       console.log('Location permission denied');
       return;
     }
-  } else {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      console.log('Location permission denied');
-      return;
-    }
-  }
+  } 
+  // else {
+  //   const { status } = await Location.requestForegroundPermissionsAsync();
+  //   if (status !== 'granted') {
+  //     console.log('Location permission denied');
+  //     return;
+  //   }
+  // }
 
   getLocation(dispatch);
 };
@@ -342,4 +343,57 @@ export function loadRequestParams(
       }
 
       return query;
+}
+
+export function vehicleRequestParams(
+  {
+    page, 
+    limit, 
+    booleanFilters, 
+    selectedCountry, 
+    selectedCity,
+    selectedItems
+  }: 
+  {
+    limit: number, 
+    page: number, 
+    booleanFilters: any, 
+    selectedCountry: any, 
+    selectedCity: any
+    selectedItems: string[]
+  }) {
+    let query: Record<string, any> = {
+      limit: limit,
+      page: page,
+      sort: '!createdAt',
+      isArchived: false,
+      isDeleted: false,
+    };
+  
+    if (booleanFilters['isDagruz']) {
+      query.isDagruz = booleanFilters['isDagruz']; 
     }
+  
+    if (booleanFilters['isLikelyDispatcher']) {
+      query.isLikelyDispatcher = booleanFilters['isLikelyDispatcher']; 
+    }
+  
+    if (booleanFilters['isWebAd']) {
+      query.isWebAd = booleanFilters['isWebAd']; 
+    }
+  
+    if (selectedItems.length) {
+      query.truckTypes = selectedItems.map((item) => item).join(', ');
+    }
+  
+    if (selectedCountry) {
+      query.origin_country_id = selectedCountry.id;
+    }
+  
+    if (selectedCity) {
+      query.origin_city_id = selectedCity.id;
+    }
+  
+    return query;
+  }
+

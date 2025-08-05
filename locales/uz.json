@@ -469,7 +469,10 @@
     "total-stats": "Umumiy statistika",
     "total-loads": "Umumiy yuklar",
     "total-vehicles": "Umumiy transportlar",
-		"compared-to-yesterday": "Kechagiga nisbatan"
+		"compared-to-yesterday": "Kechagiga nisbatan",
+    "location-permission-needed": "Joylashuvni aniqlash uchun ruxsat kerak",
+    "enable-location": "Joylashuvni yoqish",
+    "tap-to-enable-location": "Joylashuvni qayta so‘rash uchun bosing"
   }
 }
 

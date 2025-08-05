@@ -469,6 +469,9 @@
 		"total-stats": "Общая статистика",
 		"total-loads": "Всего грузов",
 		"total-vehicles": "Всего транспортных средств",
-		"compared-to-yesterday": "Вчера"
+		"compared-to-yesterday": "Вчера",
+		"location-permission-needed": "Требуется разрешение для определения местоположения",
+		"enable-location": "Включить геолокацию",
+		"tap-to-enable-location": "Нажмите, чтобы повторно запросить доступ"
 	}
 }

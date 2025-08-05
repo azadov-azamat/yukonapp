@@ -54,7 +54,7 @@ const Input: React.FC<InputSelectorProps<any>> = ({
 	return (
 		<View>
 			{label && <Text className="mb-2 text-[15px] leading-[22.5px] font-semibold text-primary-title-color dark:text-primary-light">{label}</Text>}
-			<View style={[styles.dropdownWrapper, disabled && styles.disabledWrapper]}>
+			<View className={divClass} style={[styles.dropdownWrapper, disabled && styles.disabledWrapper]}>
 				<Dropdown
 					style={[styles.dropdown, {backgroundColor: theme.colors.cardBackground}]}
 					placeholderStyle={{ color: theme.colors.inputColor, ...styles.inputText }}

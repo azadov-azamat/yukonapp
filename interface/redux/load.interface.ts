@@ -8,6 +8,7 @@ export interface LoadInitialProps {
 		latestLoads: LoadModel[] | [];
 		loadingLatestLoads: boolean;
     bookmarks: LoadModel[] | [];
+    nearbyLoads: LoadModel[] | [];
     topSearches: DirectionItemProps[] | [];
     pagination: any;
     stats: any;

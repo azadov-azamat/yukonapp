@@ -25,7 +25,7 @@ const VehicleViewBottomSheet = React.forwardRef<VehicleViewBottomSheetRef>((_, r
   const { isDarkMode, theme } = useTheme();
   
   const bottomSheetRef = React.useRef<BottomSheet>(null);
-  const snapPoints = React.useMemo(() => ['90%'], []);
+  const snapPoints = React.useMemo(() => ['80%'], []);
   const { vehicle } = useAppSelector(state => state.vehicle);
   const { vehicleCities } = useAppSelector(state => state.city);
   
@@ -94,7 +94,7 @@ const VehicleViewBottomSheet = React.forwardRef<VehicleViewBottomSheetRef>((_, r
   );
 });
 
-const VehicleHeader: React.FC<{bottomSheetRef: React.RefObject<BottomSheet>, cities: any}> = React.memo(({ bottomSheetRef, cities }) => {
+const VehicleHeader: React.FC<{bottomSheetRef: React.RefObject<BottomSheet | null>, cities: any}> = React.memo(({ bottomSheetRef, cities }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { theme } = useTheme();
@@ -109,7 +109,7 @@ const VehicleHeader: React.FC<{bottomSheetRef: React.RefObject<BottomSheet>, cit
       markedExpiredLoads.push(vehicle.id || '1'); 
       user.markedExpiredLoads = markedExpiredLoads;
       user.save(dispatch);
-      bottomSheetRef.current?.close();
+      bottomSheetRef?.current?.close();
       Toast.show({
         text1: t('cargo-out-dated'),
         type: 'success',

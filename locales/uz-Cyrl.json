@@ -469,6 +469,9 @@
 		"total-stats": "Умумий статистика",
 		"total-loads": "Умумий юклар",
 		"total-vehicles": "Умумий транспортлар",
-		"compared-to-yesterday": "Кечагига нисбатан"
+		"compared-to-yesterday": "Кечагига нисбатан",
+		"location-permission-needed": "Жойлашувни аниқлаш учун рухсат керак",
+		"enable-location": "Жойлашувни ёқиш",
+		"tap-to-enable-location": "Жойлашувни қайта сўраш учун босинг"
 	}
 }

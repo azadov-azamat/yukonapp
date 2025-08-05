@@ -6,7 +6,7 @@ import { clearVehicles, searchVehicles, setVehicle } from "@/redux/reducers/vehi
 import { getVehicleCountries, getVehicleCountryCities } from "@/redux/reducers/country";
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
-import { getName } from '@/utils/general';
+import { getName, vehicleRequestParams } from '@/utils/general';
 import { vehicleCountriesProps } from '@/interface/redux/variable.interface';
 import { debounce } from 'lodash';
 import { locationSearch } from '@/redux/reducers/city';
@@ -32,7 +32,7 @@ const SearchVehicleScreen = () => {
   const [selectedCountry, setSelectedCountry] = React.useState<vehicleCountriesProps | null>(null); // Initialize with "" to avoid null
 	const [selectedCity, setSelectedCity] = React.useState<vehicleCountriesProps | null>(null); // Initialize with "" to avoid null
 
-  const [viewId, setViewId] = React.useState(null);
+  // const [viewId, setViewId] = React.useState(null);
   const [isGridView, setIsGridView] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
@@ -119,56 +119,6 @@ const SearchVehicleScreen = () => {
       }, 2000); // 2 soniyalik kechikish
     }
   };
-  
-  
-  function requestParams() {
-    let query: {
-      limit: number;
-      page: number;
-      sort: string;
-      isArchived: boolean;
-      isDeleted: boolean;
-      isDagruz?: boolean; // Qo‘shilayotgan property-lar optional bo‘lishi mumkin
-      isWebAd?: boolean;
-      isLikelyDispatcher?: boolean;
-      truckTypes?: string;
-      origin_country_id?: any;
-      origin_city_id?: any;
-    } = {
-      limit: limit,
-      page: page,
-      sort: '!createdAt',
-      isArchived: false,
-      isDeleted: false,
-    };
-  
-    if (booleanFilters['isDagruz']) {
-      query.isDagruz = booleanFilters['isDagruz']; 
-    }
-  
-    if (booleanFilters['isLikelyDispatcher']) {
-      query.isLikelyDispatcher = booleanFilters['isLikelyDispatcher']; 
-    }
-  
-    if (booleanFilters['isWebAd']) {
-      query.isWebAd = booleanFilters['isWebAd']; 
-    }
-  
-    if (selectedItems.length) {
-      query.truckTypes = selectedItems.map((item) => item).join(', ');
-    }
-  
-    if (selectedCountry) {
-      query.origin_country_id = selectedCountry.id;
-    }
-  
-    if (selectedCity) {
-      query.origin_city_id = selectedCity.id;
-    }
-  
-    return query;
-  }
-  
 
   const fetchVehicles = async () => {
       try {
@@ -177,7 +127,7 @@ const SearchVehicleScreen = () => {
           return;
         }
 
-        const params = requestParams();
+        const params = vehicleRequestParams({ page, limit, booleanFilters, selectedCity, selectedCountry, selectedItems });
         await dispatch(searchVehicles(params));
       } catch (error) {
         console.error('Error fetching loads:', error);

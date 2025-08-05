@@ -64,6 +64,23 @@ export const searchLoads = createAsyncThunk('load/searchLoads', async (query: an
     }
 });
 
+// Fetch Loads (Search)
+export const searchNearbyLoads = createAsyncThunk('load/searchNearbyLoads', async (query: any, { rejectWithValue }) => {
+    try {
+        const response = await http.get('/loads/search', { params: query });
+        let deserializedData = await deserialize(response.data.data)
+        deserializedData.map((item: ILoadModel) => deserializeLoad(item));
+
+        return {
+                loads: deserializedData,
+                pagination: response.data?.data.meta.pagination,
+                stats: response.data.stats
+            };
+    } catch (error) {
+        return rejectWithValue(error);
+    }
+});
+
 export const fetchLatestLoads = createAsyncThunk('load/latestLoads', async (_, { rejectWithValue }) => {
 	try {
 			const query = {
@@ -118,6 +135,7 @@ const initialState: LoadInitialProps = {
     bookmarks: [],
     load: null,
     topSearches: [],
+    nearbyLoads: [],
     pagination: null,
     stats: null,
     dashboardStats: null,
@@ -198,6 +216,26 @@ export const loadSlice = createSlice({
         });
         builder.addCase(searchLoads.rejected, (state) => {
             state.loads = [];
+            state.pagination = null;
+            state.stats = null;
+            state.loading = false;
+            state.loadingSearchLoads = false;
+        });
+
+          // Search Nearby Loads
+        builder.addCase(searchNearbyLoads.fulfilled, (state, action) => {
+            state.nearbyLoads = action.payload?.loads;
+            state.pagination = action.payload.pagination;
+            state.stats = action.payload.stats;
+            state.loading = false;
+            state.loadingSearchLoads = false;
+        });
+        builder.addCase(searchNearbyLoads.pending, (state) => {
+            state.loading = true;
+            state.loadingSearchLoads = true;
+        });
+        builder.addCase(searchNearbyLoads.rejected, (state) => {
+            state.nearbyLoads = [];
             state.pagination = null;
             state.stats = null;
             state.loading = false;

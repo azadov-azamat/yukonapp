@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo } from "react";
-import { View, Text, RefreshControl, Animated, StatusBar } from "react-native";
+import { View, Text, RefreshControl, Animated, StatusBar, FlatList } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
-import { getTopSearches, fetchLatestLoads, getLoadStats } from "@/redux/reducers/load";
+import { getTopSearches, fetchLatestLoads, getLoadStats, searchNearbyLoads, setLoad } from "@/redux/reducers/load";
 import { useRouter } from "expo-router";
 import { requestLocationPermission } from "@/utils/general";
 import { useTheme } from "@/config/ThemeContext";
@@ -10,22 +10,32 @@ import StickyHeader from "@/components/sticky-header"; // Import the Sticky Head
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from 'expo-linear-gradient';
 import { LoadModal } from '@/components/modal'
-import { MainPageCards } from "@/components/cards";
+import { EmptyStateCard, LoadListCard, MainPageCards } from "@/components/cards";
 import { getVehicleStats } from "@/redux/reducers/vehicle";
+import { ContentLoaderLoadGrid, ContentLoaderLoadList } from "@/components/content-loader";
+import LoadModel from "@/models/load";
+import { useBottomSheet } from "@/hooks/context/bottom-sheet";
+import { CustomInputSelector } from "@/components/custom";
+import { OPTIONS } from "@/utils/constants";
 
 const HEADER_HEIGHT = 50;
 const SCROLL_THRESHOLD = 30;
 
+type NearbyRadius = '10' | '20' | '30' | '40' | '50'
+
 export default function MainPage() {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const { openLoadView } = useBottomSheet();
   const router = useRouter();
 
-  const { dashboardStats: loadStats } = useAppSelector(state => state.load);
+  const { location } = useAppSelector(state => state.auth);
+  const { dashboardStats: loadStats, loadingSearchLoads, nearbyLoads } = useAppSelector(state => state.load);
   const { dashboardStats: vehicleStats } = useAppSelector(state => state.vehicle);
 
   const [openModal, setOpenModal] = React.useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [nearbyRadius, setNearbyRadius] = React.useState<{label: NearbyRadius; value: NearbyRadius}>({label: '10', value: '10'});
 
 	const scrollY = React.useRef(new Animated.Value(0)).current;
 	const statusBarBackgroundColor = useMemo(() =>
@@ -42,32 +52,48 @@ export default function MainPage() {
   React.useEffect(() => {
     requestLocationPermission(dispatch);
   }, []);
+  
+  React.useEffect(() => {
+    if (location.length) {
+      const query = {
+        page: 1,
+        limit: 10,
+        sort: '!createdAt',
+        isArchived: false,
+        isDeleted: false,
+        lat: location[0],
+        lng: location[1],
+        radius: nearbyRadius.value
+      }
+      dispatch(searchNearbyLoads(query));    
+    }
+  }, [location, nearbyRadius])
 
   // Combined focus effect for data fetching and cleanup
-  React.useEffect(() => {
-    const abortController = new AbortController();
-    let isSubscribed = true;
+  // React.useEffect(() => {
+  //   const abortController = new AbortController();
+  //   let isSubscribed = true;
 
-    const fetchData = async () => {
-      if (!isSubscribed) return;
-      try {
-        await Promise.all([
-          dispatch(getTopSearches()),
-          dispatch(fetchLatestLoads())
-        ]);
-      } catch (error) {
-        console.error('Fetch error:', error);
-      }
-    };
+  //   const fetchData = async () => {
+  //     if (!isSubscribed) return;
+  //     try {
+  //       await Promise.all([
+  //         dispatch(getTopSearches()),
+  //         dispatch(fetchLatestLoads())
+  //       ]);
+  //     } catch (error) {
+  //       console.error('Fetch error:', error);
+  //     }
+  //   };
 
-    fetchData();
+  //   fetchData();
 
-    return () => {
-      isSubscribed = false;
-      abortController.abort();
-      StatusBar.setBackgroundColor("transparent");
-    };
-  }, []);
+  //   return () => {
+  //     isSubscribed = false;
+  //     abortController.abort();
+  //     StatusBar.setBackgroundColor("transparent");
+  //   };
+  // }, []);
 
   React.useEffect(() => {
     dispatch(getLoadStats());
@@ -94,6 +120,24 @@ export default function MainPage() {
     };
   }, [scrollY]);
 
+  const toggleSetId = useCallback((item: LoadModel) => {
+    openLoadView();
+    dispatch(setLoad(item));
+  }, [dispatch]);
+
+  const MemoizedContentLoadItem = React.memo(ContentLoaderLoadList);
+  const MemoizedLoadListCard = React.memo(LoadListCard);
+  
+  const renderContentLoadItem = useCallback(() => (
+      <MemoizedContentLoadItem />
+    ), []);
+
+  const renderLoadItem = useCallback(({ item }: {item: LoadModel}) => (
+    <MemoizedLoadListCard
+      changes={true} onPress={() => toggleSetId(item)} load={item}
+    />
+  ), [toggleSetId, toggleModal]);
+  
   return (
     <View style={{ flex: 1 }}>
       <Animated.View style={{ backgroundColor: statusBarBackgroundColor, height: insets.top, padding: 0, margin: 0 }}>
@@ -208,8 +252,56 @@ export default function MainPage() {
                     growth="+8%"
                   />}
                 </View>
+
+                <View className="relative flex-row items-center justify-between flex-1">
+                  <Text className="text-base font-bold text-gray-900">Eng yaqin shaharlar </Text>
+                    <CustomInputSelector
+                        divClass="m-0 p-0"
+                        value={nearbyRadius}
+                        onChange={(item) => setNearbyRadius(item)}
+                        placeholder="table.action"
+                        labelField='label'
+                        valueField="value"
+                        items={OPTIONS['radius']}
+                        rowItem={(item) => <Text>{item.value}km</Text>}
+                    />
+                </View>
+
+               <View className="-mt-4">
+                  {
+                    !location.length ? (
+                      <View className="items-center py-10">
+                        <Text className="mb-4 text-center text-gray-600">
+                          {t("dashboard.location-permission-needed")}
+                        </Text>
+                        <MainPageCards.CardButton
+                          iconName="location-outline"
+                          title={t("dashboard.enable-location")}
+                          subtitle={t("dashboard.tap-to-enable-location")}
+                          onPress={() => requestLocationPermission(dispatch)}
+                        />
+                      </View>
+                    ) : loadingSearchLoads ? (
+                      <FlatList
+                        data={[1, 2, 3, 4, 6, 7]}
+                        keyExtractor={(item) => item.toString()}
+                        renderItem={renderContentLoadItem}
+                      />
+                    ) : (
+                      <FlatList
+                        data={nearbyLoads}
+                        keyExtractor={(item) => String(item?.id) || '-'}
+                        showsVerticalScrollIndicator={false}
+                        ListEmptyComponent={<EmptyStateCard type="load"/>}
+                        renderItem={renderLoadItem}
+                        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                      />
+                    )
+                  }
+                </View>
+
                 <View/>
-            </View>
+              </View>
             </View>
           </Animated.ScrollView>
         </View>
