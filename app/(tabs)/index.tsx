@@ -49,9 +49,9 @@ export default function MainPage() {
 	const { theme, isDarkMode } = useTheme();
   const insets = useSafeAreaInsets();
 
-  React.useEffect(() => {
-    requestLocationPermission(dispatch);
-  }, []);
+  // React.useEffect(() => {
+  //   requestLocationPermission(dispatch);
+  // }, []);
   
   React.useEffect(() => {
     if (location.length) {
@@ -182,7 +182,7 @@ export default function MainPage() {
               <View className="flex-row items-center my-4 space-x-2">
                 <View className="flex-1">
                   <MainPageCards.CardButton
-                    iconName="search"
+                    iconName="cube"
                     title={t("dashboard.search-loads")}
                     subtitle={t('dashboard.find-loads')}
                     onPress={() => {
@@ -278,6 +278,7 @@ export default function MainPage() {
                           iconName="location-outline"
                           title={t("dashboard.enable-location")}
                           subtitle={t("dashboard.tap-to-enable-location")}
+                          disabled={true}
                           onPress={() => requestLocationPermission(dispatch)}
                         />
                       </View>

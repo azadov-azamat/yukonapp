@@ -458,8 +458,8 @@
 		"emailNotifications": "Elektron pochta xabarlari"
 	},
   "dashboard": {
-    "search-loads": "Yuklar topish",
-    "search-vehicles": "Transport topish",
+    "search-loads": "Yuklar",
+    "search-vehicles": "Transport",
     "find-loads": "Mavjud yuklarni topish",
     "find-vehicles": "Mavjud transportlarni topish",
     "today-stats": "Bugungi statistika",

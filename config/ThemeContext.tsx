@@ -54,7 +54,7 @@ const ThemeContext = createContext({
   isDarkMode: false,
   toggleTheme: () => {},
   theme: LightTheme,
-  themeName: "dark"
+  themeName: "light"
 });
 
 // Add this function before the ThemeProvider

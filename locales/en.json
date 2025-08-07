@@ -458,8 +458,8 @@
     "emailNotifications": "Email Notifications"
   },
   "dashboard": {
-    "search-loads": "Search Loads",
-    "search-vehicles": "Search Vehicles",
+    "search-loads": "Loads",
+    "search-vehicles": "Vehicles",
     "find-loads": "Find available loads",
     "find-vehicles": "Find available Vehicles",
     "today-stats": "Today’s Statistics",

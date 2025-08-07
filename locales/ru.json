@@ -458,8 +458,8 @@
 		"emailNotifications": "Email-уведомления"
 	},
 	"dashboard": {
-		"search-loads": "Поиск грузов",
-		"search-vehicles": "Поиск транспорта",
+		"search-loads": "груз",
+		"search-vehicles": "транспорт",
 		"find-loads": "Найти доступные грузы",
 		"find-vehicles": "Найти доступные транспортные средства",
 		"today-stats": "Сегодняшняя статистика",

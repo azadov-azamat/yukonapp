@@ -4,13 +4,15 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
 import { TouchableOpacity, Text, View } from "react-native";
 
-const CardButton = React.memo(({ iconName, title, subtitle, onPress }: {
+const CardButton = React.memo(({ iconName, title, subtitle, onPress, disabled }: {
     iconName: keyof typeof Ionicons.glyphMap,
     title: string,
     subtitle: string,
-    onPress?: () => void
+    onPress?: () => void,
+    disabled?: boolean
   }) => (
     <TouchableOpacity
+      disabled={disabled}
       onPress={onPress}
       className="relative flex flex-col items-center w-full py-4 space-y-4 text-white bg-primary rounded-2xl"
     >
@@ -19,7 +21,7 @@ const CardButton = React.memo(({ iconName, title, subtitle, onPress }: {
 					<Ionicons name={iconName} size={18} color="#FFF" />
 				</View>
 				<View className="flex items-center flex-auto">
-        	<Text className="block text-base font-bold text-white leading-[21px] tracking-wider">{title}</Text>
+        	<Text className="capitalize block text-base font-bold text-white leading-[21px] tracking-wider">{title}</Text>
         	{/* <Text className="text-xs text-white opacity-80">{subtitle}</Text> */}
 				</View>
       </View>

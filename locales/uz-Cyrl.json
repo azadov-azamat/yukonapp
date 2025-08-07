@@ -458,8 +458,8 @@
 		"emailNotifications": "Email-хабарномалар"
 	},
 	"dashboard": {
-		"search-loads": "Юклар топиш",
-		"search-vehicles": "Транспорт топиш",
+		"search-loads": "Юклар",
+		"search-vehicles": "Транспорт",
 		"find-loads": "Мавжуд юкларни топиш",
 		"find-vehicles": "Мавжуд транспортларни топиш",
 		"today-stats": "Бугунги статистика",
