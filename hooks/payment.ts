@@ -8,6 +8,7 @@ import { getName } from '@/utils/general';
 import Toast from 'react-native-toast-message';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
+import PlanModel from '@/models/plan';
 
 const usePayment = () => {
     const dispatch = useAppDispatch();
@@ -26,6 +27,7 @@ const usePayment = () => {
             "-31101": t("errors.confirmation-code-expired"),
             "-31630": t("errors.get-enough-amount"),
             "-31400": t("errors.confirmation-code-incorrect"),
+            "-32504": t("errors.access-denied"),
             "-31650": t ("errors.card-no-supported")
         };
 
@@ -85,7 +87,7 @@ const usePayment = () => {
         Toast.show({
             type: 'success',
             text1: t('success.create'),
-            text2: t('success.payment-subscription', {plan: getName(selectedPlan, 'name'), endDate: formatDate(new Date(resPayReceipts.result.endDate))})
+            text2: t('success.payment-subscription', {plan: getName(selectedPlan as PlanModel, 'name'), endDate: formatDate(new Date(resPayReceipts.result.endDate))})
         })
         return router.push('/profile');;
     };

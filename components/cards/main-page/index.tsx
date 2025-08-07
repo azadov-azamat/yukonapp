@@ -17,7 +17,7 @@ const CardButton = React.memo(({ iconName, title, subtitle, onPress, disabled }:
       className="relative flex flex-col items-center w-full py-4 space-y-4 text-white bg-primary rounded-2xl"
     >
       <View className="flex flex-row items-center w-full gap-4 px-3">
-				<View className="flex items-center justify-center w-10 h-10 border border-white shadow-lg bg-primary rounded-xl ">
+				<View className="flex items-center justify-center border border-white shadow-lg h-9 w-9 bg-primary rounded-xl ">
 					<Ionicons name={iconName} size={18} color="#FFF" />
 				</View>
 				<View className="flex items-center flex-auto">

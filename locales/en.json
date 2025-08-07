@@ -276,6 +276,7 @@
     "empty-confirm-password": "Password not entered.",
     "please-try-again": "Please try again.",
     "unhandled-error": "An error occurred. Please try again.",
+    "access-denied": "Доступ запрещён",
     "card-no-supported": "The entered card is not supported"
   },
   "user-saved": "Your information has been successfully updated.",

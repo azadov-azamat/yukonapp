@@ -276,6 +276,7 @@
     "empty-confirm-password": "Parol kiritilmagan.",
     "please-try-again": "Iltimos, qayta urinib ko'ring.",
     "unhandled-error": "Xatolik, qayta urinib ko'ring.",
+    "access-denied": "Ruxsat berilmadi",
     "card-no-supported": "Kiritilgan karta qo'llab-quvvatlanmaydi"
   },
   "user-saved": "Ma'lumotlaringiz muvaffaqiyatli yangilandi.",

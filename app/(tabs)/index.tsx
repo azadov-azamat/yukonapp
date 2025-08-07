@@ -206,10 +206,10 @@ export default function MainPage() {
               <View className="space-y-4">
                 <View className="flex-row items-center justify-between">
                   <Text className="text-lg font-bold text-gray-900">{t('dashboard.today-stats')}</Text>
-                  <Text className="flex items-center text-sm text-gray-500">
+                  {/* <Text className="flex items-center text-sm text-gray-500">
                     <View className="w-2 h-2 mr-2 bg-green-500 rounded-full"></View>
                     {t('dashboard.live-updates')}
-                  </Text>
+                  </Text> */}
                 </View>
 
                 <View className="flex-row space-x-4">
