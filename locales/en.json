@@ -475,5 +475,11 @@
     "enable-location": "Enable Location",
     "tap-to-enable-location": "Tap to request location access again",
     "nearby-ads": "Nearby ads"
+  },
+  "pricing-unit": {
+    "kilo": "per kg",
+    "ton": "per ton",
+    "per_unit": "per unit",
+    "km": "per km"
   }
 }

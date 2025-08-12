@@ -475,6 +475,12 @@
     "enable-location": "Joylashuvni yoqish",
     "tap-to-enable-location": "Joylashuvni qayta so‘rash uchun bosing",
     "nearby-ads": "Eng yaqin e`lonlar"
+  },
+  "pricing-unit": {
+    "kilo": "kilosiga",
+    "ton": "tonnasiga",
+    "per_unit": "donasiga",
+    "km": "km ga"
   }
 }
 

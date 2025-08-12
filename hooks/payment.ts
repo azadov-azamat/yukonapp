@@ -1,7 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { createCard, getVerifyToken, verifyCard, createReceipts, payReceipts } from '@/redux/reducers/card';
 import { unwrapResult } from '@reduxjs/toolkit';
-import { Alert, Platform } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '@/utils/general';
 import { getName } from '@/utils/general';

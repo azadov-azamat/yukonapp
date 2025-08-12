@@ -5,7 +5,6 @@ import i18n from 'i18next';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
-import * as Location from 'expo-location';
 
 import 'dayjs/locale/en';
 import 'dayjs/locale/ru';
@@ -111,21 +110,55 @@ export function getName(object: Record<string, any>, key: string): string {
   return uzKey || ruKey || enKey || fallbackText;
 }
 
-export const formatPrice = (x: number, hideSign?: boolean): string => {
+function getCurrencySymbol(currencyCode: string): string {
+  switch ((currencyCode || '').toUpperCase()) {
+    case 'UZS':
+      return "so'm";
+    case 'RUB':
+      return '₽';
+    case 'USD':
+      return '$';
+    case 'EUR':
+      return '€';
+    case 'KZT':
+      return 'tenge';
+    default:
+      return '$';
+  }
+}
+
+export const formatPrice = (x: number, currency: string, pricingUnit: string, hideSign?: boolean): string => {
     if (!x) return '0';
+    const n = Number(x);
+    if (!Number.isFinite(n)) return '';
+    
     let result = x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    if (x < 20000 && x > 100) {
-        if (hideSign) {
-          return result;
-        }
-        return '$' + result;
-      }
+    const symbol = getCurrencySymbol(currency || '');
+    const isEndLetter = currency === 'UZS' || currency === 'KZT';
 
-      if (x <= 50) {
-        return result + '%';
-      }
+    if (n <= 50) {
+      return result + '%';
+    }
 
-      return result;
+  if (x >= 1_000_000) {
+      let mlnValue = (x / 1_000_000).toFixed(1); // 1 xonali kasr
+
+      return isEndLetter 
+        ? `${mlnValue} mln ${symbol}`
+        : `${symbol}${mlnValue} mln`;
+  }
+
+  // sign/placement
+  const sep = isEndLetter ? (hideSign ? '' : ' ') : '';
+  const sign = hideSign ? '' : isEndLetter ? '' : symbol;
+
+  if (pricingUnit && pricingUnit !== 'flat') {
+    // e.g., "$1 200/ton" vs "1 200 so'm/ton"
+    const head = isEndLetter ? `${result}${sep}${symbol} / ` : `${sign}${result} / `;
+    return head + i18n.t('pricing-unit.' + pricingUnit);
+  }
+
+  return isEndLetter ? `${result}${sep}${symbol}` : `${sign}${result}`;
 };
 
 const DefaultDeserializer = new Deserializer({
