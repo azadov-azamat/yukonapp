@@ -144,8 +144,8 @@ export const formatPrice = (x: number, currency: string, pricingUnit: string, hi
       let mlnValue = (x / 1_000_000).toFixed(1); // 1 xonali kasr
 
       return isEndLetter 
-        ? `${mlnValue} mln ${symbol}`
-        : `${symbol}${mlnValue} mln`;
+        ? `${mlnValue} ${i18n.t('mln')} ${symbol}`
+        : `${symbol}${mlnValue} ${i18n.t('mln')}`;
   }
 
   // sign/placement
