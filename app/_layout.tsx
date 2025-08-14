@@ -17,6 +17,8 @@ import { Provider as PaperProvider, ActivityIndicator } from "react-native-paper
 import { ThemeProvider, useTheme } from "@/config/ThemeContext"; // ✅ Import the Theme Context
 import { BottomSheetProvider } from "@/hooks/context/bottom-sheet";
 
+import * as Linking from "expo-linking";
+
 NativeWindStyleSheet.setOutput({
   default: "native",
 });
@@ -30,6 +32,22 @@ function App() {
 
   const { theme, isDarkMode } = useTheme();
 
+  useEffect(() => {
+    const sub = Linking.addEventListener("url", ({ url }) => {
+      console.log("Deep link keldi:", url);
+      const parsed = Linking.parse(url);
+      console.log(parsed); // { scheme: 'yukon.uz.app', path: 'tg-login', queryParams: { ... } }
+    });
+
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        console.log("Cold start deep link:", url);
+      }
+    });
+
+    return () => sub.remove();
+  }, []);
+  
   useEffect(() => {
     const checkAuth = async () => {
       try {

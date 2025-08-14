@@ -55,5 +55,6 @@ export interface ILoadModel extends defaultData {
     originCountry?: ICountryModel;
     destinationCity?: ICityModel;
     destinationCountry?: ICountryModel;
-    currency: 'UZS' | 'USD' | 'RUB';
+    currency?: string;
+    pricingUnit?: string;
   }

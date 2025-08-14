@@ -41,9 +41,10 @@ export default class UserModel implements IUserModel {
   }
 
   // Foydalanuvchining obunasini tekshirish
-  async hasActiveSubscription(): Promise<{active: boolean; subscription?: SubscriptionModel}> {
+  async fetchActiveSubscription(): Promise<{active: boolean; subscription?: SubscriptionModel}> {
     try {
       const response = await http.get<{ active: boolean }>(`users/has-subscription`);
+      console.log('Subscription check response:', response);
       return response.data;
     } catch (error) {
       console.error('Error checking subscription:', error);

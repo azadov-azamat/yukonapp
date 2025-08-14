@@ -12,11 +12,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { LoadModal } from '@/components/modal'
 import { EmptyStateCard, LoadListCard, MainPageCards } from "@/components/cards";
 import { getVehicleStats } from "@/redux/reducers/vehicle";
-import { ContentLoaderLoadGrid, ContentLoaderLoadList } from "@/components/content-loader";
+import { ContentLoaderLoadList } from "@/components/content-loader";
 import LoadModel from "@/models/load";
 import { useBottomSheet } from "@/hooks/context/bottom-sheet";
 import { CustomInputSelector } from "@/components/custom";
 import { OPTIONS } from "@/utils/constants";
+// import TelegramLogin from "@/components/modal/auth-telegram";
 
 const HEADER_HEIGHT = 50;
 const SCROLL_THRESHOLD = 30;
@@ -28,7 +29,10 @@ export default function MainPage() {
   const { t } = useTranslation();
   const { openLoadView } = useBottomSheet();
   const router = useRouter();
-
+  
+  const [open, setOpen] = React.useState(false);
+  const toggle = () => setOpen(prev => !prev);
+  
   const { location } = useAppSelector(state => state.auth);
   const { dashboardStats: loadStats, loadingSearchLoads, nearbyLoads } = useAppSelector(state => state.load);
   const { dashboardStats: vehicleStats } = useAppSelector(state => state.vehicle);
@@ -38,6 +42,7 @@ export default function MainPage() {
   const [nearbyRadius, setNearbyRadius] = React.useState<{label: NearbyRadius; value: NearbyRadius}>({label: '10', value: '10'});
 
 	const scrollY = React.useRef(new Animated.Value(0)).current;
+  const getRef = React.useRef('telegram-login');
 	const statusBarBackgroundColor = useMemo(() =>
 		scrollY.interpolate({
 			inputRange: [15, SCROLL_THRESHOLD],
@@ -185,9 +190,7 @@ export default function MainPage() {
                     iconName="cube"
                     title={t("dashboard.search-loads")}
                     subtitle={t('dashboard.find-loads')}
-                    onPress={() => {
-											router.push('/search?tab=load');
-                    }}
+                    onPress={toggle}
                   />
                 </View>
                 <View className="flex-1">
@@ -308,6 +311,7 @@ export default function MainPage() {
         </View>
       </LinearGradient>
       <LoadModal open={openModal} toggle={toggleModal}/>
+      {/* <TelegramLogin open={open} toggle={toggle} getRef={getRef}/> */}
     </View>
   );
 }

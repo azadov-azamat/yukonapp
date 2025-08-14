@@ -48,7 +48,8 @@ export default class LoadModel implements ILoadModel {
   originCountry?: CountryModel;
   destinationCity?: CityModel;
   destinationCountry?: CountryModel;
-  currency: "UZS" | "USD" | "RUB" = "UZS";
+  currency?: string;
+  pricingUnit?: string;
   createdAt?: string;
   updatedAt?: string;
   
@@ -167,8 +168,11 @@ export default class LoadModel implements ILoadModel {
         return ''
     }
 
+    console.log(` asdfadsfasd`)
     try {
       const hasSubscription = await this.checkSubscription(user);
+
+      console.log('hasSubscription', hasSubscription);
 
       if (!hasSubscription) {
         if (user.loadSearchLimit > 0) {
@@ -195,7 +199,8 @@ export default class LoadModel implements ILoadModel {
 
   async checkSubscription(user: UserModel) {
     try {
-        const { active } = await user?.hasActiveSubscription();
+      console.log('Checking subscription for user:', user.id);
+        const { active } = await user?.fetchActiveSubscription();
         return active
     } catch (err) {
         console.log(err)

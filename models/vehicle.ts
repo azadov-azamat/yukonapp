@@ -141,7 +141,7 @@ export default class VehicleModel implements IVehicleModel {
 
   async checkSubscription(user: UserModel) {
     try {
-      const { active } = await user?.hasActiveSubscription();
+      const { active } = await user?.fetchActiveSubscription();
       return active
     } catch (err) {
         console.log(err)

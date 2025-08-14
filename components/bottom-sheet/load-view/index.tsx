@@ -8,11 +8,12 @@ import Ionicons from '@expo/vector-icons/build/Ionicons';
 import { ButtonBookmark } from '@/components/buttons';
 import { dateFromNow, formatPrice, getCityName, removePhoneNumbers } from '@/utils/general';
 import LoadModel from '@/models/load';
-import { TFunction } from 'i18next';
+// import { TFunction } from 'i18next';
 import { CustomOpenLink, CustomPhoneCall } from '@/components/custom';
 import dayjs from 'dayjs';
 import { ConfirmModal } from '@/components/modal';
 import Toast from 'react-native-toast-message';
+import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
 export interface LoadViewBottomSheetRef {
   open: () => void;
@@ -22,7 +23,7 @@ export interface LoadViewBottomSheetRef {
 const LoadViewBottomSheet = React.forwardRef<LoadViewBottomSheetRef>((_, ref) => {
   const { isDarkMode, theme } = useTheme();
   
-  const bottomSheetRef = React.useRef<BottomSheet>(null);
+  const bottomSheetRef = React.useRef<BottomSheetMethods | null>(null);
   const snapPoints = React.useMemo(() => ['90%'], []);
   
   React.useImperativeHandle(ref, () => ({
@@ -165,7 +166,7 @@ const LoadStatus: React.FC = React.memo(() => {
   );
 });
 
-const LoadHeader: React.FC<{bottomSheetRef: React.RefObject<BottomSheet>}> = React.memo(({ bottomSheetRef }) => {
+const LoadHeader: React.FC<{bottomSheetRef: React.RefObject<BottomSheetMethods | null>}> = React.memo(({ bottomSheetRef }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { theme } = useTheme();
@@ -275,13 +276,15 @@ const LoadDetails: React.FC = React.memo(() => {
     prepaymentAmount: number,
     originId: number,
     destinationId: number,
+    currency?: string,
+    pricingUnit?: string
   ) {
     const prepayment = hasPrepayment
       ? prepaymentAmount
         ? ` (${t ('prepayment')} ${formatPrice(prepaymentAmount)})`
         : ` (${t ('has-prepayment')})`
       : '';
-    return `${(price ? formatPrice(price, originId === 1 && destinationId === 1) : '') + prepayment}`;
+    return `${(price ? formatPrice(price, currency, pricingUnit, originId === 1 && destinationId === 1) : '') + prepayment}`;
   }
   
   if (!load) return null;
@@ -308,7 +311,9 @@ const LoadDetails: React.FC = React.memo(() => {
           load.hasPrepayment, 
           load.prepaymentAmount, 
           load.originCountry?.id || 1,
-          load.destinationCountry?.id || 1
+          load.destinationCountry?.id || 1,
+          load.currency,
+          load.pricingUnit
         )}</Text>
         </View>
       </View>}
@@ -391,7 +396,7 @@ const LoadFooter: React.FC = React.memo(() => {
   
   if (!load) return null;
   return (
-    <View className='absolute left-0 right-0 flex-row items-center justify-between px-2 pt-4 pb-10 my-4 space-x-2 border-t shadow-sm -bottom-10 border-border-color/20 bg-primary-light dark:bg-primary-dark'>
+    <View className='absolute bottom-0 left-0 right-0 flex-row items-center justify-between px-2 pt-4 pb-10 my-4 space-x-2 border-t shadow-sm border-border-color/20 bg-primary-light dark:bg-primary-dark'>
           
     <ButtonBookmark model={load} paramName='bookmarkedLoadIds' size={20} style='w-10 h-10 border border-border-color/20 bg-transparent'/>
 
@@ -421,11 +426,13 @@ const LoadFooter: React.FC = React.memo(() => {
                           <CustomPhoneCall phoneNumber={load.phone} loading={phoneLoading} />
                         </View>
                       )}  
+                      
                       {load.telegram && (
                         <View>
                           <CustomOpenLink url={load.telegram} />
                         </View>
                       )}
+                      
                       {!load.url && user && (
                         <View>
                             <TouchableOpacity onPress={() => load.urlFunction(user, dispatch)} className='flex-row items-center space-x-2'>
@@ -436,6 +443,7 @@ const LoadFooter: React.FC = React.memo(() => {
                             </TouchableOpacity>
                         </View>
                       )}
+
                       {load.url && (
                         <View>
                           <CustomOpenLink url={load.url} text='message-link' />

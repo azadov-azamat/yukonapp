@@ -127,7 +127,7 @@ function getCurrencySymbol(currencyCode: string): string {
   }
 }
 
-export const formatPrice = (x: number, currency: string, pricingUnit: string, hideSign?: boolean): string => {
+export const formatPrice = (x: number, currency?: string, pricingUnit?: string, hideSign?: boolean): string => {
     if (!x) return '0';
     const n = Number(x);
     if (!Number.isFinite(n)) return '';
