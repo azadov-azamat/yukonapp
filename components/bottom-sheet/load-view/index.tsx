@@ -387,16 +387,9 @@ const LoadFooter: React.FC = React.memo(() => {
     }
   }, [load?.phone]);
 
-  // React.useEffect(() => {
-  //   if (load?.description) {
-  //     load.viewCount += 1;
-  //     load.save(dispatch);
-  //   }
-  // }, [load?.description]);
-  
   if (!load) return null;
   return (
-    <View className='absolute bottom-0 left-0 right-0 flex-row items-center justify-between px-2 pt-4 pb-10 my-4 space-x-2 border-t shadow-sm border-border-color/20 bg-primary-light dark:bg-primary-dark'>
+    <View className='absolute left-0 right-0 flex-row items-center justify-between px-2 pt-4 pb-10 my-4 space-x-2 border-t shadow-sm -bottom-10 border-border-color/20 bg-primary-light dark:bg-primary-dark'>
           
     <ButtonBookmark model={load} paramName='bookmarkedLoadIds' size={20} style='w-10 h-10 border border-border-color/20 bg-transparent'/>
 

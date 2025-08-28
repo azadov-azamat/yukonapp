@@ -14,23 +14,22 @@ if (Platform.OS !== 'web') {
 const TelegramLogin = ({
   getRef,
   open,
-  toggle,
+  setOpen
 }: {
   getRef: any;
+  setOpen: any;
   open: boolean;
-  toggle: (item?: boolean) => void;
 }) => {
-  const [visible, setVisible] = useState(false);
   let webViewRef = useRef<WebView>(null);
 
   useEffect(() => {
     let ref = {
-      open: () => setVisible(true),
-      close: () => setVisible(false),
+      open: () => setOpen(true),
+      close: () => setOpen(false),
     };
     // console.log('TelegramLogin ref', getRef, ref);
     // if (getRef) {
-    //   getRef(ref);
+      getRef(ref);
     // }
     // getRef.current(ref);
 
@@ -42,17 +41,19 @@ const TelegramLogin = ({
   `;
 
   const handleTelegramAuth = () => {
+    console.log("CookieManager", CookieManager)
     if (Platform.OS === 'web') {
-      console.warn('CookieManager mobil platforma uchun mo‘ljallangan');
+      console.log('CookieManager web platforma uchun mo‘ljallangan');
+      // console.warn('CookieManager mobil platforma uchun mo‘ljallangan');
       return;
     }
-
+    console.log("CookieManager", CookieManager)
     CookieManager.get('https://oauth.telegram.org', true)
       .then((data: any) => {
         const stel_ssid = get(data, 'stel_ssid.value', '');
         const stel_token = get(data, 'stel_token.value', '');
 
-        fetch('https://oauth.telegram.org/auth/get?bot_id=547043436', {
+        fetch('https://oauth.telegram.org/auth/get?bot_id=6803228860', {
           headers: {
             'content-type':
               'application/x-www-form-urlencoded; charset=UTF-8',
@@ -67,10 +68,10 @@ const TelegramLogin = ({
             console.log('data is', data);
             const user = data.user;
             console.log('user is', user);
-            setVisible(false);
+            setOpen(false);
           })
           .catch((err) => {
-            setVisible(false);
+            setOpen(false);
             Toast.show({
               type: 'error',
               text1: 'Xatolik yuz berdi',
@@ -80,7 +81,7 @@ const TelegramLogin = ({
       })
       .catch((err: any) => {
         console.error('Cookie error:', err);
-        setVisible(false);
+        setOpen(false);
         Toast.show({
           type: 'error',
           text1: 'Xatolik yuz berdi',
@@ -88,20 +89,15 @@ const TelegramLogin = ({
         });
       });
   };
-
+console.log('TelegramLogin render', open);
   return (
-    <DynamicModal open={visible} toggle={() => setVisible(!visible)}>
-      <TouchableOpacity
-        onPress={() => setVisible(false)}
-        style={{
-          padding: 10,
-          marginRight: 5,
-          marginVertical: 3,
-          alignSelf: 'flex-end',
-        }}
-      >
-        <Text>Bekor qilish</Text>
-      </TouchableOpacity>
+    <DynamicModal open={setOpen} toggle={() => setOpen(!open)}>
+      {Platform.OS === 'web' ? (
+  <iframe
+    src={`https://oauth.telegram.org/auth?bot_id=6803228860&origin=https://core.telegram.org&return_to=https://core.telegram.org&lang=en`}
+    style={{ width: '100%', height: '500px', border: 'none' }}
+  />
+) : (
       <WebView
         ref={webViewRef}
         thirdPartyCookiesEnabled={true}
@@ -110,18 +106,20 @@ const TelegramLogin = ({
           if (
             event.url.startsWith('https://core.telegram.org/#tgAuthResult')
           ) {
+            console.log('Navigation state changed:', event.url);
             webViewRef.current?.injectJavaScript(jsCode);
             handleTelegramAuth();
           }
         }}
         source={{
-          uri: `https://oauth.telegram.org/auth?bot_id=7147160427&origin=https://core.telegram.org&return_to=https://core.telegram.org&lang=uz`,
+          uri: `https://oauth.telegram.org/auth?bot_id=6803228860&origin=https://core.telegram.org&return_to=https://core.telegram.org&lang=en`,
         }}
         onMessage={(event) => {
           console.log('onMessage', event.nativeEvent.data);
         }}
         style={{ flex: 1 }}
       />
+)}
     </DynamicModal>
   );
 };

@@ -31,7 +31,7 @@ export default function MainPage() {
   const router = useRouter();
   
   const [open, setOpen] = React.useState(false);
-  const toggle = () => setOpen(prev => !prev);
+  // const toggle = () => setOpen(prev => !prev);
   
   const { location } = useAppSelector(state => state.auth);
   const { dashboardStats: loadStats, loadingSearchLoads, nearbyLoads } = useAppSelector(state => state.load);
@@ -42,7 +42,7 @@ export default function MainPage() {
   const [nearbyRadius, setNearbyRadius] = React.useState<{label: NearbyRadius; value: NearbyRadius}>({label: '10', value: '10'});
 
 	const scrollY = React.useRef(new Animated.Value(0)).current;
-  const getRef = React.useRef('telegram-login');
+  // const telegramRef = React.useRef(null);
 	const statusBarBackgroundColor = useMemo(() =>
 		scrollY.interpolate({
 			inputRange: [15, SCROLL_THRESHOLD],
@@ -190,7 +190,9 @@ export default function MainPage() {
                     iconName="cube"
                     title={t("dashboard.search-loads")}
                     subtitle={t('dashboard.find-loads')}
-                    onPress={toggle}
+                    onPress={() => {
+                      router.push('/search?tab=load');
+                    }}
                   />
                 </View>
                 <View className="flex-1">
@@ -311,7 +313,12 @@ export default function MainPage() {
         </View>
       </LinearGradient>
       <LoadModal open={openModal} toggle={toggleModal}/>
-      {/* <TelegramLogin open={open} toggle={toggle} getRef={getRef}/> */}
+      {/* <TelegramLogin open={open} setOpen={setOpen}
+        getRef={(ref: any) => { 
+          console.log('TelegramLogin ref', ref);
+          telegramRef.current = ref; 
+        }}
+       /> */}
     </View>
   );
 }
