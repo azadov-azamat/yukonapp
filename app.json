@@ -22,6 +22,7 @@
       "package": "yukon.uz.app",
       "versionCode": 8,
       "permissions": [],
+			"edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.jpg",
         "backgroundColor": "#ffffff"
