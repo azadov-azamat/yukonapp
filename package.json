@@ -55,7 +55,7 @@
     "nativewind": "^2.0.11",
     "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
-    "react": "19.1.0",
+    "react": "19.0.0",
     "react-content-loader": "^7.0.2",
     "react-dom": "19.0.0",
     "react-hook-form": "^7.54.2",
@@ -84,7 +84,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@react-native-community/cli": "19.1.0",
+    "@react-native-community/cli": "19.0.0",
     "@types/jest": "^29.5.12",
     "@types/jsonapi-serializer": "^3.6.8",
     "@types/lodash": "^4.17.14",
