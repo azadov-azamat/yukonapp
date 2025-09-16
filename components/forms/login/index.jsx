@@ -10,6 +10,7 @@ import Toast from 'react-native-toast-message';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 import { styled } from "nativewind";
+import { useTelegramAuth } from '@/hooks/telegram-auth';
 
 const StyledTouchableOpacity = styled(TouchableOpacity);
 const StyledView = styled(View);
@@ -20,6 +21,20 @@ const Login = ({setView}) => {
   const dispatch = useAppDispatch();
   const {t} = useTranslation();
   const { loading } = useAppSelector(state => state.auth)
+  const { start } = useTelegramAuth();
+  
+    const onPress = async () => {
+      const res = await start();
+      if (res.type === 'success' && res.url) {
+        const url = new URL(res.url);
+        console.log('Telegram auth callback URL:', url);
+        // masalan: ?id=...&hash=... kabi paramlarni oling
+        const userId = url.searchParams.get('id');
+        console.log('Authenticated user ID:', userId);
+        // ... token/userni serverga yuboring
+        setOpen(false);
+      }
+    };
   
   const formik = useFormik({
     initialValues: { phone: '', password: '' },
@@ -106,7 +121,7 @@ const Login = ({setView}) => {
       
       <CustomButton 
         title={t ('auth-with-telegram')} 
-        onPress={handleContinueWithTelegram} 
+        onPress={onPress} 
         buttonStyle={'bg-primary-bg-light dark:bg-primary-bg-dark'}
         textStyle={'text-primary-title-color dark:text-primary-light'}    
       />

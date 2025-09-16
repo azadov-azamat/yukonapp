@@ -2,8 +2,8 @@ import { View, Alert, TouchableOpacity, Text } from "react-native";
 import React from "react";
 import { CustomLanguageSelector } from "@/components/custom";
 import { useTranslation } from "react-i18next";
-import { Ionicons } from "@expo/vector-icons";
-import { useTheme } from '@/config/ThemeContext';
+// import { Ionicons } from "@expo/vector-icons";
+// import { useTheme } from '@/config/ThemeContext';
 import { styled } from "nativewind";
 import { LoginForm, AuthProcessForm } from "@/components/forms";
 
@@ -13,7 +13,7 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 
 export default function MainPage() {
   const {t} = useTranslation();
-  const { isDarkMode, toggleTheme, theme } = useTheme();
+  // const { isDarkMode, toggleTheme, theme } = useTheme();
   
   const [view, setView] = React.useState("login")
   
@@ -23,7 +23,7 @@ export default function MainPage() {
            {/* Language Selector */}
         <CustomLanguageSelector />
 
-        <StyledView className="ml-2"> 
+        {/* <StyledView className="ml-2"> 
             <StyledTouchableOpacity
               onPress={toggleTheme}
               className={`w-10 h-10 items-center justify-center rounded-full ${isDarkMode ? 'bg-primary-bg-dark' : 'bg-primary-bg-light'}`}
@@ -34,7 +34,7 @@ export default function MainPage() {
                 color={theme.colors[!isDarkMode ? 'dark' : 'light']}
               />
             </StyledTouchableOpacity>
-        </StyledView>
+        </StyledView> */}
       </StyledView>
 
       <StyledView className="mt-10">

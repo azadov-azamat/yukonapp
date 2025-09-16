@@ -30,7 +30,7 @@ export default function MainPage() {
   const { openLoadView } = useBottomSheet();
   const router = useRouter();
   
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
   // const toggle = () => setOpen(prev => !prev);
   
   const { location } = useAppSelector(state => state.auth);
@@ -42,7 +42,7 @@ export default function MainPage() {
   const [nearbyRadius, setNearbyRadius] = React.useState<{label: NearbyRadius; value: NearbyRadius}>({label: '10', value: '10'});
 
 	const scrollY = React.useRef(new Animated.Value(0)).current;
-  // const telegramRef = React.useRef(null);
+  
 	const statusBarBackgroundColor = useMemo(() =>
 		scrollY.interpolate({
 			inputRange: [15, SCROLL_THRESHOLD],
