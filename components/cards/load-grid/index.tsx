@@ -73,7 +73,7 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
         ? ` (${t ('prepayment')} ${formatPrice(prepaymentAmount)})`
         : ` (${t ('has-prepayment')})`
       : '';
-    return `${(price ? formatPrice(price, originId === 1 && destinationId === 1) : '') + prepayment}`;
+    return `${(price ? formatPrice(price, "", "", originId === 1 && destinationId === 1) : '') + prepayment}`;
   }
 
   const ParentComponent = showElement ? View : TouchableOpacity;
@@ -113,8 +113,8 @@ const LoadCard = ({load, onPress, showElement = false, close, isUpdate  = false}
 
         {/* Path Line */}
         <View className='relative items-center flex-auto max-w-40'>
-              <View className="absolute left-0 right-0 h-1 top-3.5 bg-[repeating-linear-gradient(90deg,#6b46c1,#6b46c1_5px,transparent_5px,transparent_10px)]"></View>
-              <View className='relative z-10 items-center justify-center inline-block w-8 h-8 p-1 border rounded-full bg-primary-light dark:bg-primary/50 border-border-color'>
+              
+              <View className='relative z-10 items-center justify-center inline-block w-8 h-8 pl-0.5 border rounded-full bg-primary-light dark:bg-primary/50 border-border-color'>
                 <Ionicons name='chevron-forward' size={20} color={theme.colors.icon}/>
               </View>
               {load.distanceInKm && <View className='absolute justify-center items-center left-0 right-0 -translate-x-1/2 -translate-y-1/2 bottom-[-20px]'>

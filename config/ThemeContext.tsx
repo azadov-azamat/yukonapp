@@ -1,9 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  DefaultTheme as PaperDefaultTheme,
-  MD3LightTheme,
-  MD3DarkTheme
+  DefaultTheme as PaperDefaultTheme
 } from "react-native-paper";
 import { Appearance } from "react-native";
 import { useColorScheme } from "nativewind";
@@ -51,7 +49,7 @@ const DarkTheme = {
 
 // ✅ Create ThemeContext with default values
 const ThemeContext = createContext({
-  isDarkMode: false,
+  isDarkMode: true,
   toggleTheme: () => {},
   theme: LightTheme,
   themeName: "light"
@@ -69,15 +67,25 @@ const applyThemeVariables = (theme: typeof LightTheme) => {
 };
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [isDarkMode, setIsDarkMode] = useState(Appearance.getColorScheme() === "dark");
+  // const [isDarkMode, setIsDarkMode] = useState(Appearance.getColorScheme() === "dark");
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const { setColorScheme } = useColorScheme();
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      await AsyncStorage.setItem("theme", 'light');    
+    };
+    loadTheme();
+  }, []);
 
   useEffect(() => {
     const loadTheme = async () => {
       const savedTheme = await AsyncStorage.getItem("theme");
       if (savedTheme !== null) {
-        setIsDarkMode(savedTheme === "dark");
-        setColorScheme(savedTheme as ColorSchemeSystem);
+        // setIsDarkMode(savedTheme === "dark");
+        setIsDarkMode(false);
+        // setColorScheme(savedTheme as ColorSchemeSystem);
+        setColorScheme('light' as ColorSchemeSystem);
       }
     };
     loadTheme();
