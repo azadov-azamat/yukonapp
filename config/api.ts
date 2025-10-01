@@ -2,19 +2,10 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AnalyticsEventSerializer } from "@/serializers";
 import { isAuthEndpoint } from "@/utils/general";
-import DeviceInfo from 'react-native-device-info';
+import { getPlatformInfoString } from "@/utils/platform";
 
 export const baseUrl = `${process.env.EXPO_PUBLIC_BACKEND_HOST}/api`;
 const TRACK_URL = `${process.env.EXPO_PUBLIC_BACKEND_HOST}/api/analytics-events`;
-
-const platformInfo = {
-  brand: DeviceInfo.getBrand(),          // Masalan: Apple / Xiaomi
-  model: DeviceInfo.getModel(),          // Masalan: iPhone 14 Pro
-  systemName: DeviceInfo.getSystemName(),// iOS / Android
-  systemVersion: DeviceInfo.getSystemVersion(), // 17.1
-  appVersion: DeviceInfo.getVersion(),   // 1.0.3
-  buildNumber: DeviceInfo.getBuildNumber(),
-};
 
 export const http = axios.create({
     baseURL: baseUrl,
@@ -85,10 +76,11 @@ http.interceptors.response.use(
     const shouldTrack = !!(cfg.headers && (cfg.headers as any)['X-Track']);
     if (shouldTrack) {
         const duration = Date.now() - (cfg.__startedAt ?? Date.now());
+        const otherObject = (cfg.headers as any)['X-Track-Meta'] ?? "{}"
         const payload = {
             platform: "mobile",                     // mobil ilova uchun
             pageUrl: "",                            // RN’da yo‘q, lekin kerak bo‘lsa ekran nomini yuboring
-            platformInfo: JSON.stringify(platformInfo), // string qilib jo‘natamiz
+            platformInfo: getPlatformInfoString(), // string qilib jo‘natamiz
             eventType: (cfg.headers as any)['X-Track-Event'] ?? "api_call",
             textMessage: (cfg.headers as any)['X-Track-Message'] ?? `API call to ${cfg.url}`,
             metadata: JSON.stringify({              // metadata STRING bo‘lishi shart!
@@ -96,7 +88,7 @@ http.interceptors.response.use(
                 method: (cfg.method ?? "GET").toUpperCase(),
                 status: response.status,
                 durationMs: duration,
-                ...JSON.parse((cfg.headers as any)['X-Track-Meta']) ?? {},
+                ...JSON.parse(otherObject),
             }),
         };
         

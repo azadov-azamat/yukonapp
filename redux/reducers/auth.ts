@@ -12,7 +12,12 @@ import UserModel from "@/models/user";
 
 export const getUserMe = createAsyncThunk('auth/getUserMe', async (id: number, {rejectWithValue}) => {
     try {
-        const response = await http.get(`/users/${id}`)
+        const response = await http.get(`/users/${id}`, {
+            headers: {
+                'X-Track': '1',
+                'X-Track-Event': 'get_user_me'
+            }
+        })
         if (response.data === null) return rejectWithValue(response?.data)
         return deserializeUser(await deserialize(response.data))
     } catch (error) {
