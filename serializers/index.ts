@@ -6,6 +6,24 @@ import LoadModel from '@/models/load';
 import UserModel from '@/models/user';
 import { Serializer } from 'jsonapi-serializer';
 
+// Analytics Event Serializer
+export const AnalyticsEventSerializer = new Serializer('analytics_events', {
+  attributes: [
+    'platform',
+    'pageUrl',
+    'platformInfo',
+    'eventType',
+    'textMessage',
+    'metadata',
+    'metadataHash'
+  ],
+  relationships: {
+    user: {
+      ref: (user: UserModel) => user.id,
+    },
+  }
+});
+
 // User Serializer
 export const UserSerializer = new Serializer('users', {
   attributes: [

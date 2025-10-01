@@ -34,14 +34,14 @@ function App() {
 
   useEffect(() => {
     const sub = Linking.addEventListener("url", ({ url }) => {
-      console.log("Deep link keldi:", url);
+      // console.log("Deep link keldi:", url);
       const parsed = Linking.parse(url);
       console.log(parsed); // { scheme: 'yukon.uz.app', path: 'tg-login', queryParams: { ... } }
     });
 
     Linking.getInitialURL().then((url) => {
       if (url) {
-        console.log("Cold start deep link:", url);
+        // console.log("Cold start deep link:", url);
       }
     });
 

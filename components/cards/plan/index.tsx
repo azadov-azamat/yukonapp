@@ -1,7 +1,5 @@
 import { ContentSubscriptionLoader } from '@/components/content-loader';
-import SubscriptionModel from '@/models/subscription';
 import { formatPrice, getName } from '@/utils/general';
-import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { View, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
@@ -21,8 +19,8 @@ const Plan: React.FC<PlanModel> = (plan) => {
 
     return (
         <View
-        className={`p-4 bg-primary-light/20 dark:bg-primary-dark border rounded-lg border-border-color/20`}
-    >
+            className={`p-4 bg-primary-light/20 dark:bg-primary-dark border rounded-lg border-border-color/20`}
+        >
         <Text className="text-lg font-semibold text-primary-title-color dark:text-primary-light">{getName(plan, 'name')}</Text>
         <Text className="mt-2 text-sm text-primary-desc-color dark:text-primary-light">{getName(plan, 'description')}</Text>
         <View className='flex-row items-center justify-between mt-4'>

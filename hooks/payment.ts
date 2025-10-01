@@ -24,6 +24,8 @@ const usePayment = () => {
             "-31900": t("errors.card-data-incorrect"),
             "-31103": t("errors.confirmation-code-incorrect"),
             "-31101": t("errors.confirmation-code-expired"),
+            "-31625": t("errors.use-only-uzcard-and-humo"),
+            "-31626": t("errors.use-only-uzcard-and-humo"),
             "-31630": t("errors.get-enough-amount"),
             "-31400": t("errors.confirmation-code-incorrect"),
             "-32504": t("errors.access-denied"),

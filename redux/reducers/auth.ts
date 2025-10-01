@@ -21,8 +21,15 @@ export const getUserMe = createAsyncThunk('auth/getUserMe', async (id: number, {
 });
 
 export const login = createAsyncThunk('auth/login', async (data: {phone: string, password: string}, {rejectWithValue}) => {
+    console.log("login", JSON.stringify(data))
     try {
-        const response = await http.post(`/auth/login`, data)
+        const response = await http.post(`/auth/login`, data, {
+            headers: {
+                'X-Track': '1',
+                'X-Track-Event': 'auth_login',
+                'X-Track-Meta': JSON.stringify(data)
+            }
+        })
         if (response.data === null) return rejectWithValue(response?.data)
         return response.data
     } catch (error) {

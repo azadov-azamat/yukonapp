@@ -54,9 +54,7 @@ export default function SubscriptionsPage() {
             setRefreshing(false); // Yangilashni tugatish
           }, 2000); // 2 soniyalik kechikish
       };
-      
-    const handleSubscribe = (id: number) => router.push(`/profile/payment/${id}`)
-    
+          
     return (
         <View className="items-center flex-1 px-4 pt-4 bg-white dark:bg-black">
             <ViewSelector

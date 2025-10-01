@@ -271,6 +271,7 @@
     "confirmation-code-incorrect": "Tasdiqlash kodi xato! Tekshirib ko'ring",
     "confirmation-code-expired": "Tasdiqlash kod muddati o'tgan! Qayta kod yuborish orqali tasdiqlang",
     "get-enough-amount": "Kartangizda mablag' yetarli emas!",
+    "use-only-uzcard-and-humo": "Faqat Uzcard va Humo kartalaridan to'lov qilishingiz mumkin!",
     "destination-not-found": "Kiritilgan manzil topilmadi! Shahar nomini tekshiring",
     "phone-not-exist": "Telefon raqami mavjud emas",
     "empty-confirm-password": "Parol kiritilmagan.",

@@ -271,6 +271,7 @@
 		"confirmation-code-incorrect": "Код подтверждения неверен! Проверьте",
 		"confirmation-code-expired": "Срок действия кода подтверждения истек! Подтвердите, отправив код снова",
 		"get-enough-amount": "На вашей карте недостаточно средств!",
+		"use-only-uzcard-and-humo": "Оплата возможна только с карт Uzcard и Humo!",
 		"destination-not-found": "Указанное место не найдено! Проверьте название города",
 		"phone-not-exist": "Номер телефона не существует",
 		"empty-confirm-password": "Пароль не введен.",

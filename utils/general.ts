@@ -123,7 +123,7 @@ function getCurrencySymbol(currencyCode: string): string {
     case 'KZT':
       return 'tenge';
     default:
-      return '$';
+      return '';
   }
 }
 
@@ -430,3 +430,8 @@ export function vehicleRequestParams(
     return query;
   }
 
+export const isAuthEndpoint = (url?: string) => {
+  if (!url) return false
+  // o'zingizning routhingizga moslang:
+  return /\/auth\/(login|register|refresh)$/.test(url)
+}

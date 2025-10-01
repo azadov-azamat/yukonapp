@@ -6,7 +6,13 @@ import Toast from 'react-native-toast-message';
 // API: cards.create
 export const createCard = createAsyncThunk('card/createCard', async (data:{ number: string, expire: string }, { rejectWithValue }) => {
     try {
-      const response = await http.post('/cards', data);
+      const response = await http.post('/cards', data, {
+        headers: {
+                'X-Track': '1',
+                'X-Track-Event': 'create_card',
+                'X-Track-Message': 'Api Create card',
+        },
+      });
       return response.data;
     } catch (error) {
       return rejectWithValue(error);

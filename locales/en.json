@@ -271,6 +271,7 @@
     "confirmation-code-incorrect": "Incorrect confirmation code! Please verify",
     "confirmation-code-expired": "Confirmation code expired! Confirm by resending the code",
     "get-enough-amount": "Insufficient funds on your card!",
+    "use-only-uzcard-and-humo": "You can only pay with Uzcard and Humo cards!",
     "destination-not-found": "Entered destination not found! Please check the city name",
     "phone-not-exist": "Phone number does not exist",
     "empty-confirm-password": "Password not entered.",

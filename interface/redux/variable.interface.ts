@@ -23,10 +23,10 @@ export interface CityInitialProps {
 }
 
 export interface CountryInitialProps {
-		countries: any;
-		allCountries: any;
-		loading: boolean;
-        activeCountries: vehicleCountriesProps[] | [];
+	countries: any;
+	allCountries: any;
+	loading: boolean;
+    activeCountries: vehicleCountriesProps[] | [];
     activeCities: vehicleCountriesProps[] | [];
 }
 
@@ -54,6 +54,17 @@ export interface ICityModel extends defaultData {
     countryId: string;
     country?: ICountryModel;
 		[key: string]: any;
+}
+
+export interface IAnalyticsEvent extends defaultData {
+    platform: 'web' | 'bot' | 'mobile';
+    pageUrl?: string;
+    platformInfo?: string;
+    eventType: string;
+    textMessage: string;
+    metadata?: string;
+    metadataHash?: string;
+    user: IUserModel
 }
 
 export interface IPlanModel extends defaultData {
