@@ -142,7 +142,7 @@ export const updateLoad = createAsyncThunk('load/updateLoad', async ({id, data}:
 // Create a New Load
 export const createLoad = createAsyncThunk('load/createLoad', async (data: ILoadModel, { rejectWithValue }) => {
     try {
-        const response = await http.post('/loads', data, {
+        const response = await http.post('/loads', LoadSerializer.serialize(data), {
             headers: {
                 'X-Track': '1',
                 'X-Track-Event': 'create_new_load',

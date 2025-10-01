@@ -168,7 +168,6 @@ export default class LoadModel implements ILoadModel {
         return ''
     }
 
-    console.log(` asdfadsfasd`)
     try {
       const hasSubscription = await this.checkSubscription(user);
 

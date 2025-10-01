@@ -34,7 +34,7 @@ export const updateVehicle = createAsyncThunk('vehicle/updateVehicle', async ({i
 // Create a New Vehicle
 export const createVehicle = createAsyncThunk('vehicle/createVehicle', async (data: IVehicleModel, { rejectWithValue }) => {
     try {
-        const response = await http.post('/vehicles', data, {
+        const response = await http.post('/vehicles', VehicleSerializer.serialize(data), {
             headers: {
                 'X-Track': '1',
                 'X-Track-Event': 'create_new_vehicle',
