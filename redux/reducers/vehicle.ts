@@ -8,7 +8,13 @@ import { VehicleSerializer } from "@/serializers";
 // Fetch Vehicle by ID
 export const getVehicleById = createAsyncThunk('vehicle/getVehicleById', async (id: string, { rejectWithValue }) => {
     try {
-        const response = await http.get(`/vehicles/${id}`);
+        const response = await http.get(`/vehicles/${id}`, {
+            headers: {
+                'X-Track': '1',
+                'X-Track-Event': 'page_view',
+                'X-Track-Meta': JSON.stringify({type: 'Vehicle', recordId: id})
+            }
+        });
         return deserializeVehicle(await deserialize(response.data));
     } catch (error) {
         return rejectWithValue(error);
@@ -28,7 +34,13 @@ export const updateVehicle = createAsyncThunk('vehicle/updateVehicle', async ({i
 // Create a New Vehicle
 export const createVehicle = createAsyncThunk('vehicle/createVehicle', async (data: IVehicleModel, { rejectWithValue }) => {
     try {
-        const response = await http.post('/vehicles', data);
+        const response = await http.post('/vehicles', data, {
+            headers: {
+                'X-Track': '1',
+                'X-Track-Event': 'create_new_vehicle',
+                'X-Track-Meta': JSON.stringify(data)
+            }
+        });
         return deserializeVehicle(await deserialize(response.data));
     } catch (error) {
         return rejectWithValue(error);

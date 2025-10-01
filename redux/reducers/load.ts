@@ -50,7 +50,14 @@ export const getLoadStats = createAsyncThunk('load/getLoadStats', async (_, { re
 // Fetch Loads (Search)
 export const searchLoads = createAsyncThunk('load/searchLoads', async (query: any, { rejectWithValue }) => {
     try {
-        const response = await http.get('/loads/search', { params: query });
+        const response = await http.get('/loads/search', { 
+            params: query,
+            headers: {
+                'X-Track': '1',
+                'X-Track-Event': 'load_search',
+                'X-Track-Meta': JSON.stringify(query)
+            } 
+        });
         let deserializedData = await deserialize(response.data.data)
         deserializedData.map((item: ILoadModel) => deserializeLoad(item));
 
@@ -67,7 +74,14 @@ export const searchLoads = createAsyncThunk('load/searchLoads', async (query: an
 // Fetch Loads (Search)
 export const searchNearbyLoads = createAsyncThunk('load/searchNearbyLoads', async (query: any, { rejectWithValue }) => {
     try {
-        const response = await http.get('/loads/search', { params: query });
+        const response = await http.get('/loads/search', { 
+            params: query,
+            headers: {
+                'X-Track': '1',
+                'X-Track-Event': 'load_search',
+                'X-Track-Meta': JSON.stringify(query)
+            }
+        });
         let deserializedData = await deserialize(response.data.data)
         deserializedData.map((item: ILoadModel) => deserializeLoad(item));
 
@@ -102,7 +116,13 @@ export const fetchLatestLoads = createAsyncThunk('load/latestLoads', async (_, {
 // Fetch Load by ID
 export const getLoadById = createAsyncThunk('load/getLoadById', async (id: string, { rejectWithValue }) => {
     try {
-        const response = await http.get(`/loads/${id}`);
+        const response = await http.get(`/loads/${id}`, {
+            headers: {
+                'X-Track': '1',
+                'X-Track-Event': 'page_view',
+                'X-Track-Meta': JSON.stringify({type: 'load', recordId: id})
+            }
+        });
         return deserializeLoad(await deserialize(response.data));
     } catch (error) {
         return rejectWithValue(error);
@@ -122,7 +142,13 @@ export const updateLoad = createAsyncThunk('load/updateLoad', async ({id, data}:
 // Create a New Load
 export const createLoad = createAsyncThunk('load/createLoad', async (data: ILoadModel, { rejectWithValue }) => {
     try {
-        const response = await http.post('/loads', data);
+        const response = await http.post('/loads', data, {
+            headers: {
+                'X-Track': '1',
+                'X-Track-Event': 'create_new_load',
+                'X-Track-Meta': JSON.stringify(data)
+            }
+        });
         return deserializeLoad(await deserialize(response.data));
     } catch (error) {
         return rejectWithValue(error);
@@ -131,7 +157,7 @@ export const createLoad = createAsyncThunk('load/createLoad', async (data: ILoad
 
 const initialState: LoadInitialProps = {
     loads: [],
-		latestLoads: [],
+	latestLoads: [],
     bookmarks: [],
     load: null,
     topSearches: [],

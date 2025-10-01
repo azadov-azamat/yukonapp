@@ -118,7 +118,13 @@ export default class VehicleModel implements IVehicleModel {
 
       if (!hasSubscription) {
         if (user.loadSearchLimit > 0) {
-            const response = await http.get(endpoint);
+            const response = await http.get(endpoint, {
+              headers: {
+                'X-Track': '1',
+                'X-Track-Event': 'open_message_info',
+                'X-Track-Meta': JSON.stringify({type: 'Vehicle', recordId: this.id})
+              }
+            });
             successCallback(response.data);
             user.loadSearchLimit--;
             await user.save(dispatch);
@@ -127,7 +133,13 @@ export default class VehicleModel implements IVehicleModel {
             close?.();
         }
       } else {
-        const response = await http.get(endpoint);
+        const response = await http.get(endpoint, {
+          headers: {
+              'X-Track': '1',
+              'X-Track-Event': 'open_message_info',
+              'X-Track-Meta': JSON.stringify({type: 'Vehicle', recordId: this.id})
+          }
+        });
         successCallback(response.data);
       }
     } catch (e) {

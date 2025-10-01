@@ -1,7 +1,6 @@
 import { http } from '@/config/api';
 import { CardInitialProps } from '@/interface/redux/card.interface';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import Toast from 'react-native-toast-message';
 
 // API: cards.create
 export const createCard = createAsyncThunk('card/createCard', async (data:{ number: string, expire: string }, { rejectWithValue }) => {

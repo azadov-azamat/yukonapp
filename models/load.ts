@@ -176,7 +176,13 @@ export default class LoadModel implements ILoadModel {
 
       if (!hasSubscription) {
         if (user.loadSearchLimit > 0) {
-            const response = await http.get(endpoint);
+            const response = await http.get(endpoint, {
+              headers: {
+                'X-Track': '1',
+                'X-Track-Event': 'open_message_info',
+                'X-Track-Meta': JSON.stringify({type: 'Load', recordId: this.id})
+              }
+            });
             successCallback(response.data);
             user.loadSearchLimit--;
             await user.save(dispatch);
@@ -185,7 +191,13 @@ export default class LoadModel implements ILoadModel {
             close?.();
         }
       } else {
-        const response = await http.get(endpoint);
+        const response = await http.get(endpoint, {
+          headers: {
+              'X-Track': '1',
+              'X-Track-Event': 'open_message_info',
+              'X-Track-Meta': JSON.stringify({type: 'Load', recordId: this.id})
+          }
+        });
         successCallback(response.data);
       }
     } catch (e) {
