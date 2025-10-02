@@ -27,7 +27,8 @@ Sentry.init({
   sendDefaultPii: true,
 
   debug: true,            // yoki true
-
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0,
   // Enable Logs
   // enableLogs: true,
 
