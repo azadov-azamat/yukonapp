@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AnalyticsEventSerializer } from "@/serializers";
 import { isAuthEndpoint } from "@/utils/general";
 import { getPlatformInfoString } from "@/utils/platform";
+import * as Sentry from '@sentry/react-native';
 
 export const baseUrl = `${process.env.EXPO_PUBLIC_BACKEND_HOST}/api`;
 const TRACK_URL = `${process.env.EXPO_PUBLIC_BACKEND_HOST}/api/analytics-events`;
@@ -61,6 +62,7 @@ http.interceptors.request.use(async (config) => {
     return config;
 }, (error) => {
     console.log("error - 29", error);
+    Sentry.captureException(new Error('http interceptors request', error))
     if (error.response?.status === 401) {
         console.log("401");
         // const router = useRouter();
@@ -105,6 +107,7 @@ http.interceptors.response.use(
   },
   async (error) => {
     const cfg: any = error.config ?? {};
+    Sentry.captureException(new Error('http interceptors response', error))
     try {
       if (!cfg.__skipTrack) {
         const duration = Date.now() - (cfg.__startedAt ?? Date.now());

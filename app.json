@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.jpg",
     "scheme": "yukon.uz.app",
     "userInterfaceStyle": "automatic",
-		"newArchEnabled": true,
+    "newArchEnabled": true,
     "runtimeVersion": "2.1.2",
     "ios": {
       "supportsTablet": true,
@@ -15,14 +15,14 @@
       "buildNumber": "1.1.0",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-				"NSLocationWhenInUseUsageDescription": "This app uses your location to show relevant info nearby."
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to show relevant info nearby."
       }
     },
     "android": {
       "package": "yukon.uz.app",
       "versionCode": 8,
       "permissions": [],
-			"edgeToEdgeEnabled": true,
+      "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.jpg",
         "backgroundColor": "#ffffff"
@@ -59,7 +59,15 @@
         }
       ],
       "expo-font",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "yukon-mobile",
+          "organization": "pdp-xh"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

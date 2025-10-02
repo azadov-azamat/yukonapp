@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { View, Text, RefreshControl, Animated, StatusBar, FlatList } from "react-native";
+import { View, Text, RefreshControl, Animated, StatusBar, FlatList, Button } from "react-native";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useTranslation } from 'react-i18next';
 import { getTopSearches, fetchLatestLoads, getLoadStats, searchNearbyLoads, setLoad } from "@/redux/reducers/load";
@@ -18,6 +18,7 @@ import { useBottomSheet } from "@/hooks/context/bottom-sheet";
 import { CustomInputSelector } from "@/components/custom";
 import { OPTIONS } from "@/utils/constants";
 // import TelegramLogin from "@/components/modal/auth-telegram";
+import * as Sentry from '@sentry/react-native';
 
 const HEADER_HEIGHT = 50;
 const SCROLL_THRESHOLD = 30;

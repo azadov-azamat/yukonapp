@@ -18,6 +18,38 @@ import { ThemeProvider, useTheme } from "@/config/ThemeContext"; // ✅ Import t
 import { BottomSheetProvider } from "@/hooks/context/bottom-sheet";
 
 import * as Linking from "expo-linking";
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://3d1313a2655a8a7a407523879cc9faf4@o530575.ingest.us.sentry.io/4510118569181184',
+  // Adds more context data to events (IP address, cookies, user, etc.)
+  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
+  sendDefaultPii: true,
+
+  debug: true,            // yoki true
+
+  // Enable Logs
+  // enableLogs: true,
+
+  integrations: [
+    Sentry.feedbackIntegration({
+      // Additional SDK configuration goes in here, for example:
+      styles: {
+        submitButton: {
+          backgroundColor: "#6a1b9a",
+        },
+      },
+      namePlaceholder: "Fullname",
+      isNameRequired: true,
+    }),
+  ],
+  replaysSessionSampleRate: 0.1,
+  replaysOnErrorSampleRate: 1,
+  // integrations: [Sentry.mobileReplayIntegration(), Sentry.feedbackIntegration()],
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // spotlight: __DEV__,
+});
 
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -125,14 +157,17 @@ function App() {
   );
 }
 
-export default function RootLayout() {
+Sentry.showFeedbackWidget();
+Sentry.hideFeedbackButton();
+
+export default Sentry.wrap(function RootLayout() {
   return (
     // <View className="w-auto h-auto max-w-[400px] flex justify-center">
-      <ReduxProvider store={store}>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
-      </ReduxProvider>
     // </View>
+    <ReduxProvider store={store}>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </ReduxProvider>
   );
-}
+});

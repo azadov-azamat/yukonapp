@@ -55,12 +55,12 @@ interface SettingConfig {
 }
 
 const SETTINGS_CONFIG: SettingConfig[] = [
-  {
-    icon: 'moon-outline',
-    title: 'profile.dark-mode',
-    showToggle: true,
-    value: 'dark-mode',
-  },
+  // {
+  //   icon: 'moon-outline',
+  //   title: 'profile.dark-mode',
+  //   showToggle: true,
+  //   value: 'dark-mode',
+  // },
   {
     icon: 'cart-outline',
     title: 'profile.subscriptions',
