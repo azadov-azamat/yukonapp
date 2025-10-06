@@ -25,7 +25,6 @@ Sentry.init({
   
   debug: false,  
   // enableLogs: true,
-  enableNative: true,
   beforeSend(event, hint) {
     // console.log(event, hint);
     return event;
