@@ -56,7 +56,7 @@ export default function SubscriptionsPage() {
       };
           
     return (
-        <View className="items-center flex-1 px-4 pt-4 bg-white dark:bg-black">
+        <View className="items-center flex-1 px-4 pt-4 bg-[#f3f4f6] dark:bg-black">
             <ViewSelector
                 tabs={tabs}
                 selectedTab={status}

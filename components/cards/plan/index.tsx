@@ -19,7 +19,7 @@ const Plan: React.FC<PlanModel> = (plan) => {
 
     return (
         <View
-            className={`p-4 bg-primary-light/20 dark:bg-primary-dark border rounded-lg border-border-color/20`}
+            className={`p-4 bg-white dark:bg-primary-dark border-2 rounded-lg border-border-color/30`}
         >
         <Text className="text-lg font-semibold text-primary-title-color dark:text-primary-light">{getName(plan, 'name')}</Text>
         <Text className="mt-2 text-sm text-primary-desc-color dark:text-primary-light">{getName(plan, 'description')}</Text>

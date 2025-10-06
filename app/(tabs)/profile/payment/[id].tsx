@@ -34,7 +34,7 @@ export default function Payment() {
     }
       
     return (
-        <View className="relative items-center justify-center flex-1 p-4 bg-white">
+        <View className="relative items-center justify-center flex-1 p-4 bg-[#f3f4f6]">
         {/* Header */}
             <View className="w-full">
         
