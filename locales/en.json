@@ -190,7 +190,8 @@
     "customs-clearance": "Customs",
     "created-at": "Ad Date",
     "load-capacity": "Load Capacity (tons)",
-    "prepayment-percentage": "Advance Payment Percentage"
+    "prepayment-percentage": "Advance Payment Percentage",
+      "currency": "Currency"
   },
   "truck-type": {
     "isuzu": "Isuzu",

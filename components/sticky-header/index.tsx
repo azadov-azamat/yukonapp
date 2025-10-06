@@ -48,11 +48,11 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ scrollY }) => {
 
 
   const handleIconPress = useCallback(() => {
-    if (Platform.OS === 'android') {
+    // if (Platform.OS === 'android') {
       router.push('/android/ads/create');
-    } else {
-      openEditForm(0, 'load');
-    }
+    // } else {
+    //   openEditForm(0, 'load');
+    // }
   }, [router, openEditForm]);
 
   const initials = useMemo(() => {

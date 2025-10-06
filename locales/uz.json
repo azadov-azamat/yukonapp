@@ -190,7 +190,8 @@
     "customs-clearance": "Bojxona",
     "created-at": "E'lon sanasi",
     "load-capacity": "Yuk ko'tarish vazni (tonna)",
-    "prepayment-percentage": "Oldindan to'lov foizi"
+    "prepayment-percentage": "Oldindan to'lov foizi",
+    "currency": "Valyuta"
   },
   "truck-type": {
     "isuzu": "Isuzu",

@@ -336,7 +336,7 @@ const AdsFormComponent: React.FC<{recordId: number, close?: () => void, model?: 
                 items={OPTIONS['truck-types']}
                 labelField="label"
                 valueField="value"
-                rowItem={(item) => <Text className={textClass}>{t(item.label)}</Text>}
+                rowItem={(item) => <Text className={textClass}>{t(item.label)}sdsds</Text>}
             />
         </View>}
         

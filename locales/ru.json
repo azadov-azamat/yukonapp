@@ -190,7 +190,8 @@
 		"customs-clearance": "Таможня",
 		"created-at": "Дата объявления",
 		"load-capacity": "Грузоподъемность (тонна)",
-		"prepayment-percentage": "Процент предоплаты"
+		"prepayment-percentage": "Процент предоплаты",
+		"currency": "Валюта"
 	},
 	"truck-type": {
 		"isuzu": "Исузу",
