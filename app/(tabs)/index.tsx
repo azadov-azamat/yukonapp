@@ -34,7 +34,7 @@ export default function MainPage() {
   // const [open, setOpen] = React.useState(false);
   // const toggle = () => setOpen(prev => !prev);
   
-  const { location } = useAppSelector(state => state.auth);
+  const { location, user } = useAppSelector(state => state.auth);
   const { dashboardStats: loadStats, loadingSearchLoads, nearbyLoads } = useAppSelector(state => state.load);
   const { dashboardStats: vehicleStats } = useAppSelector(state => state.vehicle);
 
@@ -73,6 +73,9 @@ export default function MainPage() {
       }
       dispatch(searchNearbyLoads(query));    
     }
+    
+    Sentry.captureMessage(`Foydalanuvchi tizimga kirdi: ${user?.telegramId}`, 'log');
+
   }, [location, nearbyRadius])
 
   // Combined focus effect for data fetching and cleanup

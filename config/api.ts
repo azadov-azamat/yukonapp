@@ -101,6 +101,7 @@ http.interceptors.response.use(
         trackToken = response.data && (response.data.token)
       }
 
+      Sentry.captureMessage(`http.interceptors.response: ${JSON.stringify(payload)}`, 'info');
       sendTrack(payload, trackToken);
     }
     return response;

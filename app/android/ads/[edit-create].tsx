@@ -6,6 +6,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { clearLoad } from '@/redux/reducers/load';
 import AdsFormComponent from '@/components/forms/ads-form';
 
+import * as Sentry from "@sentry/react-native";
+
 const AdsEditCreate = () => {
 
   const dispatch = useAppDispatch();
@@ -15,6 +17,8 @@ const AdsEditCreate = () => {
   const param = params['edit-create'];
   
   React.useEffect(() => {
+    Sentry.logger.info("edit or Create page", {param});
+
     return () => {
       dispatch(clearLoad());
     }

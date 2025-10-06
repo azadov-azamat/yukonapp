@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "@/redux/store";
-import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { View, StatusBar, Platform } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -22,16 +22,21 @@ import * as Sentry from '@sentry/react-native';
 
 Sentry.init({
   dsn: 'https://3d1313a2655a8a7a407523879cc9faf4@o530575.ingest.us.sentry.io/4510118569181184',
-  // Adds more context data to events (IP address, cookies, user, etc.)
-  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
+  
+  debug: false,  
+  // enableLogs: true,
+  enableNative: true,
+  beforeSend(event, hint) {
+    // console.log(event, hint);
+    return event;
+  },
+  beforeBreadcrumb(breadcrumb, hint) {
+    // console.log(breadcrumb, hint);
+    return breadcrumb;
+  },
   sendDefaultPii: true,
-
-  debug: true,            // yoki true
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
-  // Enable Logs
-  // enableLogs: true,
-
   integrations: [
     Sentry.feedbackIntegration({
       // Additional SDK configuration goes in here, for example:
@@ -46,10 +51,6 @@ Sentry.init({
   ],
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1,
-  // integrations: [Sentry.mobileReplayIntegration(), Sentry.feedbackIntegration()],
-
-  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
-  // spotlight: __DEV__,
 });
 
 NativeWindStyleSheet.setOutput({
