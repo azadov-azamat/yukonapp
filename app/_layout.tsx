@@ -17,6 +17,8 @@ import { Provider as PaperProvider, ActivityIndicator } from "react-native-paper
 import { ThemeProvider, useTheme } from "@/config/ThemeContext"; // ✅ Import the Theme Context
 import { BottomSheetProvider } from "@/hooks/context/bottom-sheet";
 
+import { configureForegroundHandling, registerForPushAsync, addNotificationListeners, getLastResponse } from '../utils/notifications';
+
 import * as Linking from "expo-linking";
 import * as Sentry from '@sentry/react-native';
 
@@ -24,15 +26,15 @@ Sentry.init({
   dsn: 'https://3d1313a2655a8a7a407523879cc9faf4@o530575.ingest.us.sentry.io/4510118569181184',
   
   debug: false,  
-  // enableLogs: true,
-  beforeSend(event, hint) {
-    // console.log(event, hint);
-    return event;
-  },
-  beforeBreadcrumb(breadcrumb, hint) {
-    // console.log(breadcrumb, hint);
-    return breadcrumb;
-  },
+  enableLogs: true,
+  // beforeSend(event, hint) {
+  //   // console.log(event, hint);
+  //   return event;
+  // },
+  // beforeBreadcrumb(breadcrumb, hint) {
+  //   // console.log(breadcrumb, hint);
+  //   return breadcrumb;
+  // },
   sendDefaultPii: true,
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
@@ -65,6 +67,30 @@ function App() {
 
   const { theme, isDarkMode } = useTheme();
 
+  React.useEffect(() => {
+    configureForegroundHandling();              // foreground xulq-atvor
+    (async () => {
+      const token = await registerForPushAsync("355249bb-7f55-452a-80b0-81a49689458f");
+      console.log("token", token)
+      // token-ni backendga yuborib saqlab qo‘ying
+      const last = await getLastResponse();
+      console.log("last", last)
+      // agar cold start bosilgan notifikatsiyadan bo‘lsa, shu yerda navigatsiya qiling
+    })();
+    
+    const unsubscribe = addNotificationListeners(
+      (n) => { 
+        console.log(' =============== n =============== ', n)
+      },
+      (r) => { 
+        console.log(" =============== r =============== ", r)
+       },
+    );
+    
+    return unsubscribe;
+    
+  }, []);
+  
   useEffect(() => {
     const sub = Linking.addEventListener("url", ({ url }) => {
       // console.log("Deep link keldi:", url);
@@ -158,13 +184,12 @@ function App() {
   );
 }
 
-Sentry.showFeedbackWidget();
-Sentry.hideFeedbackButton();
-
 export default Sentry.wrap(function RootLayout() {
+  
+  // Sentry.showFeedbackWidget();
+  // Sentry.hideFeedbackButton();
+
   return (
-    // <View className="w-auto h-auto max-w-[400px] flex justify-center">
-    // </View>
     <ReduxProvider store={store}>
       <ThemeProvider>
         <App />

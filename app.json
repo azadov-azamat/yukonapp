@@ -26,6 +26,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.jpg",
         "backgroundColor": "#ffffff"
+      },
+      "notification": {
+        "icon": "./assets/images/splash-icon.png",
+        "color": "#0EA5E9",
+        "channelId": "default"
       }
     },
     "web": {
@@ -47,6 +52,7 @@
           "backgroundColor": "#ffffff"
         }
       ],
+      "expo-notifications",
       [
         "expo-build-properties",
         {
